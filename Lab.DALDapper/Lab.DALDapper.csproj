@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{2F8D1B53-21B0-4227-A349-C950608BD380}</ProjectGuid>
+    <ProjectGuid>{87591671-8D84-4482-A27C-C65D88B11691}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Lab.Businesss</RootNamespace>
-    <AssemblyName>Lab.Businesss</AssemblyName>
+    <RootNamespace>Lab.DALDapper</RootNamespace>
+    <AssemblyName>Lab.DALDapper</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -41,14 +41,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Masters\CasePaper.cs" />
+    <Compile Include="Implimantation\Masters\DALCasePaper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Lab.DALDapper\Lab.DALDapper.csproj">
-      <Project>{87591671-8d84-4482-a27c-c65d88b11691}</Project>
-      <Name>Lab.DALDapper</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Lab.DTO\Lab.DTO.csproj">
       <Project>{fd62eb83-e3a1-4a84-a9f4-7c01e3a40902}</Project>
       <Name>Lab.DTO</Name>

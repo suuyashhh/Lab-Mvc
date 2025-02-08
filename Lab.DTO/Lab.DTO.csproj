@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{2F8D1B53-21B0-4227-A349-C950608BD380}</ProjectGuid>
+    <ProjectGuid>{FD62EB83-E3A1-4A84-A9F4-7C01E3A40902}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Lab.Businesss</RootNamespace>
-    <AssemblyName>Lab.Businesss</AssemblyName>
+    <RootNamespace>Lab.DTO</RootNamespace>
+    <AssemblyName>Lab.DTO</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -41,17 +41,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Masters\CasePaper.cs" />
+    <Compile Include="Masters\Interfaces\IMstCasePaper.cs" />
+    <Compile Include="Masters\Objects\DTOCasePaper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Lab.DALDapper\Lab.DALDapper.csproj">
-      <Project>{87591671-8d84-4482-a27c-c65d88b11691}</Project>
-      <Name>Lab.DALDapper</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Lab.DTO\Lab.DTO.csproj">
-      <Project>{fd62eb83-e3a1-4a84-a9f4-7c01e3a40902}</Project>
-      <Name>Lab.DTO</Name>
+    <ProjectReference Include="..\Lab Mvc\Lab Mvc.csproj">
+      <Project>{9d159d06-11f5-40c4-8a25-141afc45acd0}</Project>
+      <Name>Lab Mvc</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
