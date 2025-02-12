@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using Lab.Businesss.Masters;
 
 namespace Lab_Mvc.Controllers
 {
@@ -13,6 +14,12 @@ namespace Lab_Mvc.Controllers
         public ActionResult Index()
         {
             return View();
+        }
+
+        
+        public ActionResult Create()
+        {
+            return PartialView(CasePaper.New());
         }
 
         [HttpPost]

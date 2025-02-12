@@ -21,6 +21,17 @@ namespace Lab.Businesss.Masters
         public string Doctor { get; set; }
         public string Date { get; set; }
 
+        public static CasePaper New()
+        {
+            try
+            {
+                return new CasePaper();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Request Failed. " + ex.Message);
+            }
+        }
 
         public static async Task<int> Create(CasePaper _ObjCsPaper)
         {

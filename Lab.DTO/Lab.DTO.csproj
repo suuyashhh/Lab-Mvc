@@ -45,11 +45,5 @@
     <Compile Include="Masters\Objects\DTOCasePaper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Lab Mvc\Lab Mvc.csproj">
-      <Project>{9d159d06-11f5-40c4-8a25-141afc45acd0}</Project>
-      <Name>Lab Mvc</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -237,22 +237,22 @@
         <form>
             <div class="form-group">
                 <label>Petient Name</label>
-                <input type="text" class="input-field">
+                <input type="text" id="PName" class="input-field">
             </div>
 
             <div class="form-group">
                 <label>Date Of Birth</label>
-                <input type="text" class="input-field">
+                <input type="text" id="PBOD" class="input-field">
             </div>
 
             <div class="row">
                 <div class="col form-group">
                     <label>Gender</label>
-                    <input type="text" class="input-field">
+                    <input type="text" id="Gender" class="input-field">
                 </div>
                 <div class="col form-group">
                     <label>Phone Number</label>
-                    <input type="text" class="input-field unit-field">
+                    <input type="text" id="PNumber" class="input-field unit-field">
                 </div>
             </div>
 
@@ -263,7 +263,7 @@
 
             <div class="form-group">
                 <label>Doctor Reference</label>
-                <input type="text" class="input-field">
+                <input type="text" id="Doctor" class="input-field">
             </div>
 
             <div class="tests-section">
@@ -343,11 +343,59 @@
             <div class="tests-section">
                 <div class="add-test-section">
                     <div class="test-inputs" style="justify-content:end">
-                        <a href="@Url.Action("Index","CasePaper")" class="add-btn">Save</a>                        
-                        <button class="add-btn" style="background:red!important">Cancle</button>
+                        @*<a href="@Url.Action("Index","CasePaper")" class="add-btn">Save</a>*@
+                        <button class="add-btn" id="save">Save</button>
+                        @*<button class="add-btn" style="background:red!important">Cancle</button>*@
+                        <a class="add-btn" style="background:red!important" href="/CasePaper/index" data-ajax-update="#mainContent" data-ajax-mode="replace" data-ajax-method="GET" data-ajax="true"></a>
                     </div>
                 </div>
             </div>
         </form>
     </div>
 </div>
+<script type="text/javascript">
+    $(document).ready(function () {
+       
+        $("#save").click(function (e) {
+            if (form.valid()) {
+                var city = {
+                    PatientId: $("#PName").val(),
+                    PatientName: $("#PBOD").val(),
+                    Gender: $("#Gender").val(),
+                    Contact: $("#PNumber").val(),
+                    Doctor: $("#Doctor").val()
+                };
+
+                $("#mainContent").html('<div></div>');
+
+                $.ajax({
+                    url: 'CasePaper/create',
+                    type: "POST",
+                    async: false,
+                    contentType: "application/json",
+                    dataType: "json",
+                    data: JSON.stringify(city),
+                    success: function (response, status, xhr) {
+                        if (response === 0) {
+                            var urlName = 'CasePaper/index';
+                            $.ajax({
+                                url: urlName,
+                                type: "GET",
+                                success: function (response, status, xhr) {
+                                    $("#mainContent").html(response);
+                                },
+                                error: function (err) {
+                                    $("#mainContent").html(err);
+                                }
+                            });
+                        }
+                    },
+                    error: function (error) {
+                        alert("Error : " + error.toSource())
+                        $("#mainContent").html("error");
+                    }
+                });
+            }
+        });
+    });
+</script>
