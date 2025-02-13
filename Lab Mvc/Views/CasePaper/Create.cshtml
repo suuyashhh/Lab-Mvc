@@ -354,48 +354,47 @@
     </div>
 </div>
 <script type="text/javascript">
-    $(document).ready(function () {
-       
-        $("#save").click(function (e) {
-            if (form.valid()) {
-                var city = {
-                    PatientId: $("#PName").val(),
-                    PatientName: $("#PBOD").val(),
-                    Gender: $("#Gender").val(),
-                    Contact: $("#PNumber").val(),
-                    Doctor: $("#Doctor").val()
-                };
+   $(document).ready(function () {
+    $("#save").click(function (e) {
+        e.preventDefault(); // Prevents form submission
 
-                $("#mainContent").html('<div></div>');
+        console.log("Save button clicked"); // Debugging
 
-                $.ajax({
-                    url: 'CasePaper/create',
-                    type: "POST",
-                    async: false,
-                    contentType: "application/json",
-                    dataType: "json",
-                    data: JSON.stringify(city),
-                    success: function (response, status, xhr) {
-                        if (response === 0) {
-                            var urlName = 'CasePaper/index';
-                            $.ajax({
-                                url: urlName,
-                                type: "GET",
-                                success: function (response, status, xhr) {
-                                    $("#mainContent").html(response);
-                                },
-                                error: function (err) {
-                                    $("#mainContent").html(err);
-                                }
-                            });
+        var _ObjCsPaper = {
+            PatientName: $("#PName").val(),
+            DateOfBirth: $("#PBOD").val(),
+            Gender: $("#Gender").val(),
+            Contact: $("#PNumber").val(),
+            Doctor: $("#Doctor").val()
+        };
+
+        $.ajax({
+            url: '@Url.Action("Create", "CasePaper")', // Correct MVC URL
+            type: "POST",
+            contentType: "application/json",
+            dataType: "json",
+            data: JSON.stringify(_ObjCsPaper),
+            success: function (response) {
+                console.log("Response: ", response);
+                if (response === 0) {
+                    $.ajax({
+                        url: '@Url.Action("Index", "CasePaper")',
+                        type: "GET",
+                        success: function (data) {
+                            $("#mainContent").html(data);
+                        },
+                        error: function (err) {
+                            console.error("Error loading index: ", err);
                         }
-                    },
-                    error: function (error) {
-                        alert("Error : " + error.toSource())
-                        $("#mainContent").html("error");
-                    }
-                });
+                    });
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("AJAX Error: ", status, error);
+                alert("Error: " + error);
             }
         });
     });
+});
+
 </script>
