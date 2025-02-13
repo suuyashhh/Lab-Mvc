@@ -37,5 +37,26 @@ namespace Lab.DALDapper.Implimantation.Masters
             //    throw new Exception("Error while inserting patient record: " + ex.Message, ex);
             //}
         }
+
+        public async Task<string> GetLastPatientIdForDate(string datePart)
+        {
+            string lastPatientId = null;
+            //string query = "SELECT TOP 1 PATIENT_ID FROM CasePaper WHERE PATIENT_ID LIKE @datePart + '%' ORDER BY PATIENT_ID DESC";
+
+            //using (SqlConnection conn = new SqlConnection(connectionString))
+            //{
+            //    await conn.OpenAsync();
+            //    using (SqlCommand cmd = new SqlCommand(query, conn))
+            //    {
+            //        cmd.Parameters.AddWithValue("@datePart", datePart);
+            //        object result = await cmd.ExecuteScalarAsync();
+            //        if (result != null)
+            //            lastPatientId = result.ToString();
+            //    }
+            //}
+            return lastPatientId;
+        }
+
+
     }
 }

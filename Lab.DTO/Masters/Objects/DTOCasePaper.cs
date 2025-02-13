@@ -8,7 +8,7 @@ namespace Lab.DTO.Masters.Objects
 {
     public class DTOCasePaper
     {
-        public int PATIENT_ID { get; set; }
+        public Int64 PATIENT_ID { get; set; }
         public string PATIENT_NAME{ get; set; }
         public string GENDER { get; set; }
         public string CONTACT { get; set; }
