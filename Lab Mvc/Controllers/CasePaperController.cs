@@ -44,5 +44,16 @@ namespace Lab_Mvc.Controllers
             }
             //return View();
         }
+
+        //[HttpPost]
+        //public async Task<JsonResult> MaterialAutoFill(string searchtext)
+        //{
+        //    List<MaterialsEntity> _lstMaterialsCache = await MaterialsService.GetMaterialAutoFillList(searchtext);
+        //    _lstMaterialsCache = _lstMaterialsCache.Where(obj => obj.MaterialType == 111 || obj.MaterialType == 113).ToList();
+
+        //    var jsonResult = Json(_lstMaterialsCache, JsonRequestBehavior.AllowGet);
+        //    jsonResult.MaxJsonLength = Int32.MaxValue;
+        //    return jsonResult;
+        //}
     }
 }

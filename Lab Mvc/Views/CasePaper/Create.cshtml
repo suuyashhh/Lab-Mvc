@@ -134,11 +134,54 @@
 
     .table-responsive {
         overflow-x: auto;
-        margin-bottom: 20px;
         border-radius: 8px;
         border: 1px solid #ddd;
         max-width: 100%;
         width: 100%;
+        background-color: #fff;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th, td {
+        padding: 12px;
+        border-bottom: 1px solid #ddd;
+        text-align: left;
+    }
+
+    th {
+        background-color: #5f9278;
+        color: white;
+    }
+
+    tr:hover {
+        background-color: #eee;
+    }
+
+    .delete-btn {
+        background-color: #dc3545;
+        color: white;
+        border: none;
+        padding: 6px 12px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+    }
+
+        .delete-btn:hover {
+            background-color: #c82333;
+        }
+
+    input {
+        width: 100%;
+        border: 1px solid #ccc;
+        padding: 6px;
+        font-size: 16px;
+        border-radius: 4px;
+        outline: none;
     }
 
     .blood-tests-table {
@@ -158,14 +201,14 @@
         .blood-tests-table th {
             background-color: #5f9278;
             color: white;
-            font-weight: normal;
+            font-weight: bold;
         }
 
         .blood-tests-table tbody tr:hover {
             background-color: #eee;
         }
 
-    .delete-btn {
+   /* .delete-btn {
         background-color: #dc3545;
         color: white;
         border: none;
@@ -178,7 +221,7 @@
 
         .delete-btn:hover {
             background-color: #c82333;
-        }
+        }*/
 
     .add-test-section {
         margin-top: 20px;
@@ -271,7 +314,7 @@
 
                 <!-- Table -->
                 <div class="table-responsive">
-                    <table class="blood-tests-table">
+                    <table class="blood-tests-table" id="tblMaterials">
                         <thead>
                             <tr>
                                 <th>Sr No</th>
@@ -282,44 +325,45 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td>1</td>
-                                <td>Complete Blood Count (CBC)</td>
-                                <td>500</td>
+                                <td data-editable="false">1</td>
+                                <td data-editable="true">Complete Blood Count (CBC)</td>
+                                <td data-editable="true">500</td>
                                 <td>
-                                    <button class="delete-btn">
-                                        <i class="fas fa-trash"></i>
-                                        Delete
-
-                                    </button>
+                                    <button class="delete-btn">Delete</button>
                                 </td>
                             </tr>
                             <tr>
-                                <td>2</td>
-                                <td>Blood Sugar Test</td>
-                                <td>300</td>
+                                <td data-editable="false">2</td>
+                                <td data-editable="true">Blood Sugar Test</td>
+                                <td data-editable="true">300</td>
                                 <td>
-                                    <button class="delete-btn">
-                                        <i class="fas fa-trash"></i>
-                                        Delete
-
-                                    </button>
+                                    <button class="delete-btn">Delete</button>
                                 </td>
                             </tr>
                         </tbody>
+                        <thead>
+                            <tr>
+                                <th colspan="2">Total Amount</th>
+                                <th id="totalPrice">₹0</th>
+                                <th></th>
+                            </tr>
+                        </thead>
                     </table>
                 </div>
 
                 <!-- Add Test Section -->
                 <div class="add-test-section">
                     <div class="test-inputs">
-                        <select class="input-field select-test">
-                            <option value="">Select Test</option>
-                            <option value="cbc">Complete Blood Count (CBC)</option>
-                            <option value="sugar">Blood Sugar Test</option>
-                            <option value="thyroid">Thyroid Profile</option>
-                            <option value="lipid">Lipid Profile</option>
-                        </select>
-                        <button class="add-btn">Add Test</button>
+                        @*<select class="input-field select-test">
+            <option value="">Select Test</option>
+            <option value="cbc">Complete Blood Count (CBC)</option>
+            <option value="sugar">Blood Sugar Test</option>
+            <option value="thyroid">Thyroid Profile</option>
+            <option value="lipid">Lipid Profile</option>
+        </select>*@
+                        <input class="input-field select-test" id="MatName" name="MatName" placeholder="Test Name" type="text" autocomplete="off" />                        
+                        @*<button class="add-btn" id="btnAdd" href="javascript:void(0);">Add Test</button>*@
+                        <a class="add-btn" id="btnAdd" href="javascript:void(0);">Add Test</a>
                     </div>
                 </div>
             </div>
@@ -346,7 +390,7 @@
                         @*<a href="@Url.Action("Index","CasePaper")" class="add-btn">Save</a>*@
                         <button class="add-btn" id="save">Save</button>
                         @*<button class="add-btn" style="background:red!important">Cancle</button>*@
-                        <a class="add-btn" style="background:red!important" href="/CasePaper/index" data-ajax-update="#mainContent" data-ajax-mode="replace" data-ajax-method="GET" data-ajax="true"></a>
+                        <a class="add-btn" style="background:red!important" href="/CasePaper/index" data-ajax-update="#mainContent" data-ajax-mode="replace" data-ajax-method="GET" data-ajax="true">Cancle</a>
                     </div>
                 </div>
             </div>
@@ -395,6 +439,232 @@
             }
         });
     });
-});
 
+       $("#btnAdd").click(function () {
+           debugger;
+           if ($("#hfMatId").val() == 0) {
+               alert("Please select proper material.");
+               $('#MatName').focus();
+               return false;
+           }
+
+           var cur_row_num = $('#tblMaterials > tbody > tr').length;
+
+           var matcode = $("#hfMatId").val();
+
+           if (document.getElementById(matcode)) {
+               alert("Duplicate material is not allowed.");
+               return;
+           }
+
+           var mat_name = $("#MatName").val();
+
+           var row = `
+            <tr>
+                  <td data-editable="false">${cur_row_num}</td>
+                  <td data-editable="true">${mat_name}
+                        <input id='MatCode${cur_row_num}' type='hidden' value='${matcode}'>
+                        <input id='${matcode}' type='hidden' value='${matcode}'></td>
+                  <td data-editable="true" id="Amount${cur_row_num}" name="Amount"></td>
+                  <td>
+                      <a class="delete-btn remove-row" href="javascript:void(0);" onclick="removeRow(this)">Delete</a>
+                  </td>
+            </tr>
+
+    //<tr>
+    //    <td class="text-center">${cur_row_num}</td>
+    //    <td>${mat_name}
+    //        <input id='MatCode${cur_row_num}' type='hidden' value='${matcode}'>
+    //        <input id='${matcode}' type='hidden' value='${matcode}'>
+    //    </td>
+    //    <td class="text-center">
+    //        <label class="input">
+    //            <input class="number text-right input-xs qty-field" id="Qty${cur_row_num}" name="Qty[]" value="0" type="text" min="1" required>
+    //            <b class="tooltip tooltip-top-right">
+    //                <i class="fa fa-warning txt-color-teal"></i>Input Quantity (must be > 0)
+    //            </b>
+    //        </label>
+    //    </td>
+    //    <td class="text-center">
+    //        <label class="input">
+    //            <input class="number text-right input-xs rate-field" id="Rate${cur_row_num}" name="Rate[]" value="0" type="text" min="1" required>
+    //            <b class="tooltip tooltip-top-right">
+    //                <i class="fa fa-warning txt-color-teal"></i>Input Rate (must be > 0)
+    //            </b>
+    //        </label>
+    //    </td>
+    //    <td class="text-center">
+    //        <label class="input">
+    //            <input class="number text-right input-xs" id="Amount${cur_row_num}" value="" type="text" disabled="disabled">
+    //            <b class="tooltip tooltip-top-right">
+    //                <i class="fa fa-warning txt-color-teal"></i>Amount
+    //            </b>
+    //        </label>
+    //    </td>
+    //    <td class="text-center">
+    //        <a class="btn btn-default remove-row" href="javascript:void(0);" onclick="removeRow(this)">
+    //            <i class="fa fa-lg fa-fw fa-minus"></i>
+    //        </a>
+    //    </td>
+    //</tr>
+    `;
+
+
+           $('#tblMaterials > tbody > tr:last').before(row);
+
+
+           $("#MatName").val('');
+           $("#hfMatId").val(0);
+
+
+           regen_srno();
+       });
+
+
+       $('#tblMaterials').on('click', '.remove-row', function () {
+           $(this).closest('tr').remove();
+           regen_srno();
+           calculateSum();
+       });
+
+       $('#tblMaterials').on('input', '.qty-field, .rate-field', function () {
+           calculateAmt(this);
+       });
+
+       function regen_srno() {
+           $('#tblMaterials > tbody > tr').not(':last').each(function (index) {
+
+               $(this).find('td:first').text(index + 1);
+
+               $(this).find('input, label').each(function () {
+                   var currentId = $(this).attr('id');
+                   if (currentId) {
+
+                       var newId = currentId.replace(/\d+$/, index + 1);
+                       $(this).attr('id', newId);
+                   }
+               });
+           });
+       }
+
+       function removeRow(button) {
+           $(button).closest('tr').remove();
+           regen_srno();
+           calculateSum();
+       }
+
+       function calculateSum() {
+           var sum = 0;
+
+           $('#tblMaterials').find("[id*=Amount]").each(function () {
+               sum += parseFloat($(this).val()) || 0;
+           });
+           $('#transaction').val(sum.toFixed(2));
+           assignBasicAmount();
+       }
+
+       function calculateAmt(obj) {
+           var $row = $(obj).closest('tr');
+           var NQty = parseFloat($row.find("[id^=Qty]").val()) || 0;
+           var NRate = parseFloat($row.find("[id^=Rate]").val()) || 0;
+
+           var Total = NQty * NRate;
+
+           $row.find("[id^=Amount]").val(Total.toFixed(2));
+
+           calculateSum();
+       }
+
+       function assignBasicAmount() {
+           $('#TaxAmount1').val($('#transaction').val());
+           calculate();
+       }
+
+
+       //$(function () {
+       //    $('[id*=MatName]').keyup(function () {
+       //        if ($("#MatName").val().trim().length >= 3) {
+       //            dontBlock = true;
+       //        }
+       //    });
+
+       //    $('[id*=MatName]').autocomplete({
+
+       //        int: true,
+       //        highlight: true,
+       //        minLength: 3
+       //        , source: function (request, response) {
+       //            $.ajax({
+
+       //                url: " /TrainingH/MaterialAutoFill?searchtext=" + $("#MatName").val(),
+
+       //                dataType: "json",
+       //                type: "POST",
+       //                contentType: "application/json; charset=utf-8",
+       //                success: function (data) {
+
+       //                    dontBlock = false;
+       //                    $("#hfMatId").val(0);
+       //                    items = [];
+       //                    map = {};
+       //                    $.each(data, function (i, item) {
+       //                        var id = item.MaterialCode;
+       //                        var name = item.MaterialName;
+       //                        map[name] = { id: id, name: name, };
+       //                        items.push(name);
+       //                    });
+       //                    response(items);
+       //                    $(".dropdown-menu").css("height", "auto");
+       //                },
+       //                error: function (response) {
+       //                    dontBlock = false;
+       //                    alert(response.responseText);
+       //                },
+       //                failure: function (response) {
+       //                    dontBlock = false;
+       //                    alert(response.responseText);
+       //                }
+       //            });
+       //        },
+       //        select: function (event, ui) {
+       //            $('[id*=hfMatId]').val(map[ui.item.value].id);
+       //        }
+       //    });
+
+       //});
+   });
+
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll("#tblMaterials td[data-editable='true']").forEach(cell => {
+            cell.addEventListener("click", function () {
+                let currentValue = this.textContent.trim();
+
+                // Prevent duplicate input elements
+                if (this.querySelector("input")) return;
+
+                let input = document.createElement("input");
+                input.type = "text";
+                input.value = currentValue;
+                this.innerHTML = "";
+                this.appendChild(input);
+                input.focus();
+
+                // On losing focus, save and revert to text
+                input.addEventListener("blur", function () {
+                    cell.textContent = this.value.trim();
+                });
+
+                // Save on pressing Enter
+                input.addEventListener("keypress", function (event) {
+                    if (event.key === "Enter") {
+                        event.preventDefault();
+                        input.blur();
+                    }
+                });
+            });
+        });
+    });
 </script>
