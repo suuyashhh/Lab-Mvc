@@ -13,12 +13,12 @@ namespace Lab.Businesss.Masters
     {
         public static IMstCasePaper _dalCasePaper;
 
-        public int PatientId { get; set; }
+        public int TrnNo { get; set; }
         public string PatientName { get; set; }
         public string Gender { get; set; }
-        public string Contact { get; set; }
+        public string ConNumber { get; set; }
         public string Address { get; set; }
-        public string Doctor { get; set; }
+        public string DoctorRef { get; set; }
         public string Date { get; set; }
 
         public static CasePaper New()
@@ -31,55 +31,26 @@ namespace Lab.Businesss.Masters
             {
                 throw new Exception("Request Failed. " + ex.Message);
             }
-        }
+        }    
 
-        //public static async Task<int> Create(CasePaper _ObjCsPaper)
-        //{
-        //    try
-        //    {
-        //        int result = 0;
-        //        _dalCasePaper = new DALCasePaper();
-
-        //        DTOCasePaper _objDtoCasePaper = new DTOCasePaper()
-        //        {
-        //            PATIENT_ID = _ObjCsPaper.PatientId,
-        //            PATIENT_NAME = _ObjCsPaper.PatientName,
-        //            GENDER = _ObjCsPaper.Gender,
-        //            CONTACT = _ObjCsPaper.Contact,
-        //            ADDRESS = _ObjCsPaper.Address,
-        //            DOCTOR = _ObjCsPaper.Doctor,
-        //            DATE = _ObjCsPaper.Date
-        //        };
-
-        //        result = await Task.Run(() => { return _dalCasePaper.Create(_objDtoCasePaper); });
-        //        return result;
-        //    }
-        //    catch
-        //    {
-        //        return 0;
-        //    }
-        //}
-
-        public static async Task<int> Create(CasePaper _ObjCsPaper)
+        public static async Task<Int64> Create(CasePaper _ObjCsPaper)
         {
             try
             {
-                int result = 0;
+                Int64 result = 0;
                 _dalCasePaper = new DALCasePaper();
 
                 // Generate Unique Patient ID as Int64
                 string datePart = DateTime.Now.ToString("yyyyMMdd"); // Get YYYYMMDD format
-                long newPatientId = await GeneratePatientId(datePart);
+                Int64 newPatientId = await GeneratePatientId(datePart);
 
                 DTOCasePaper _objDtoCasePaper = new DTOCasePaper()
                 {
-                    PATIENT_ID = newPatientId, // Store as Int64
+                    TRN_NO = newPatientId, // Store as Int64
                     PATIENT_NAME = _ObjCsPaper.PatientName,
                     GENDER = _ObjCsPaper.Gender,
-                    CONTACT = _ObjCsPaper.Contact,
-                    ADDRESS = _ObjCsPaper.Address,
-                    DOCTOR = _ObjCsPaper.Doctor,
-                    DATE = _ObjCsPaper.Date
+                    CON_NUMBER = _ObjCsPaper.ConNumber,
+                    DOCTOR_REF = _ObjCsPaper.DoctorRef
                 };
 
                 result = await Task.Run(() => { return _dalCasePaper.Create(_objDtoCasePaper); });

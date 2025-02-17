@@ -25,7 +25,7 @@ namespace Lab_Mvc.Controllers
         {
             try
             {
-                int result = 0;
+                Int64 result = 0;
                 result = await CasePaper.Create(_ObjCsPaper);
                 if (result != 0)
                 {

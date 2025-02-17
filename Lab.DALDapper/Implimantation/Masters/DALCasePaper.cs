@@ -6,54 +6,56 @@ using System.Text;
 using System.Threading.Tasks;
 using Lab.DTO.Masters.Objects;
 using System.Data.SqlClient;
+using System.Configuration;
+using Dapper;
+
 
 namespace Lab.DALDapper.Implimantation.Masters
 {
     public class DALCasePaper : IMstCasePaper
     {
-        public int Create(DTOCasePaper _objDtoCasePaper)
+        public Int64 Create(DTOCasePaper _objDtoCasePaper) // Change int → long
         {
-            int i=0;
-            return i;
-            //try
-            //{
-            //    int patientId = 0;
-            //    string connectionString = "Your_Connection_String_Here"; 
+            try
+            {
+                Int64 patientId = 0;  // Change int → long
+                string connectionString = ConfigurationManager.ConnectionStrings["connstr"].ConnectionString;
 
-            //    string query = @"INSERT INTO LAB_PATIENT (PATIENT_NAME, GENDER, CONTACT, ADDRESS, DOCTOR, DATE) 
-            //             VALUES (@PATIENT_NAME, @GENDER, @CONTACT, @ADDRESS, @DOCTOR, @DATE); 
-            //             SELECT CAST(SCOPE_IDENTITY() AS INT);"; 
+                string query = @"INSERT INTO MST_PATIENT (TRN_NO, PATIENT_NAME, GENDER, CON_NUMBER, DOCTOR_REF) 
+                         VALUES (@TRN_NO, @PATIENT_NAME, @GENDER, @CON_NUMBER, @DOCTOR_REF); 
+                         SELECT @TRN_NO;";  // Return TRN_NO directly
 
-            //    using (SqlConnection con = new SqlConnection(connectionString))
-            //    {
-            //        con.Open();
-            //        patientId = con.Query<int>(query, _objDtoCasePaper).Single();
-            //    }
+                using (SqlConnection con = new SqlConnection(connectionString))
+                {
+                    con.Open();
+                    patientId = con.Query<Int64>(query, _objDtoCasePaper).Single();  // Change int → long
+                }
 
-            //    return patientId;
-            //}
-            //catch (Exception ex)
-            //{
-            //    throw new Exception("Error while inserting patient record: " + ex.Message, ex);
-            //}
+                return patientId;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while inserting patient record: " + ex.Message, ex);
+            }
         }
+
 
         public async Task<string> GetLastPatientIdForDate(string datePart)
         {
             string lastPatientId = null;
-            //string query = "SELECT TOP 1 PATIENT_ID FROM CasePaper WHERE PATIENT_ID LIKE @datePart + '%' ORDER BY PATIENT_ID DESC";
+            string query = "SELECT TOP 1 TRN_NO FROM MST_PATIENT WHERE TRN_NO LIKE @datePart + '%' ORDER BY TRN_NO DESC";
 
-            //using (SqlConnection conn = new SqlConnection(connectionString))
-            //{
-            //    await conn.OpenAsync();
-            //    using (SqlCommand cmd = new SqlCommand(query, conn))
-            //    {
-            //        cmd.Parameters.AddWithValue("@datePart", datePart);
-            //        object result = await cmd.ExecuteScalarAsync();
-            //        if (result != null)
-            //            lastPatientId = result.ToString();
-            //    }
-            //}
+            using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["connstr"].ConnectionString))
+            {
+                await conn.OpenAsync();
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@datePart", datePart);
+                    object result = await cmd.ExecuteScalarAsync();
+                    if (result != null)
+                        lastPatientId = result.ToString();
+                }
+            }
             return lastPatientId;
         }
 
