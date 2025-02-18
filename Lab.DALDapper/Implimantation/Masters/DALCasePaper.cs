@@ -8,6 +8,7 @@ using Lab.DTO.Masters.Objects;
 using System.Data.SqlClient;
 using System.Configuration;
 using Dapper;
+using System.Data;
 
 
 namespace Lab.DALDapper.Implimantation.Masters
@@ -58,7 +59,5 @@ namespace Lab.DALDapper.Implimantation.Masters
             }
             return lastPatientId;
         }
-
-
-    }
+    }       
 }

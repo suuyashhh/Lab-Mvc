@@ -45,6 +45,20 @@ namespace Lab_Mvc.Controllers
             //return View();
         }
 
+        [HttpPost]
+        public async Task<JsonResult> TestAutoFill(string searchtext)
+        {
+            if (string.IsNullOrEmpty(searchtext))
+            {
+                return Json(new List<Test>(), JsonRequestBehavior.AllowGet);
+            }
+
+            // Call Business Layer method to fetch data
+            List<Test> testList = await Test.GetTestsAsync(searchtext);
+
+            return Json(testList, JsonRequestBehavior.AllowGet);
+        }
+
         //[HttpPost]
         //public async Task<JsonResult> MaterialAutoFill(string searchtext)
         //{

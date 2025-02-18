@@ -361,7 +361,7 @@
             <option value="thyroid">Thyroid Profile</option>
             <option value="lipid">Lipid Profile</option>
         </select>*@
-                        <input class="input-field select-test" id="MatName" name="MatName" placeholder="Test Name" type="text" autocomplete="off" />                        
+                        <input class="input-field select-test" id="TestName" name="TestName" placeholder="Test Name" type="text" autocomplete="off" />                        
                         @*<button class="add-btn" id="btnAdd" href="javascript:void(0);">Add Test</button>*@
                         <a class="add-btn" id="btnAdd" href="javascript:void(0);">Add Test</a>
                     </div>
@@ -412,6 +412,8 @@
             Doctor: $("#Doctor").val()
         };
 
+        $("#mainContent").html('<div></div>');
+
         $.ajax({
             url: '@Url.Action("Create", "CasePaper")', // Correct MVC URL
             type: "POST",
@@ -419,7 +421,15 @@
             dataType: "json",
             data: JSON.stringify(_ObjCsPaper),
             success: function (response) {
-                console.log("Response: ", response);
+                console.log("Response: ", response, status);
+                if (response.Status) {
+                    $.smallBox({
+                        title: "Save Form",
+                        content: "Successfully saved",
+                        color: "#C46A69",
+                        timeout: 7000,
+                    });
+                }
                 if (response === 0) {
                     $.ajax({
                         url: '@Url.Action("Index", "CasePaper")',
@@ -441,35 +451,38 @@
     });
 
        $("#btnAdd").click(function () {
-           debugger;
-           if ($("#hfMatId").val() == 0) {
+           if ($("#hfTestId").val() == 0) {
                alert("Please select proper material.");
-               $('#MatName').focus();
+               $('#TestName').focus();
                return false;
            }
 
            var cur_row_num = $('#tblMaterials > tbody > tr').length;
 
-           var matcode = $("#hfMatId").val();
+           var TestCode = $("#hfTestId").val();
+           var TestName = $("#TestName").val();
+           var price = $("#hfPrice").val();
+           var labprice = $("#hfLabPrice").val(); // Hidden value
 
-           if (document.getElementById(matcode)) {
+           // Prevent duplicate material
+           if (document.getElementById(TestCode)) {
                alert("Duplicate material is not allowed.");
                return;
            }
 
-           var mat_name = $("#MatName").val();
-
            var row = `
-            <tr>
-                  <td data-editable="false">${cur_row_num}</td>
-                  <td data-editable="true">${mat_name}
-                        <input id='MatCode${cur_row_num}' type='hidden' value='${matcode}'>
-                        <input id='${matcode}' type='hidden' value='${matcode}'></td>
-                  <td data-editable="true" id="Amount${cur_row_num}" name="Amount"></td>
-                  <td>
-                      <a class="delete-btn remove-row" href="javascript:void(0);" onclick="removeRow(this)">Delete</a>
-                  </td>
-            </tr>
+      <tr id="row${cur_row_num}">
+            <td data-editable="false">${cur_row_num}</td>
+            <td data-editable="true">${TestName}
+                  <input type='hidden' id='MatCode${cur_row_num}' value='${TestCode}'>
+                  <input type='hidden' id='${TestCode}' value='${TestCode}'>
+                  <input type='hidden' id='LabPrice${cur_row_num}' value='${labprice}'> 
+            </td>
+            <td data-editable="true" id="Amount${cur_row_num}" name="Amount">${price}</td>
+            <td>
+                <a class="delete-btn remove-row" href="javascript:void(0);" onclick="removeRow(this)">Delete</a>
+            </td>
+      </tr>
 
     //<tr>
     //    <td class="text-center">${cur_row_num}</td>
@@ -513,7 +526,7 @@
            $('#tblMaterials > tbody > tr:last').before(row);
 
 
-           $("#MatName").val('');
+           $("#TestName").val('');
            $("#hfMatId").val(0);
 
 
@@ -581,57 +594,62 @@
        }
 
 
-       //$(function () {
-       //    $('[id*=MatName]').keyup(function () {
-       //        if ($("#MatName").val().trim().length >= 3) {
-       //            dontBlock = true;
-       //        }
-       //    });
+       $(function () {
+           $('[id*=TestName]').keyup(function () {
+               if ($("#TestName").val().trim().length >= 3) {
+                   dontBlock = true;
+               }
+           });
 
-       //    $('[id*=MatName]').autocomplete({
+           $('[id*=TestName]').autocomplete({
+               minLength: 1,
+               source: function (request, response) {
+                   $.ajax({
+                       url: "/CasePaper/TestAutoFill?searchtext=" + $("#TestName").val(),
+                       dataType: "json",
+                       type: "POST",
+                       contentType: "application/json; charset=utf-8",
+                       success: function (data) {
+                           dontBlock = false;
+                           $("#hfTestId").val(0);
+                           $("#hfTestName").val('');
+                           $("#hfPrice").val(0);
+                           $("#hfLabPrice").val(0);
+                           items = [];
+                           map = {};
 
-       //        int: true,
-       //        highlight: true,
-       //        minLength: 3
-       //        , source: function (request, response) {
-       //            $.ajax({
+                           $.each(data, function (i, item) {
+                               var id = item.TestCode;
+                               var name = item.TestName;
+                               var price = item.Price;
+                               var labprice = item.LabPrice;
 
-       //                url: " /TrainingH/MaterialAutoFill?searchtext=" + $("#MatName").val(),
+                               map[name] = { id: id, name: name, price: price, labprice: labprice };
+                               items.push(name);
+                           });
+                           response(items);
+                           $(".dropdown-menu").css("height", "auto");
+                       },
+                       error: function (response) {
+                           dontBlock = false;
+                           alert(response.responseText);
+                       },
+                       failure: function (response) {
+                           dontBlock = false;
+                           alert(response.responseText);
+                       }
+                   });
+               },
+               select: function (event, ui) {
+                   $('[id*=hfTestId]').val(map[ui.item.value].id);
+                   $('[id*=hfTestName]').val(map[ui.item.value].name);
+                   $('[id*=hfPrice]').val(map[ui.item.value].price);
+                   $('[id*=hfLabPrice]').val(map[ui.item.value].labprice); // Storing hidden LabPrice
+               }
+           });
 
-       //                dataType: "json",
-       //                type: "POST",
-       //                contentType: "application/json; charset=utf-8",
-       //                success: function (data) {
 
-       //                    dontBlock = false;
-       //                    $("#hfMatId").val(0);
-       //                    items = [];
-       //                    map = {};
-       //                    $.each(data, function (i, item) {
-       //                        var id = item.MaterialCode;
-       //                        var name = item.MaterialName;
-       //                        map[name] = { id: id, name: name, };
-       //                        items.push(name);
-       //                    });
-       //                    response(items);
-       //                    $(".dropdown-menu").css("height", "auto");
-       //                },
-       //                error: function (response) {
-       //                    dontBlock = false;
-       //                    alert(response.responseText);
-       //                },
-       //                failure: function (response) {
-       //                    dontBlock = false;
-       //                    alert(response.responseText);
-       //                }
-       //            });
-       //        },
-       //        select: function (event, ui) {
-       //            $('[id*=hfMatId]').val(map[ui.item.value].id);
-       //        }
-       //    });
-
-       //});
+       });
    });
 
 </script>
