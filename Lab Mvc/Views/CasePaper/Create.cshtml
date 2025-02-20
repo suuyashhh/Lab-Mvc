@@ -3,6 +3,13 @@
     ViewBag.Title = "CasePaper Create";
 }
 
+<!-- jQuery and jQuery UI -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+
+
+
 <style>
     * {
         margin: 0;
@@ -208,7 +215,7 @@
             background-color: #eee;
         }
 
-   /* .delete-btn {
+    /* .delete-btn {
         background-color: #dc3545;
         color: white;
         border: none;
@@ -262,6 +269,15 @@
             width: 100%;
         }
     }
+
+    .ui-autocomplete {
+        max-height: 200px;
+        overflow-y: auto;
+        background: white;
+        border: 1px solid #ccc;
+        z-index: 9999 !important;
+    }
+
 </style>
 
 <div class="body">
@@ -324,22 +340,6 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td data-editable="false">1</td>
-                                <td data-editable="true">Complete Blood Count (CBC)</td>
-                                <td data-editable="true">500</td>
-                                <td>
-                                    <button class="delete-btn">Delete</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td data-editable="false">2</td>
-                                <td data-editable="true">Blood Sugar Test</td>
-                                <td data-editable="true">300</td>
-                                <td>
-                                    <button class="delete-btn">Delete</button>
-                                </td>
-                            </tr>
                         </tbody>
                         <thead>
                             <tr>
@@ -354,15 +354,10 @@
                 <!-- Add Test Section -->
                 <div class="add-test-section">
                     <div class="test-inputs">
-                        @*<select class="input-field select-test">
-            <option value="">Select Test</option>
-            <option value="cbc">Complete Blood Count (CBC)</option>
-            <option value="sugar">Blood Sugar Test</option>
-            <option value="thyroid">Thyroid Profile</option>
-            <option value="lipid">Lipid Profile</option>
-        </select>*@
-                        <input class="input-field select-test" id="TestName" name="TestName" placeholder="Test Name" type="text" autocomplete="off" />                        
-                        @*<button class="add-btn" id="btnAdd" href="javascript:void(0);">Add Test</button>*@
+                        <input class="input-field select-test" id="TestName" name="TestName" placeholder="Test Name" type="text" autocomplete="off" />
+                        <input type="hidden" id="hfTestId" />
+                        <input type="hidden" id="hfPrice" />
+                        <input type="hidden" id="hfLabPrice" />
                         <a class="add-btn" id="btnAdd" href="javascript:void(0);">Add Test</a>
                     </div>
                 </div>
@@ -402,7 +397,6 @@
     $("#save").click(function (e) {
         e.preventDefault(); // Prevents form submission
 
-        console.log("Save button clicked"); // Debugging
 
         var _ObjCsPaper = {
             PatientName: $("#PName").val(),
@@ -451,87 +445,73 @@
     });
 
        $("#btnAdd").click(function () {
-           if ($("#hfTestId").val() == 0) {
-               alert("Please select proper material.");
-               $('#TestName').focus();
+           if ($("#hfTestId").val() == 0 || $("#TestName").val().trim() === "") {
+               alert("Please select a valid test.");
+               $("#TestName").focus();
                return false;
            }
 
-           var cur_row_num = $('#tblMaterials > tbody > tr').length;
+           let cur_row_num = $("#tblMaterials tbody tr").length;
+           let TestCode = $("#hfTestId").val();
+           let TestName = $("#TestName").val();
+           let price = $("#hfPrice").val();
+           let labprice = $("#hfLabPrice").val();
 
-           var TestCode = $("#hfTestId").val();
-           var TestName = $("#TestName").val();
-           var price = $("#hfPrice").val();
-           var labprice = $("#hfLabPrice").val(); // Hidden value
-
-           // Prevent duplicate material
+           // Check for duplicate test
            if (document.getElementById(TestCode)) {
-               alert("Duplicate material is not allowed.");
+               alert("Duplicate test is not allowed.");
                return;
            }
 
-           var row = `
-      <tr id="row${cur_row_num}">
-            <td data-editable="false">${cur_row_num}</td>
-            <td data-editable="true">${TestName}
-                  <input type='hidden' id='MatCode${cur_row_num}' value='${TestCode}'>
-                  <input type='hidden' id='${TestCode}' value='${TestCode}'>
-                  <input type='hidden' id='LabPrice${cur_row_num}' value='${labprice}'> 
-            </td>
-            <td data-editable="true" id="Amount${cur_row_num}" name="Amount">${price}</td>
-            <td>
-                <a class="delete-btn remove-row" href="javascript:void(0);" onclick="removeRow(this)">Delete</a>
-            </td>
-      </tr>
+           let row = `
+            <tr id="row${cur_row_num}">
+                <td>${cur_row_num}</td>
+                <td>${TestName}
+                    <input type='hidden' id='MatCode${cur_row_num}' value='${TestCode}'>
+                    <input type='hidden' id='${TestCode}' value='${TestCode}'>
+                    <input type='hidden' id='LabPrice${cur_row_num}' value='${labprice}'>
+                </td>
+                <td id="Amount${cur_row_num}">${price}</td>
+                <td>
+                    <a class="delete-btn remove-row" href="javascript:void(0);">Delete</a>
+                </td>
+            </tr>
+        `;
 
-    //<tr>
-    //    <td class="text-center">${cur_row_num}</td>
-    //    <td>${mat_name}
-    //        <input id='MatCode${cur_row_num}' type='hidden' value='${matcode}'>
-    //        <input id='${matcode}' type='hidden' value='${matcode}'>
-    //    </td>
-    //    <td class="text-center">
-    //        <label class="input">
-    //            <input class="number text-right input-xs qty-field" id="Qty${cur_row_num}" name="Qty[]" value="0" type="text" min="1" required>
-    //            <b class="tooltip tooltip-top-right">
-    //                <i class="fa fa-warning txt-color-teal"></i>Input Quantity (must be > 0)
-    //            </b>
-    //        </label>
-    //    </td>
-    //    <td class="text-center">
-    //        <label class="input">
-    //            <input class="number text-right input-xs rate-field" id="Rate${cur_row_num}" name="Rate[]" value="0" type="text" min="1" required>
-    //            <b class="tooltip tooltip-top-right">
-    //                <i class="fa fa-warning txt-color-teal"></i>Input Rate (must be > 0)
-    //            </b>
-    //        </label>
-    //    </td>
-    //    <td class="text-center">
-    //        <label class="input">
-    //            <input class="number text-right input-xs" id="Amount${cur_row_num}" value="" type="text" disabled="disabled">
-    //            <b class="tooltip tooltip-top-right">
-    //                <i class="fa fa-warning txt-color-teal"></i>Amount
-    //            </b>
-    //        </label>
-    //    </td>
-    //    <td class="text-center">
-    //        <a class="btn btn-default remove-row" href="javascript:void(0);" onclick="removeRow(this)">
-    //            <i class="fa fa-lg fa-fw fa-minus"></i>
-    //        </a>
-    //    </td>
-    //</tr>
-    `;
+           $("#tblMaterials tbody").append(row);
 
-
-           $('#tblMaterials > tbody > tr:last').before(row);
-
-
+           // Clear input fields
            $("#TestName").val('');
-           $("#hfMatId").val(0);
-
+           $("#hfTestId").val(0);
+           $("#hfPrice").val('');
+           $("#hfLabPrice").val('');
 
            regen_srno();
+           calculateSum();
        });
+
+       // Remove Row Event
+       $("#tblMaterials").on("click", ".remove-row", function () {
+           $(this).closest("tr").remove();
+           regen_srno();
+           calculateSum();
+       });
+
+       function regen_srno() {
+           $("#tblMaterials tbody tr").each(function (index) {
+               $(this).find("td:first").text(index + 1);
+           });
+       }
+
+       function calculateSum() {
+           let total = 0;
+           $("#tblMaterials tbody tr").each(function () {
+               let amount = parseFloat($(this).find("td[id^=Amount]").text()) || 0;
+               total += amount;
+           });
+           $("#totalPrice").text("₹" + total);
+       }
+   });
 
 
        $('#tblMaterials').on('click', '.remove-row', function () {
@@ -600,57 +580,56 @@
                    dontBlock = true;
                }
            });
-
-           $('[id*=TestName]').autocomplete({
+           debugger;
+           $("#TestName").autocomplete({
                minLength: 1,
                source: function (request, response) {
+                   console.log("Request Sent:", request.term); // Debugging input
                    $.ajax({
-                       url: "/CasePaper/TestAutoFill?searchtext=" + $("#TestName").val(),
-                       dataType: "json",
+                       url: "/CasePaper/TestAutoFill",
                        type: "POST",
+                       dataType: "json",
                        contentType: "application/json; charset=utf-8",
+                       data: JSON.stringify({ searchtext: request.term }),
                        success: function (data) {
-                           dontBlock = false;
-                           $("#hfTestId").val(0);
-                           $("#hfTestName").val('');
-                           $("#hfPrice").val(0);
-                           $("#hfLabPrice").val(0);
-                           items = [];
-                           map = {};
-
-                           $.each(data, function (i, item) {
-                               var id = item.TestCode;
-                               var name = item.TestName;
-                               var price = item.Price;
-                               var labprice = item.LabPrice;
-
-                               map[name] = { id: id, name: name, price: price, labprice: labprice };
-                               items.push(name);
-                           });
-                           response(items);
-                           $(".dropdown-menu").css("height", "auto");
+                           console.log("Response Received:", data);
+                           if (!Array.isArray(data)) {
+                               console.error("Error: Response is not an array", data);
+                               return;
+                           }
+                           response($.map(data, function (item) {
+                               return {
+                                   label: item.TestName + " - ₹" + item.Price, // Display Name + Price
+                                   value: item.TestName, // What gets filled in the textbox
+                                   id: item.TestCode, // Extra data
+                                   price: item.Price,
+                                   labprice: item.LabPrice
+                               };
+                           }));
                        },
-                       error: function (response) {
-                           dontBlock = false;
-                           alert(response.responseText);
-                       },
-                       failure: function (response) {
-                           dontBlock = false;
-                           alert(response.responseText);
+                       error: function (xhr, status, error) {
+                           console.error("AJAX Error:", status, error);
                        }
                    });
                },
                select: function (event, ui) {
-                   $('[id*=hfTestId]').val(map[ui.item.value].id);
-                   $('[id*=hfTestName]').val(map[ui.item.value].name);
-                   $('[id*=hfPrice]').val(map[ui.item.value].price);
-                   $('[id*=hfLabPrice]').val(map[ui.item.value].labprice); // Storing hidden LabPrice
+                   $("#TestName").val(ui.item.value);
+                   $("#hfTestId").val(ui.item.id);
+                   $("#hfPrice").val(ui.item.price);
+                   $("#hfLabPrice").val(ui.item.labprice);
+                   return false; // Prevent default behavior (auto-filling input)
                }
-           });
+           }).autocomplete("instance")._renderItem = function (ul, item) {
+               return $("<li>")
+                   .append("<div>" + item.label + "</div>") // Display suggestion
+                   .appendTo(ul);
+           };
+
+
 
 
        });
-   });
+   
 
 </script>
 

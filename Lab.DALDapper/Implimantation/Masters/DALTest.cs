@@ -21,7 +21,7 @@ namespace Lab.DALDapper.Implimantation.Masters
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
                 string query = @"SELECT TOP 10 TEST_CODE, TEST_NAME, PRICE, LAB_PRICE 
-                                 FROM MST_TESTS 
+                                 FROM MST_TEST 
                                  WHERE TEST_NAME LIKE @SearchText + '%' 
                                  ORDER BY TEST_NAME";
 
