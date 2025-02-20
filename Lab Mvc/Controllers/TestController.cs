@@ -17,7 +17,7 @@ namespace Lab_Mvc.Controllers
 
         public ActionResult Create()
         {
-            return PartialView(CasePaper.New());
+            return PartialView(Test.New());
         }
 
         [HttpPost]

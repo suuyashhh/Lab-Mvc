@@ -16,6 +16,18 @@ namespace Lab.Businesss.Masters
         public decimal Price { get; set; }
         public decimal LabPrice { get; set; }
 
+
+        public static Test New()
+        {
+            try
+            {
+                return new Test();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Request Failed. " + ex.Message);
+            }
+        }
         public static async Task<List<Test>> GetTestsAsync(string searchtext)
         {
             _dalTest = new DALTest();

@@ -15,21 +15,38 @@ namespace Lab.DALDapper.Implimantation.Masters
 {
     public class DALCasePaper : IMstCasePaper
     {
-        public Int64 Create(DTOCasePaper _objDtoCasePaper) // Change int → long
+        public List<DTOCasePaper> GetAll()
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["connstr"].ConnectionString;
+            try
+            {
+                string query = "SELECT * FROM MST_PATIENT";
+                using (SqlConnection con = new SqlConnection(connectionString))
+                {
+                    con.Open(); 
+                    return con.Query<DTOCasePaper>(query).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error retrieving MST_PATIENT data", ex);
+            }
+        }
+        public Int64 Create(DTOCasePaper _objDtoCasePaper) 
         {
             try
             {
-                Int64 patientId = 0;  // Change int → long
+                Int64 patientId = 0; 
                 string connectionString = ConfigurationManager.ConnectionStrings["connstr"].ConnectionString;
 
                 string query = @"INSERT INTO MST_PATIENT (TRN_NO, PATIENT_NAME, GENDER, CON_NUMBER, DOCTOR_REF) 
                          VALUES (@TRN_NO, @PATIENT_NAME, @GENDER, @CON_NUMBER, @DOCTOR_REF); 
-                         SELECT @TRN_NO;";  // Return TRN_NO directly
+                         SELECT @TRN_NO;"; 
 
                 using (SqlConnection con = new SqlConnection(connectionString))
                 {
                     con.Open();
-                    patientId = con.Query<Int64>(query, _objDtoCasePaper).Single();  // Change int → long
+                    patientId = con.Query<Int64>(query, _objDtoCasePaper).Single(); 
                 }
 
                 return patientId;

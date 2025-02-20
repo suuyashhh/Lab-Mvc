@@ -395,7 +395,7 @@
 <script type="text/javascript">
    $(document).ready(function () {
     $("#save").click(function (e) {
-        e.preventDefault(); // Prevents form submission
+        e.preventDefault(); 
 
 
         var _ObjCsPaper = {
@@ -409,7 +409,7 @@
         $("#mainContent").html('<div></div>');
 
         $.ajax({
-            url: '@Url.Action("Create", "CasePaper")', // Correct MVC URL
+            url: '@Url.Action("Create", "CasePaper")', 
             type: "POST",
             contentType: "application/json",
             dataType: "json",
@@ -456,8 +456,7 @@
            let TestName = $("#TestName").val();
            let price = $("#hfPrice").val();
            let labprice = $("#hfLabPrice").val();
-
-           // Check for duplicate test
+                      
            if (document.getElementById(TestCode)) {
                alert("Duplicate test is not allowed.");
                return;
@@ -480,7 +479,7 @@
 
            $("#tblMaterials tbody").append(row);
 
-           // Clear input fields
+           
            $("#TestName").val('');
            $("#hfTestId").val(0);
            $("#hfPrice").val('');
@@ -490,7 +489,7 @@
            calculateSum();
        });
 
-       // Remove Row Event
+       
        $("#tblMaterials").on("click", ".remove-row", function () {
            $(this).closest("tr").remove();
            regen_srno();
@@ -584,7 +583,7 @@
            $("#TestName").autocomplete({
                minLength: 1,
                source: function (request, response) {
-                   console.log("Request Sent:", request.term); // Debugging input
+                   console.log("Request Sent:", request.term); 
                    $.ajax({
                        url: "/CasePaper/TestAutoFill",
                        type: "POST",
@@ -599,9 +598,9 @@
                            }
                            response($.map(data, function (item) {
                                return {
-                                   label: item.TestName + " - ₹" + item.Price, // Display Name + Price
-                                   value: item.TestName, // What gets filled in the textbox
-                                   id: item.TestCode, // Extra data
+                                   label: item.TestName + " - ₹" + item.Price, 
+                                   value: item.TestName, 
+                                   id: item.TestCode,
                                    price: item.Price,
                                    labprice: item.LabPrice
                                };
@@ -617,11 +616,11 @@
                    $("#hfTestId").val(ui.item.id);
                    $("#hfPrice").val(ui.item.price);
                    $("#hfLabPrice").val(ui.item.labprice);
-                   return false; // Prevent default behavior (auto-filling input)
+                   return false; 
                }
            }).autocomplete("instance")._renderItem = function (ul, item) {
                return $("<li>")
-                   .append("<div>" + item.label + "</div>") // Display suggestion
+                   .append("<div>" + item.label + "</div>") 
                    .appendTo(ul);
            };
 

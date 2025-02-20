@@ -9,6 +9,7 @@ namespace Lab.DTO.Masters.Interfaces
 {
     public interface IMstCasePaper
     {
+        List<DTOCasePaper> GetAll();
         Int64 Create(DTOCasePaper _objDtoCasePaper);
         Task<string> GetLastPatientIdForDate(string datePart);
     }

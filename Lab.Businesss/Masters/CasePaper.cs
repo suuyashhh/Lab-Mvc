@@ -13,13 +13,14 @@ namespace Lab.Businesss.Masters
     {
         public static IMstCasePaper _dalCasePaper;
 
-        public int TrnNo { get; set; }
+        public Int64 TrnNo { get; set; }
         public string PatientName { get; set; }
         public string Gender { get; set; }
         public string ConNumber { get; set; }
         public string Address { get; set; }
         public string DoctorRef { get; set; }
         public string Date { get; set; }
+        public int StatusCode { get; set; }
 
         public static CasePaper New()
         {
@@ -31,7 +32,40 @@ namespace Lab.Businesss.Masters
             {
                 throw new Exception("Request Failed. " + ex.Message);
             }
-        }    
+        }
+
+        public static async Task<List<CasePaper>> GetAllAsync()
+        {
+            try
+            {
+                _dalCasePaper = new DALCasePaper();
+                List<CasePaper> lstCity = await Task.Run(() => { return fillCityList(_dalCasePaper.GetAll()); });
+                return lstCity;
+            }
+            catch
+            {
+                throw new Exception("Request Failed");
+            }
+        }
+
+        private static List<CasePaper> fillCityList(List<DTOCasePaper> dtoCasePaper)
+        {
+
+            var _citylist = from dtocasepaper in dtoCasePaper
+                            select new CasePaper()
+                            {
+                                TrnNo = dtocasepaper.TRN_NO,
+                                PatientName = dtocasepaper.PATIENT_NAME,
+                                Gender = dtocasepaper.GENDER,
+                                ConNumber = dtocasepaper.CON_NUMBER,
+                                Address = dtocasepaper.ADDRESS,
+                                DoctorRef = dtocasepaper.DOCTOR_REF,
+                                Date = dtocasepaper.DATE,
+                                StatusCode = dtocasepaper.STATUS_CODE
+                            };
+
+            return _citylist.AsEnumerable<CasePaper>().ToList();
+        }
 
         public static async Task<Int64> Create(CasePaper _ObjCsPaper)
         {
@@ -39,14 +73,13 @@ namespace Lab.Businesss.Masters
             {
                 Int64 result = 0;
                 _dalCasePaper = new DALCasePaper();
-
-                // Generate Unique Patient ID as Int64
-                string datePart = DateTime.Now.ToString("yyyyMMdd"); // Get YYYYMMDD format
+                                
+                string datePart = DateTime.Now.ToString("yyyyMMdd");
                 Int64 newPatientId = await GeneratePatientId(datePart);
 
                 DTOCasePaper _objDtoCasePaper = new DTOCasePaper()
                 {
-                    TRN_NO = newPatientId, // Store as Int64
+                    TRN_NO = newPatientId, 
                     PATIENT_NAME = _ObjCsPaper.PatientName,
                     GENDER = _ObjCsPaper.Gender,
                     CON_NUMBER = _ObjCsPaper.ConNumber,
@@ -61,27 +94,22 @@ namespace Lab.Businesss.Masters
                 return 0;
             }
         }
-
-
-        // Function to Generate Unique Patient ID
+               
         private static async Task<long> GeneratePatientId(string datePart)
         {
             _dalCasePaper = new DALCasePaper();
-
-            // Define the fixed part "02"
+                        
             string fixedPart = "02";
-
-            // Get the last inserted Patient ID for today
+                       
             string lastId = await _dalCasePaper.GetLastPatientIdForDate(datePart);
 
             int nextNumber = 1;
             if (!string.IsNullOrEmpty(lastId) && lastId.StartsWith(datePart + fixedPart))
             {
-                int lastNumber = int.Parse(lastId.Substring(10)); // Extract the last 3 digits
+                int lastNumber = int.Parse(lastId.Substring(10)); 
                 nextNumber = lastNumber + 1;
             }
-
-            // Convert to Int64
+                        
             long newPatientId = long.Parse(datePart + fixedPart + nextNumber.ToString("D3"));
 
             return newPatientId;

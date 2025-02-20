@@ -2,197 +2,197 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "CasePaper Index";
 }
-
+@model IEnumerable<Lab.Businesss.Masters.CasePaper>
 <style>
-      * {
-          box-sizing: border-box;
-          margin: 0;
-          padding: 0;
-      }
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
 
-      body {
-          font-family: Arial, sans-serif;
-          line-height: 1.6;
-          background-color: #f4f4f4;
-      }
+    body {
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+        background-color: #f4f4f4;
+    }
 
-      .pm_container {
-          max-width: 1200px;
-          margin: 0 auto;
-          padding: 20px;
-          display: flex;
-          flex-direction: column;
-          height: calc(100vh - 40px); 
-      }
+    .pm_container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        height: calc(100vh - 40px);
+    }
 
-      .pm_header {
-          display: flex;
-          flex-wrap: wrap;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 20px;
-          gap: 10px;
-      }
+    .pm_header {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        gap: 10px;
+    }
 
-      .pm_search-container,
-      .pm_date-container,
-      .pm_new-button-container {
-          margin-bottom: 10px;
-      }
+    .pm_search-container,
+    .pm_date-container,
+    .pm_new-button-container {
+        margin-bottom: 10px;
+    }
 
-      #pm_searchInput,
-      #pm_fromDate,
-      #pm_toDate {
-          padding: 8px;
-          border: 1px solid #ddd;
-          border-radius: 4px;
-      }
+    #pm_searchInput,
+    #pm_fromDate,
+    #pm_toDate {
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
 
-      #pm_searchBtn,
-      #pm_newBtn {
-          padding: 8px 16px;
-          background-color: #4caf50;
-          color: white;
-          border: none;
-          border-radius: 4px;
-          cursor: pointer;
-          transition: background-color 0.3s;
-      }
+    #pm_searchBtn,
+    #pm_newBtn {
+        padding: 8px 16px;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
 
-          #pm_searchBtn:hover,
-          #pm_newBtn:hover {
-              background-color: #45a049;
-          }
+        #pm_searchBtn:hover,
+        #pm_newBtn:hover {
+            background-color: #45a049;
+        }
 
-      .pm_table-container {
-          flex: 1;
-          overflow: auto;
-          border: 1px solid #ddd;
-          border-radius: 4px;
-      }
+    .pm_table-container {
+        flex: 1;
+        overflow: auto;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
 
-      #pm_patientTable {
-          width: 100%;
-          border-collapse: separate;
-          border-spacing: 0;
-          background-color: white;
-          min-width: 800px; 
-      }
+    #pm_patientTable {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        background-color: white;
+        min-width: 800px;
+    }
 
-          #pm_patientTable th,
-          #pm_patientTable td {
-              padding: 12px;
-              text-align: left;
-              border-bottom: 1px solid #ddd;
-              white-space: nowrap; 
-          }
+        #pm_patientTable th,
+        #pm_patientTable td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+            white-space: nowrap;
+        }
 
-          #pm_patientTable th {
-              background-color: #f2f2f2;
-              font-weight: bold;
-              position: sticky;
-              top: 0;
-              z-index: 1;
-              box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.1);
-          }
+        #pm_patientTable th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+            box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.1);
+        }
 
-              #pm_patientTable th:after {
-                  content: "";
-                  position: absolute;
-                  left: 0;
-                  bottom: 0;
-                  width: 100%;
-                  border-bottom: 1px solid #ddd;
-              }
+            #pm_patientTable th:after {
+                content: "";
+                position: absolute;
+                left: 0;
+                bottom: 0;
+                width: 100%;
+                border-bottom: 1px solid #ddd;
+            }
 
-          #pm_patientTable tr:last-child td {
-              border-bottom: none;
-          }
+        #pm_patientTable tr:last-child td {
+            border-bottom: none;
+        }
 
-          #pm_patientTable tr:hover {
-              background-color: #f5f5f5;
-          }
+        #pm_patientTable tr:hover {
+            background-color: #f5f5f5;
+        }
 
-      .pm_action-buttons button {
-          margin-right: 5px;
-          padding: 5px 10px;
-          font-size: 0.9em;
-      }
+    .pm_action-buttons button {
+        margin-right: 5px;
+        padding: 5px 10px;
+        font-size: 0.9em;
+    }
 
-      .pm_edit-btn {
-          background-color: #2196f3;
-          color: white;
-          border: none;
-          border-radius: 4px;
-          cursor: pointer;
-      }
+    .pm_edit-btn {
+        background-color: #2196f3;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
 
-      .pm_delete-btn {
-          background-color: #f44336;
-          color: white;
-          border: none;
-          border-radius: 4px;
-          cursor: pointer;
-      }
+    .pm_delete-btn {
+        background-color: #f44336;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
 
-      
-      .pm_table-container::-webkit-scrollbar {
-          width: 10px;
-          height: 10px;
-      }
 
-      .pm_table-container::-webkit-scrollbar-track {
-          background: #f1f1f1;
-      }
+    .pm_table-container::-webkit-scrollbar {
+        width: 10px;
+        height: 10px;
+    }
 
-      .pm_table-container::-webkit-scrollbar-thumb {
-          background: #888;
-          border-radius: 5px;
-      }
+    .pm_table-container::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
 
-          .pm_table-container::-webkit-scrollbar-thumb:hover {
-              background: #555;
-          }
+    .pm_table-container::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 5px;
+    }
 
-      @@media screen and (max-width: 768px) {
-          .pm_header {
-              flex-direction: column;
-              align-items: stretch;
-          }
+        .pm_table-container::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
 
-          .pm_search-container,
-          .pm_date-container,
-          .pm_new-button-container {
-              width: 100%;
-          }
+    @@media screen and (max-width: 768px) {
+        .pm_header {
+            flex-direction: column;
+            align-items: stretch;
+        }
 
-          #pm_searchInput,
-          #pm_fromDate,
-          #pm_toDate {
-              width: 100%;
-              margin-bottom: 10px;
-          }
+        .pm_search-container,
+        .pm_date-container,
+        .pm_new-button-container {
+            width: 100%;
+        }
 
-          .pm_date-container {
-              display: flex;
-              gap: 10px;
-          }
+        #pm_searchInput,
+        #pm_fromDate,
+        #pm_toDate {
+            width: 100%;
+            margin-bottom: 10px;
+        }
 
-              .pm_date-container input[type="date"] {
-                  flex: 1;
-              }
+        .pm_date-container {
+            display: flex;
+            gap: 10px;
+        }
 
-          #pm_searchBtn,
-          #pm_newBtn {
-              width: 100%;
-          }
-      }
+            .pm_date-container input[type="date"] {
+                flex: 1;
+            }
 
-      @@media screen and (max-width: 480px) {
-          .pm_date-container {
-              flex-direction: column;
-          }
-      }
+        #pm_searchBtn,
+        #pm_newBtn {
+            width: 100%;
+        }
+    }
+
+    @@media screen and (max-width: 480px) {
+        .pm_date-container {
+            flex-direction: column;
+        }
+    }
 </style>
 <div class="pagetitle">
     <h1>Case Paper</h1>
@@ -225,73 +225,46 @@
                 <tr>
                     <th>Action</th>
                     <th>Date</th>
-                    <th>ID No</th>
+                    <th>
+                        <a href="/masters/City/index?sortOrder=@ViewBag.NameSortParam&searchString=@ViewBag.CurrentFilter" data-ajax-update="#mainContent" data-ajax-mode="replace" data-ajax-method="GET" data-ajax="true">
+                            ID No
+                        </a>
+                    </th>
                     <th>Name</th>
                     <th>Contact</th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>
-                        <div class="pm_action-buttons">
-                            <button class="pm_edit-btn" data-id="1">Edit</button>
-                            <button class="pm_delete-btn" data-id="1">Delete</button>
-                        </div>
-                    </td>
-                    <td>2023-05-01</td>
-                    <td>PT001</td>
-                    <td>Tirtharaj Sardeshmukh</td>
-                    <td>1234567890</td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="pm_action-buttons">
-                            <button class="pm_edit-btn" data-id="2">Edit</button>
-                            <button class="pm_delete-btn" data-id="2">Delete</button>
-                        </div>
-                    </td>
-                    <td>2023-05-02</td>
-                    <td>PT002</td>
-                    <td>SHreyaunsh Kirloskar</td>
-                    <td>2345678901</td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="pm_action-buttons">
-                            <button class="pm_edit-btn" data-id="3">Edit</button>
-                            <button class="pm_delete-btn" data-id="3">Delete</button>
-                        </div>
-                    </td>
-                    <td>2023-05-03</td>
-                    <td>PT003</td>
-                    <td>Pushkraj Rajpurohit</td>
-                    <td>345-678-9012</td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="pm_action-buttons">
-                            <button class="pm_edit-btn" data-id="4">Edit</button>
-                            <button class="pm_delete-btn" data-id="4">Delete</button>
-                        </div>
-                    </td>
-                    <td>2023-05-04</td>
-                    <td>PT004</td>
-                    <td>om Sahu</td>
-                    <td>456-789-0123</td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="pm_action-buttons">
-                            <button class="pm_edit-btn" data-id="5">Edit</button>
-                            <button class="pm_delete-btn" data-id="5">Delete</button>
-                        </div>
-                    </td>
-                    <td>2023-05-05</td>
-                    <td>PT005</td>
-                    <td>Charlie Davis</td>
-                    <td>567-890-1234</td>
-                </tr>
-
+                @foreach (var item in Model)
+                {
+                    <tr class="@(item.StatusCode == 1 ? "deleted" : "ok")">
+                        <td>
+                            @if (item.StatusCode == 0)
+                            {
+                                <div class="pm_action-buttons">
+                                    @*<button class="pm_edit-btn" data-id="1">Edit</button>*@
+                                    <a class="pm_edit-btn" data-id="1" title="Edit" href="/masters/CasePaper/edit?TrnNo=@item.TrnNo" data-ajax-update="#mainContent" data-ajax-mode="replace" data-ajax-method="GET" data-ajax="true">
+                                        Edit
+                                    </a>
+                                    <a class="pm_delete-btn" data-id="1" title="Delete" href="/masters/CasePaper/delete?TrnNo=@item.TrnNo" data-ajax-update="#mainContent" data-ajax-mode="replace" data-ajax-method="GET" data-ajax="true">
+                                        Delete
+                                    </a>
+                                    @*<button class="pm_delete-btn" data-id="1">Delete</button>*@
+                                </div>
+                            }
+                        </td>
+                        <td>@Html.DisplayFor(modelItem => item.Date)</td>
+                        <td>
+                            <a title="View" href="/masters/City/details?CityCode=@item.TrnNo" data-ajax-update="#mainContent" data-ajax-mode="replace" data-ajax-method="GET" data-ajax="true">
+                                @Html.DisplayFor(modelItem => item.TrnNo)
+                            </a>
+                        </td>
+                        <td>@Html.DisplayFor(modelItem => item.PatientName)</td>
+                        <td>@Html.DisplayFor(modelItem => item.ConNumber)</td>
+                        <td>Tirtharaj Sardeshmukh</td>
+                        <td>1234567890</td>
+                    </tr>
+                }
             </tbody>
         </table>
     </div>

@@ -11,8 +11,25 @@ namespace Lab_Mvc.Controllers
     public class CasePaperController : Controller
     {
         // GET: CasePaper
-        public ActionResult Index()
+        public async Task<ActionResult> Index(string sortOrder, string searchString, int? page)
         {
+            List<CasePaper> _lstCitys = await CasePaper.GetAllAsync();
+            ViewBag.CurrentSort = sortOrder;
+            ViewBag.NameSortParam = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                ViewBag.CurrentFilter = searchString;
+                _lstCitys = _lstCitys.Where(obj => (obj.PatientName != null && obj.PatientName.ToUpper().Contains(searchString.ToUpper()))).ToList();
+            }
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    _lstCitys = _lstCitys.OrderByDescending(obj => obj.PatientName).ToList();
+                    break;
+                default:
+                    _lstCitys = _lstCitys.OrderBy(obj => obj.PatientName).ToList();
+                    break;
+            }
             return View();
         }
 
@@ -53,21 +70,10 @@ namespace Lab_Mvc.Controllers
                 return Json(new List<Test>(), JsonRequestBehavior.AllowGet);
             }
 
-            // Call Business Layer method to fetch data
             List<Test> testList = await Test.GetTestsAsync(searchtext);
 
             return Json(testList, JsonRequestBehavior.AllowGet);
         }
-
-        //[HttpPost]
-        //public async Task<JsonResult> MaterialAutoFill(string searchtext)
-        //{
-        //    List<MaterialsEntity> _lstMaterialsCache = await MaterialsService.GetMaterialAutoFillList(searchtext);
-        //    _lstMaterialsCache = _lstMaterialsCache.Where(obj => obj.MaterialType == 111 || obj.MaterialType == 113).ToList();
-
-        //    var jsonResult = Json(_lstMaterialsCache, JsonRequestBehavior.AllowGet);
-        //    jsonResult.MaxJsonLength = Int32.MaxValue;
-        //    return jsonResult;
-        //}
+               
     }
 }
