@@ -14,13 +14,16 @@ namespace Lab_Mvc.Controllers
         public async Task<ActionResult> Index(string sortOrder, string searchString, int? page)
         {
             List<CasePaper> _lstCitys = await CasePaper.GetAllAsync();
+
             ViewBag.CurrentSort = sortOrder;
             ViewBag.NameSortParam = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+
             if (!string.IsNullOrEmpty(searchString))
             {
                 ViewBag.CurrentFilter = searchString;
-                _lstCitys = _lstCitys.Where(obj => (obj.PatientName != null && obj.PatientName.ToUpper().Contains(searchString.ToUpper()))).ToList();
+                _lstCitys = _lstCitys.Where(obj => obj.PatientName != null && obj.PatientName.ToUpper().Contains(searchString.ToUpper())).ToList();
             }
+
             switch (sortOrder)
             {
                 case "name_desc":
@@ -30,10 +33,13 @@ namespace Lab_Mvc.Controllers
                     _lstCitys = _lstCitys.OrderBy(obj => obj.PatientName).ToList();
                     break;
             }
-            return View();
+
+            // Ensure that the model is not null when passed to the view
+            return View(_lstCitys);
         }
 
-        
+
+
         public ActionResult Create()
         {
             return PartialView(CasePaper.New());

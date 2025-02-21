@@ -1,8 +1,9 @@
-﻿@{
+﻿@model IEnumerable<Lab.Businesss.Masters.CasePaper>
+@{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "CasePaper Index";
 }
-@model IEnumerable<Lab.Businesss.Masters.CasePaper>
+
 <style>
     * {
         box-sizing: border-box;
@@ -121,19 +122,38 @@
 
     .pm_edit-btn {
         background-color: #2196f3;
-        color: white;
+        display: inline-block;
+        padding: 6px 12px;
+        color: white !important; 
         border: none;
         border-radius: 4px;
+        text-decoration: none; 
+        font-size: 14px;
         cursor: pointer;
     }
+        .pm_edit-btn:hover {
+            background-color: #d32f2f;
+            color: white !important;
+        }
 
-    .pm_delete-btn {
-        background-color: #f44336;
-        color: white;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-    }
+        .pm_delete-btn {
+            display: inline-block;
+            padding: 6px 12px;
+            background-color: #f44336;
+            color: white !important;
+            border: none;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .pm_delete-btn:hover {
+            background-color: #d32f2f; 
+            color: white !important; 
+        }
+
+
 
 
     .pm_table-container::-webkit-scrollbar {
@@ -235,36 +255,38 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model)
+                @if (Model != null && Model.Any())
                 {
-                    <tr class="@(item.StatusCode == 1 ? "deleted" : "ok")">
-                        <td>
-                            @if (item.StatusCode == 0)
-                            {
-                                <div class="pm_action-buttons">
-                                    @*<button class="pm_edit-btn" data-id="1">Edit</button>*@
-                                    <a class="pm_edit-btn" data-id="1" title="Edit" href="/masters/CasePaper/edit?TrnNo=@item.TrnNo" data-ajax-update="#mainContent" data-ajax-mode="replace" data-ajax-method="GET" data-ajax="true">
-                                        Edit
-                                    </a>
-                                    <a class="pm_delete-btn" data-id="1" title="Delete" href="/masters/CasePaper/delete?TrnNo=@item.TrnNo" data-ajax-update="#mainContent" data-ajax-mode="replace" data-ajax-method="GET" data-ajax="true">
-                                        Delete
-                                    </a>
-                                    @*<button class="pm_delete-btn" data-id="1">Delete</button>*@
-                                </div>
-                            }
-                        </td>
-                        <td>@Html.DisplayFor(modelItem => item.Date)</td>
-                        <td>
-                            <a title="View" href="/masters/City/details?CityCode=@item.TrnNo" data-ajax-update="#mainContent" data-ajax-mode="replace" data-ajax-method="GET" data-ajax="true">
-                                @Html.DisplayFor(modelItem => item.TrnNo)
-                            </a>
-                        </td>
-                        <td>@Html.DisplayFor(modelItem => item.PatientName)</td>
-                        <td>@Html.DisplayFor(modelItem => item.ConNumber)</td>
-                        <td>Tirtharaj Sardeshmukh</td>
-                        <td>1234567890</td>
+                    foreach (var item in Model)
+                    {
+                        <tr class="@(item.StatusCode == 1 ? "deleted" : "ok")">
+                            <td>
+                                @if (item.StatusCode == 0)
+                                {
+                                    <div class="pm_action-buttons">
+                                        <a class="pm_edit-btn" data-id="1" title="Edit" href="/masters/CasePaper/edit?TrnNo=@item.TrnNo">Edit</a>
+                                        <a class="pm_delete-btn" data-id="1" title="Delete" href="/masters/CasePaper/delete?TrnNo=@item.TrnNo">Delete</a>
+                                    </div>
+                                }
+                            </td>
+                            <td>@Html.DisplayFor(modelItem => item.Date)</td>
+                            <td>
+                                <a title="View" href="/masters/City/details?CityCode=@item.TrnNo">
+                                    @Html.DisplayFor(modelItem => item.TrnNo)
+                                </a>
+                            </td>
+                            <td>@Html.DisplayFor(modelItem => item.PatientName)</td>
+                            <td>@Html.DisplayFor(modelItem => item.ConNumber)</td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="5" style="text-align: center; color: red;">No records found.</td>
                     </tr>
                 }
+
             </tbody>
         </table>
     </div>
