@@ -32,5 +32,26 @@ namespace Lab.DALDapper.Implimantation.Masters
                 return tests;
             }
         }
+
+        public Int64 Create(DTOTest _objTestDetails)
+        {
+            try
+            {
+                string query = @"INSERT INTO MST_TEST (TRN_NO,TEST_CODE,TEST_NAME,PRICE,LAB_PRICE,SR_NO)";
+                query = query + " VALUES(@TRN_NO,@TEST_CODE,@TEST_NAME,@PRICE,@LAB_PRICE,@SR_NO);SELECT @TRN_NO";
+                Int64 i;
+                using (SqlConnection con = new SqlConnection(_connectionString))
+                {
+                    con.Open();
+                    i= con.Query<Int64>(query,_objTestDetails).Single();                    
+                }
+                return i;
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
     }
     }

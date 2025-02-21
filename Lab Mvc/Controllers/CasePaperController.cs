@@ -46,7 +46,7 @@ namespace Lab_Mvc.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult>Create(CasePaper _ObjCsPaper)
+        public async Task<ActionResult> Create(CasePaper _ObjCsPaper)
         {
             try
             {
@@ -54,18 +54,17 @@ namespace Lab_Mvc.Controllers
                 result = await CasePaper.Create(_ObjCsPaper);
                 if (result != 0)
                 {
-                    return Content("0");
+                    return Json(new { Status = true, Message = "Data saved successfully." });
                 }
                 else
                 {
-                    return PartialView(_ObjCsPaper);
+                    return Json(new { Status = false, Message = "Failed to save data." });
                 }
             }
-            catch
-            {
-                return PartialView(_ObjCsPaper);
+            catch (Exception ex)
+            {                
+                return Json(new { Status = false, Message = "An error occurred: " + ex.Message });
             }
-            //return View();
         }
 
         [HttpPost]

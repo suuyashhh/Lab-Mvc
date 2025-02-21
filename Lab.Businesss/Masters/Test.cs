@@ -11,10 +11,13 @@ namespace Lab.Businesss.Masters
     public class Test
     {
         public static IMSTTest _dalTest;
+        public Int64 TrnNo { get; set; }
         public Int64 TestCode { get; set; }
         public string TestName { get; set; }
         public decimal Price { get; set; }
         public decimal LabPrice { get; set; }
+        public int SrNo { get; set; }
+        public int StatusCode { get; set; }
 
 
         public static Test New()
