@@ -10,6 +10,7 @@ namespace Lab.DTO.Masters.Interfaces
 {
     public interface IMSTTest
     {
+        List<DTOTest> GetAll();
         Int64 Create(DTOTest _objTestDetails);
         Task<List<DTOTest>> GetTestsAsync(string searchtext);
     }

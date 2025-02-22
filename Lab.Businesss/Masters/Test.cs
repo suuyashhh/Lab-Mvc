@@ -1,5 +1,6 @@
 ﻿using Lab.DALDapper.Implimantation.Masters;
 using Lab.DTO.Masters.Interfaces;
+using Lab.DTO.Masters.Objects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,6 +31,38 @@ namespace Lab.Businesss.Masters
             {
                 throw new Exception("Request Failed. " + ex.Message);
             }
+        }
+
+        public static async Task<List<Test>> GetAllAsync()
+        {
+            try
+            {
+                _dalTest = new DALTest();
+                List<Test> lstTests = await Task.Run(() => { return fillTestList(_dalTest.GetAll()); });
+                return lstTests;
+            }
+            catch
+            {
+                throw new Exception("Request Failed");
+            }
+        }
+
+        private static List<Test> fillTestList(List<DTOTest> dtoTest)
+        {
+
+            var _Testlist = from dtotest in dtoTest
+                            select new Test()
+                            {
+                                TrnNo = dtotest.TRN_NO,
+                                TestCode= dtotest.TEST_CODE,
+                                TestName = dtotest.TEST_NAME,
+                                Price = dtotest.PRICE,
+                                LabPrice = dtotest.LAB_PRICE,
+                                SrNo = dtotest.SR_NO,
+                                StatusCode = dtotest.STATUS_CODE
+                            };
+
+            return _Testlist.AsEnumerable<Test>().ToList();
         }
         public static async Task<List<Test>> GetTestsAsync(string searchtext)
         {

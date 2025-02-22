@@ -1,4 +1,4 @@
-﻿
+﻿@model IEnumerable<Lab.Businesss.Masters.Test>
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Test Index";
@@ -103,19 +103,37 @@
 
     .pm_edit-btn {
         background-color: #2196f3;
-        color: white;
+        display: inline-block;
+        padding: 6px 12px;
+        color: white !important;
         border: none;
         border-radius: 4px;
+        text-decoration: none;
+        font-size: 14px;
         cursor: pointer;
     }
 
+        .pm_edit-btn:hover {
+            background-color: #d32f2f;
+            color: white !important;
+        }
+
     .pm_delete-btn {
+        display: inline-block;
+        padding: 6px 12px;
         background-color: #f44336;
-        color: white;
+        color: white !important;
         border: none;
         border-radius: 4px;
+        text-decoration: none;
+        font-size: 14px;
         cursor: pointer;
     }
+
+        .pm_delete-btn:hover {
+            background-color: #d32f2f;
+            color: white !important;
+        }
 </style>
 
 <div class="pagetitle">
@@ -143,41 +161,41 @@
             <thead>
                 <tr>
                     <th>Action</th>
-                    <th>Test Name</th>
+                    <th>
+                        <a href="/masters/Test/index?sortOrder=@ViewBag.NameSortParam&searchString=@ViewBag.CurrentFilter" data-ajax-update="#mainContent" data-ajax-mode="replace" data-ajax-method="GET" data-ajax="true">
+                            Test Name
+                        </a>
+                    </th>
                     <th>Price</th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>
-                        <div class="pm_action-buttons">
-                            <button class="pm_edit-btn" data-id="1">Edit</button>
-                            <button class="pm_delete-btn" data-id="1">Delete</button>
-                        </div>
-                    </td>
-                    <td>Sugar Test</td>
-                    <td>240</td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="pm_action-buttons">
-                            <button class="pm_edit-btn" data-id="2">Edit</button>
-                            <button class="pm_delete-btn" data-id="2">Delete</button>
-                        </div>
-                    </td>
-                    <td>Thyroid Test</td>
-                    <td>170</td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="pm_action-buttons">
-                            <button class="pm_edit-btn" data-id="3">Edit</button>
-                            <button class="pm_delete-btn" data-id="3">Delete</button>
-                        </div>
-                    </td>
-                    <td>Urine Test</td>
-                    <td>500</td>
-                </tr>
+                @if (Model != null && Model.Any())
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr class="@(item.StatusCode == 1 ? "deleted" : "ok")">
+                            <td>
+                                @if (item.StatusCode == 0)
+                                {
+                                    <div class="pm_action-buttons">
+                                        <a class="pm_edit-btn" data-id="1" title="Edit" href="/masters/Test/edit?TrnNo=@item.TrnNo">Edit</a>
+                                        <a class="pm_delete-btn" data-id="1" title="Delete" href="/masters/Test/delete?TrnNo=@item.TrnNo">Delete</a>
+
+                                    </div>
+                                }
+                            </td>
+                            <td>@Html.DisplayFor(modelItem => item.TestName)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Price)</td>
+                        </tr>                       
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="5" style="text-align: center; color: red;">No records found.</td>
+                    </tr>
+                }
             </tbody>
         </table>
     </div>

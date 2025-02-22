@@ -94,27 +94,27 @@ namespace Lab.Businesss.Masters
                 result = await Task.Run(() => { return _dalCasePaper.Create(_objDtoCasePaper); });
 
 
-                IList<Test> counte = _ObjCsPaper.MatIs;
-                if (counte != null)
-                {
-                    int intSrNo = 1;
+                //IList<Test> counte = _ObjCsPaper.MatIs;
+                //if (counte != null)
+                //{
+                //    int intSrNo = 1;
 
-                    foreach (Test _objTest in _ObjCsPaper.MatIs)
-                    {
-                        DTOTest _objTestDetails = new DTOTest()
-                        {
-                            TRN_NO = newPatientId,
-                            TEST_CODE = _objTest.TestCode,
-                            TEST_NAME = _objTest.TestName,
-                            SR_NO = intSrNo,
-                            PRICE = _objTest.Price,
-                            LAB_PRICE = _objTest.LabPrice,
+                //    foreach (Test _objTest in _ObjCsPaper.MatIs)
+                //    {
+                //        DTOTest _objTestDetails = new DTOTest()
+                //        {
+                //            TRN_NO = newPatientId,
+                //            TEST_CODE = _objTest.TestCode,
+                //            TEST_NAME = _objTest.TestName,
+                //            SR_NO = intSrNo,
+                //            PRICE = _objTest.Price,
+                //            LAB_PRICE = _objTest.LabPrice,
 
-                        };
-                        _dalTest.Create(_objTestDetails);
-                        intSrNo++;
-                    }
-                }
+                //        };
+                //        _dalTest.Create(_objTestDetails);
+                //        intSrNo++;
+                //    }
+                //}
 
 
                 return result;

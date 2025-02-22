@@ -16,6 +16,23 @@ namespace Lab.DALDapper.Implimantation.Masters
     {
         private readonly string _connectionString = ConfigurationManager.ConnectionStrings["connstr"].ConnectionString;
 
+        public List<DTOTest> GetAll()
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["connstr"].ConnectionString;
+            try
+            {
+                string query = "SELECT * FROM MST_PATIENT";
+                using (SqlConnection con = new SqlConnection(connectionString))
+                {
+                    con.Open();
+                    return con.Query<DTOTest>(query).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error retrieving MST_PATIENT data", ex);
+            }
+        }
         public async Task<List<DTOTest>> GetTestsAsync(string searchtext)
         {
             using (IDbConnection db = new SqlConnection(_connectionString))

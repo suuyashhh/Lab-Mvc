@@ -321,55 +321,62 @@
     </div>
 </div>
 <script type="text/javascript">
-   $(document).ready(function () {
-    $("#save").click(function (e) {
-        e.preventDefault();
-
-
-        var _ObjCsPaper = {
-            PatientName: $("#PName").val(),
-            DateOfBirth: $("#PBOD").val(),
-            Gender: $("#Gender").val(),
-            Contact: $("#PNumber").val(),
-            Doctor: $("#Doctor").val()
+   $(document).ready(function () {    
+       $('#save').click(function(e){
+    if (form.valid()) {
+        //if ($('#tblMaterials >tbody >tr').length == 0){
+        //    $.smallBox({
+        //        title: "Test",
+        //        content: "Please add at least one test.",
+        //        color: "#C46A69",
+        //        timeout: 3000,
+        //    });
+        //    $('#TestName').focus();
+        //    return false;
+        //}
+        
+        var _ObjTest = {
+            TestName: $("#TestName").val(),
+            Price: $("#Price").val(),
+            LabPrice: $("#LabPrice").val()
         };
 
         $("#mainContent").html('<div></div>');
 
         $.ajax({
-            url: '@Url.Action("Create", "Test")',
+            url: ' Test/create',
             type: "POST",
+            async: false,
             contentType: "application/json",
             dataType: "json",
-            data: JSON.stringify(_ObjCsPaper),
-            success: function (response) {
-                console.log("Response: ", response, status);
-                if (response.Status) {
+            data: JSON.stringify(_ObjTest),
+            success: function (response, status, xhr) {
+             if (response.Status) {
                     $.smallBox({
-                        title: "Save Form",
-                        content: "Successfully saved",
+                        title: "Document Number",
+                        content: "Document Number: -",
                         color: "#C46A69",
                         timeout: 7000,
                     });
-                }
-                if (response === 0) {
+                 var urlName = ' Test/Index';
                     $.ajax({
-                        url: '@Url.Action("Index", "Test")',
+                        url: urlName,
                         type: "GET",
-                        success: function (data) {
-                            $("#mainContent").html(data);
+                        success: function (response, status, xhr) {
+                            $("#mainContent").html(response);
                         },
                         error: function (err) {
-                            console.error("Error loading index: ", err);
+                            $("#mainContent").html(err);
                         }
                     });
                 }
             },
-            error: function (xhr, status, error) {
-                console.error("AJAX Error: ", status, error);
-                alert("Error: " + error);
+            error: function (error) {
+                alert("Error : " + error.toSource());
             }
         });
-    });
-          
+    }
+});
+});
+
 </script>

@@ -382,8 +382,8 @@
             <div class="tests-section">
                 <div class="add-test-section">
                     <div class="test-inputs" style="justify-content:end">                        
-                        @*<button class="add-btn" id="save">Save</button>*@
-                        <a class="add-btn" id="save">Save</a>
+                        <button class="add-btn" id="save">Save</button>
+                        @*<a class="add-btn" id="save">Save</a>*@
                         <a class="add-btn" style="background:red!important" href="/CasePaper/index" data-ajax-update="#mainContent" data-ajax-mode="replace" data-ajax-method="GET" data-ajax="true">Cancle</a>
                     </div>
                 </div>
@@ -393,7 +393,7 @@
 </div>
 <script type="text/javascript">
    $(document).ready(function () {
-       $("#save").click(function (e) {
+       @*$("#save").click(function (e) {
            if (form.valid()) {
                if ($('#tblMaterials >tbody >tr').length == 0) {
                    $.smallBox({
@@ -473,7 +473,87 @@
                    }
                });
            }
-    }); 
+       });*@
+
+
+
+
+        $('#save').click(function(e){
+     if (form.valid()) {
+         if ($('#tblMaterials >tbody >tr').length == 0){
+             $.smallBox({
+                 title: "Test",
+                 content: "Please add at least one test.",
+                 color: "#C46A69",
+                 timeout: 3000,
+             });
+             $('#TestName').focus();
+             return false;
+         }
+
+          var MatIs = [];
+             var j = 0;
+             debugger;
+             $('#tblMaterials >tbody >tr').each(function () {
+                 if ($('#tblMaterials >tbody >tr').length !== j) {
+                     var tstcode, price, lprice;
+                     tstcode = $(this).find("[id^=hfTestId]").val();
+                     price = $(this).find("[id^=Price]").val();
+                     lprice = $(this).find("[id^=hfLabPrice]").val();
+
+                     if ((parseFloat(qty)) > 0) {
+                         MatIs.push({ TestCode: tstcode, Price: price, LabPrice: lprice });
+                     }
+                 }
+                 j++;
+             });
+                     
+         var _ObjCsPaper = {
+             PatientName: $("#PName").val(),
+             DateOfBirth: $("#PBOD").val(),
+             Gender: $("#Gender").val(),
+             Contact: $("#PNumber").val(),
+             Doctor: $("#Doctor").val()
+         };
+
+         $("#mainContent").html('<div></div>');
+
+         $.ajax({
+             url: ' CasePaper/create',
+             type: "POST",
+             async: false,
+             contentType: "application/json",
+             dataType: "json",
+             data: JSON.stringify(_ObjCsPaper),
+             success: function (response, status, xhr) {
+              if (response.Status) {
+                     $.smallBox({
+                         title: "Document Number",
+                         content: "Document Number: -",
+                         color: "#C46A69",
+                         timeout: 7000,
+                     });
+                  var urlName = ' CasePaper/Index';
+                     $.ajax({
+                         url: urlName,
+                         type: "GET",
+                         success: function (response, status, xhr) {
+                             $("#mainContent").html(response);
+                         },
+                         error: function (err) {
+                             $("#mainContent").html(err);
+                         }
+                     });
+                 }
+             },
+             error: function (error) {
+                 alert("Error : " + error.toSource());
+             }
+         });
+     }
+ });
+
+
 
        $("#btnAdd").click(function () {
            if ($("#hfTestId").val() == 0 || $("#TestName").val().trim() === "") {
@@ -620,7 +700,7 @@
                    dontBlock = true;
                }
            });
-          
+
            $("#TestName").autocomplete({
                minLength: 1,
                source: function (request, response) {
