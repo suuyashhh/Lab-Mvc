@@ -293,7 +293,7 @@
 
 
     <div class="container">
-        <form>
+        <form method="POST" id="CasePaper-form">
             <div class="form-group">
                 <label>Petient Name</label>
                 <input type="text" id="PName" class="input-field">
@@ -392,198 +392,210 @@
     </div>
 </div>
 <script type="text/javascript">
-   $(document).ready(function () {
-       @*$("#save").click(function (e) {
-           if (form.valid()) {
-               if ($('#tblMaterials >tbody >tr').length == 0) {
-                   $.smallBox({
-                       title: "Test",
-                       content: "Please add at least one test.",
-                       color: "#C46A69",
-                       timeout: 3000,
-                   });
-                   $('#TestName').focus();
-                   return false;
-               }
+    $(document).ready(function () {
+        var form = $("#CasePaper-form");
+        //$("#PName").select2();
+        //$("#PBOD").select2();
+        //$("#Gender").select2();
+        //$("#PNumber").select2();
+        //$("#Doctor").select2();
 
-               e.preventDefault();
+        $("#save").click(function (e) {
+            if (form.valid()) {
 
-               var MatIs = [];
-               var j = 0;
-               debugger;
-               $('#tblMaterials >tbody >tr').each(function () {
-                   if ($('#tblMaterials >tbody >tr').length !== j) {
-                       var tstcode, price, lprice;
-                       tstcode = $(this).find("[id^=hfTestId]").val();
-                       price = $(this).find("[id^=Price]").val();
-                       lprice = $(this).find("[id^=hfLabPrice]").val();
+                if ($('#tblMaterials >tbody >tr').length == 0) {
+                    $.smallBox({
+                        title: "Test",
+                        content: "Please add at least one test.",
+                        color: "#C46A69",
+                        timeout: 3000,
+                    });
+                    $('#TestName').focus();
+                    return false;
+                }
 
-                       if ((parseFloat(qty)) > 0) {
-                           MatIs.push({ TestCode: tstcode, Price: price, LabPrice: lprice });
-                       }
-                   }
-                   j++;
-               });
+                var MatIs = [];
+                var j = 0;
+                debugger;
+                $('#tblMaterials >tbody >tr').each(function () {
+                    if ($('#tblMaterials >tbody >tr').length !== j) {
+                        var tstcode, price, lprice;
+                        tstcode = $(this).find("[id^=hfTestId]").val();
+                        price = $(this).find("[id^=Price]").val();
+                        lprice = $(this).find("[id^=hfLabPrice]").val();
 
-               var _ObjCsPaper = {
-                   PatientName: $("#PName").val(),
-                   DateOfBirth: $("#PBOD").val(),
-                   Gender: $("#Gender").val(),
-                   Contact: $("#PNumber").val(),
-                   Doctor: $("#Doctor").val()
-               };
+                        if ((parseFloat(qty)) > 0) {
+                            MatIs.push({ TestCode: tstcode, Price: price, LabPrice: lprice });
+                        }
+                    }
+                    j++;
+                });
 
-               $("#mainContent").html('<div></div>');
-
-               $.ajax({
-                   url: '@Url.Action("Create", "CasePaper")',
-                   type: "POST",
-                   contentType: "application/json",
-                   dataType: "json",
-                   data: JSON.stringify(_ObjCsPaper),
-                   success: function (response) {
-                       console.log("Response: ", response);
-                       if (response.Status) {
-                           $.smallBox({
-                               title: "Save Form",
-                               content: response.Message,
-                               color: "#C46A69",
-                               timeout: 7000,
-                           });
-
-                           setTimeout(function () {
-                               $.ajax({
-                                   url: '@Url.Action("Index", "CasePaper")',
-                                   type: "GET",
-                                   success: function (data) {
-                                       $("#mainContent").html(data);
-                                   },
-                                   error: function (err) {
-                                       console.error("Error loading index: ", err);
-                                   }
-                               });
-                           }, 2000);
-                       } else {
-                           alert(response.Message);
-                       }
-                   },
-                   error: function (xhr, status, error) {
-                       console.error("AJAX Error: ", status, error);
-                       alert("Error: " + error);
-                   }
-               });
-           }
-       });*@
-
-
-
-
-        $('#save').click(function(e){
-     if (form.valid()) {
-         if ($('#tblMaterials >tbody >tr').length == 0){
-             $.smallBox({
-                 title: "Test",
-                 content: "Please add at least one test.",
-                 color: "#C46A69",
-                 timeout: 3000,
-             });
-             $('#TestName').focus();
-             return false;
-         }
-
-          var MatIs = [];
-             var j = 0;
-             debugger;
-             $('#tblMaterials >tbody >tr').each(function () {
-                 if ($('#tblMaterials >tbody >tr').length !== j) {
-                     var tstcode, price, lprice;
-                     tstcode = $(this).find("[id^=hfTestId]").val();
-                     price = $(this).find("[id^=Price]").val();
-                     lprice = $(this).find("[id^=hfLabPrice]").val();
-
-                     if ((parseFloat(qty)) > 0) {
-                         MatIs.push({ TestCode: tstcode, Price: price, LabPrice: lprice });
-                     }
-                 }
-                 j++;
-             });
-                     
-         var _ObjCsPaper = {
-             PatientName: $("#PName").val(),
-             DateOfBirth: $("#PBOD").val(),
-             Gender: $("#Gender").val(),
-             Contact: $("#PNumber").val(),
-             Doctor: $("#Doctor").val()
-         };
-
-         $("#mainContent").html('<div></div>');
-
-         $.ajax({
-             url: ' CasePaper/create',
-             type: "POST",
-             async: false,
-             contentType: "application/json",
-             dataType: "json",
-             data: JSON.stringify(_ObjCsPaper),
-             success: function (response, status, xhr) {
-              if (response.Status) {
-                     $.smallBox({
-                         title: "Document Number",
-                         content: "Document Number: -",
-                         color: "#C46A69",
-                         timeout: 7000,
-                     });
-                  var urlName = ' CasePaper/Index';
-                     $.ajax({
-                         url: urlName,
-                         type: "GET",
-                         success: function (response, status, xhr) {
-                             $("#mainContent").html(response);
-                         },
-                         error: function (err) {
-                             $("#mainContent").html(err);
-                         }
-                     });
-                 }
-             },
-             error: function (error) {
-                 alert("Error : " + error.toSource());
-             }
-         });
-     }
- });
+                var _ObjCsPaper = {
+                    PatientName: $("#PName").val(),
+                    DateOfBirth: $("#PBOD").val(),
+                    Gender: $("#Gender").val(),
+                    Contact: $("#PNumber").val(),
+                    Doctor: $("#Doctor").val()
+                };
+                data.append("CasePaper", JSON.stringify(_ObjCsPaper));
+                $.ajax({
+                    url: 'CasePaper/create',
+                    type: "POST",
+                    contentType: false,
+                    processData: false,
+                    data: data,
+                    success: function (response, status, xhr) {
+                        if (response.Status) {
+                            $.smallBox({
+                                title: "Save",
+                                content: "Record Saved Succesfully.",
+                                color: "#739e73",
+                                timeout: 7000,
+                            });
+                            var urlName = 'CasePaper/Index';
+                            $.ajax({
+                                url: urlName,
+                                type: "GET",
+                                success: function (response, status, xhr) {
+                                    $("#mainContent").html(response);
+                                },
+                                error: function (err) {
+                                    $("#mainContent").html(err);
+                                }
+                            });
+                        }
+                        else {
+                            $.smallBox({
+                                title: "Failed",
+                                content: response.Message,
+                                color: "#C46A69",
+                                timeout: 7000,
+                            });
+                        }
+                    },
+                    error: function (error) {
+                        $.smallBox({
+                            title: "Error",
+                            content: "Something went wrong.",
+                            color: "#C46A69",
+                            timeout: 3000,
+                        });
+                    }
+                });
+            }
+        });
 
 
 
-       $("#btnAdd").click(function () {
-           if ($("#hfTestId").val() == 0 || $("#TestName").val().trim() === "") {
-               $.smallBox({
-                   title: "Test",
-                   content: "Please select proper Test.",
-                   color: "#C46A69",
-                   timeout: 3000,
-               });
-               $("#TestName").focus();
-               return false;
-           }
 
-           let cur_row_num = $("#tblMaterials tbody tr").length;
-           let TestCode = $("#hfTestId").val();
-           let TestName = $("#TestName").val();
-           let price = $("#hfPrice").val();
-           let labprice = $("#hfLabPrice").val();
 
-           if (document.getElementById(TestCode)) {
-               $.smallBox({
-                   title: "Duplicate",
-                   content: "Duplicate Not Allowed.",
-                   color: "#C46A69",
-                   timeout: 3000,
-               });
-               return;
-           }
+        $('#save').click(function (e) {
+            if (form.valid()) {
+                if ($('#tblMaterials >tbody >tr').length == 0) {
+                    $.smallBox({
+                        title: "Test",
+                        content: "Please add at least one test.",
+                        color: "#C46A69",
+                        timeout: 3000,
+                    });
+                    $('#TestName').focus();
+                    return false;
+                }
 
-           let row = `
+                var MatIs = [];
+                var j = 0;
+                debugger;
+                $('#tblMaterials >tbody >tr').each(function () {
+                    if ($('#tblMaterials >tbody >tr').length !== j) {
+                        var tstcode, price, lprice;
+                        tstcode = $(this).find("[id^=hfTestId]").val();
+                        price = $(this).find("[id^=Price]").val();
+                        lprice = $(this).find("[id^=hfLabPrice]").val();
+
+                        if ((parseFloat(qty)) > 0) {
+                            MatIs.push({ TestCode: tstcode, Price: price, LabPrice: lprice });
+                        }
+                    }
+                    j++;
+                });
+
+                var _ObjCsPaper = {
+                    PatientName: $("#PName").val(),
+                    DateOfBirth: $("#PBOD").val(),
+                    Gender: $("#Gender").val(),
+                    Contact: $("#PNumber").val(),
+                    Doctor: $("#Doctor").val()
+                };
+
+                $("#mainContent").html('<div></div>');
+
+                $.ajax({
+                    url: ' CasePaper/create',
+                    type: "POST",
+                    async: false,
+                    contentType: "application/json",
+                    dataType: "json",
+                    data: JSON.stringify(_ObjCsPaper),
+                    success: function (response, status, xhr) {
+                        if (response.Status) {
+                            $.smallBox({
+                                title: "Document Number",
+                                content: "Document Number: -",
+                                color: "#C46A69",
+                                timeout: 7000,
+                            });
+                            var urlName = ' CasePaper/Index';
+                            $.ajax({
+                                url: urlName,
+                                type: "GET",
+                                success: function (response, status, xhr) {
+                                    $("#mainContent").html(response);
+                                },
+                                error: function (err) {
+                                    $("#mainContent").html(err);
+                                }
+                            });
+                        }
+                    },
+                    error: function (error) {
+                        alert("Error : " + error.toSource());
+                    }
+                });
+            }
+        });
+
+
+
+        $("#btnAdd").click(function () {
+            if ($("#hfTestId").val() == 0 || $("#TestName").val().trim() === "") {
+                $.smallBox({
+                    title: "Test",
+                    content: "Please select proper Test.",
+                    color: "#C46A69",
+                    timeout: 3000,
+                });
+                $("#TestName").focus();
+                return false;
+            }
+
+            let cur_row_num = $("#tblMaterials tbody tr").length;
+            let TestCode = $("#hfTestId").val();
+            let TestName = $("#TestName").val();
+            let price = $("#hfPrice").val();
+            let labprice = $("#hfLabPrice").val();
+
+            if (document.getElementById(TestCode)) {
+                $.smallBox({
+                    title: "Duplicate",
+                    content: "Duplicate Not Allowed.",
+                    color: "#C46A69",
+                    timeout: 3000,
+                });
+                return;
+            }
+
+            let row = `
             <tr id="row${cur_row_num}">
                 <td>${cur_row_num}</td>
                 <td>${TestName}
@@ -598,153 +610,153 @@
             </tr>
         `;
 
-           $("#tblMaterials tbody").append(row);
+            $("#tblMaterials tbody").append(row);
 
 
-           $("#TestName").val('');
-           $("#hfTestId").val(0);
-           $("#hfPrice").val('');
-           $("#hfLabPrice").val('');
+            $("#TestName").val('');
+            $("#hfTestId").val(0);
+            $("#hfPrice").val('');
+            $("#hfLabPrice").val('');
 
-           regen_srno();
-           calculateSum();
-       });
-
-
-       $("#tblMaterials").on("click", ".remove-row", function () {
-           $(this).closest("tr").remove();
-           regen_srno();
-           calculateSum();
-       });
-
-       function regen_srno() {
-           $("#tblMaterials tbody tr").each(function (index) {
-               $(this).find("td:first").text(index + 1);
-           });
-       }
-
-       function calculateSum() {
-           let total = 0;
-           $("#tblMaterials tbody tr").each(function () {
-               let amount = parseFloat($(this).find("td[id^=Amount]").text()) || 0;
-               total += amount;
-           });
-           $("#totalPrice").text("₹" + total);
-       }
-   });
+            regen_srno();
+            calculateSum();
+        });
 
 
-       $('#tblMaterials').on('click', '.remove-row', function () {
-           $(this).closest('tr').remove();
-           regen_srno();
-           calculateSum();
-       });
+        $("#tblMaterials").on("click", ".remove-row", function () {
+            $(this).closest("tr").remove();
+            regen_srno();
+            calculateSum();
+        });
 
-       $('#tblMaterials').on('input', '.qty-field, .rate-field', function () {
-           calculateAmt(this);
-       });
+        function regen_srno() {
+            $("#tblMaterials tbody tr").each(function (index) {
+                $(this).find("td:first").text(index + 1);
+            });
+        }
 
-       function regen_srno() {
-           $('#tblMaterials > tbody > tr').not(':last').each(function (index) {
-
-               $(this).find('td:first').text(index + 1);
-
-               $(this).find('input, label').each(function () {
-                   var currentId = $(this).attr('id');
-                   if (currentId) {
-
-                       var newId = currentId.replace(/\d+$/, index + 1);
-                       $(this).attr('id', newId);
-                   }
-               });
-           });
-       }
-
-       function removeRow(button) {
-           $(button).closest('tr').remove();
-           regen_srno();
-           calculateSum();
-       }
-
-       function calculateSum() {
-           var sum = 0;
-
-           $('#tblMaterials').find("[id*=Amount]").each(function () {
-               sum += parseFloat($(this).val()) || 0;
-           });
-           $('#transaction').val(sum.toFixed(2));
-           assignBasicAmount();
-       }
-
-       function calculateAmt(obj) {
-           var $row = $(obj).closest('tr');
-           var NQty = parseFloat($row.find("[id^=Qty]").val()) || 0;
-           var NRate = parseFloat($row.find("[id^=Rate]").val()) || 0;
-
-           var Total = NQty * NRate;
-
-           $row.find("[id^=Amount]").val(Total.toFixed(2));
-
-           calculateSum();
-       }
-
-       function assignBasicAmount() {
-           $('#TaxAmount1').val($('#transaction').val());
-           calculate();
-       }
+        function calculateSum() {
+            let total = 0;
+            $("#tblMaterials tbody tr").each(function () {
+                let amount = parseFloat($(this).find("td[id^=Amount]").text()) || 0;
+                total += amount;
+            });
+            $("#totalPrice").text("₹" + total);
+        }
+    });
 
 
-       $(function () {
-           $('[id*=TestName]').keyup(function () {
-               if ($("#TestName").val().trim().length >= 1) {
-                   dontBlock = true;
-               }
-           });
+    $('#tblMaterials').on('click', '.remove-row', function () {
+        $(this).closest('tr').remove();
+        regen_srno();
+        calculateSum();
+    });
 
-           $("#TestName").autocomplete({
-               minLength: 1,
-               source: function (request, response) {
-                   console.log("Request Sent:", request.term);
-                   $.ajax({
-                       url: "/CasePaper/TestAutoFill",
-                       type: "POST",
-                       dataType: "json",
-                       contentType: "application/json; charset=utf-8",
-                       data: JSON.stringify({ searchtext: request.term }),
-                       success: function (data) {
-                           console.log("Response Received:", data);
-                           if (!Array.isArray(data)) {
-                               console.error("Error: Response is not an array", data);
-                               return;
-                           }
-                           response($.map(data, function (item) {
-                               return {
-                                   label: item.TestName + " - ₹" + item.Price,
-                                   value: item.TestName,
-                                   id: item.TestCode,
-                                   price: item.Price,
-                                   labprice: item.LabPrice
-                               };
-                           }));
-                       },
-                       error: function (xhr, status, error) {
-                           console.error("AJAX Error:", status, error);
-                       }
-                   });
-               },
-               select: function (event, ui) {
-                   $("#TestName").val(ui.item.value);
-                   $("#hfTestId").val(ui.item.id);
-                   $("#hfPrice").val(ui.item.price);
-                   $("#hfLabPrice").val(ui.item.labprice);
-                   return false;
-               }
-           }).autocomplete("instance")._renderItem = function (ul, item) {
-               return $("<li>")
-                   .append("<div>" + item.label + "</div>")
-                   .appendTo(ul);
-           };
-       });
+    $('#tblMaterials').on('input', '.qty-field, .rate-field', function () {
+        calculateAmt(this);
+    });
+
+    function regen_srno() {
+        $('#tblMaterials > tbody > tr').not(':last').each(function (index) {
+
+            $(this).find('td:first').text(index + 1);
+
+            $(this).find('input, label').each(function () {
+                var currentId = $(this).attr('id');
+                if (currentId) {
+
+                    var newId = currentId.replace(/\d+$/, index + 1);
+                    $(this).attr('id', newId);
+                }
+            });
+        });
+    }
+
+    function removeRow(button) {
+        $(button).closest('tr').remove();
+        regen_srno();
+        calculateSum();
+    }
+
+    function calculateSum() {
+        var sum = 0;
+
+        $('#tblMaterials').find("[id*=Amount]").each(function () {
+            sum += parseFloat($(this).val()) || 0;
+        });
+        $('#transaction').val(sum.toFixed(2));
+        assignBasicAmount();
+    }
+
+    function calculateAmt(obj) {
+        var $row = $(obj).closest('tr');
+        var NQty = parseFloat($row.find("[id^=Qty]").val()) || 0;
+        var NRate = parseFloat($row.find("[id^=Rate]").val()) || 0;
+
+        var Total = NQty * NRate;
+
+        $row.find("[id^=Amount]").val(Total.toFixed(2));
+
+        calculateSum();
+    }
+
+    function assignBasicAmount() {
+        $('#TaxAmount1').val($('#transaction').val());
+        calculate();
+    }
+
+
+    $(function () {
+        $('[id*=TestName]').keyup(function () {
+            if ($("#TestName").val().trim().length >= 1) {
+                dontBlock = true;
+            }
+        });
+
+        $("#TestName").autocomplete({
+            minLength: 1,
+            source: function (request, response) {
+                console.log("Request Sent:", request.term);
+                $.ajax({
+                    url: "/CasePaper/TestAutoFill",
+                    type: "POST",
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify({ searchtext: request.term }),
+                    success: function (data) {
+                        console.log("Response Received:", data);
+                        if (!Array.isArray(data)) {
+                            console.error("Error: Response is not an array", data);
+                            return;
+                        }
+                        response($.map(data, function (item) {
+                            return {
+                                label: item.TestName + " - ₹" + item.Price,
+                                value: item.TestName,
+                                id: item.TestCode,
+                                price: item.Price,
+                                labprice: item.LabPrice
+                            };
+                        }));
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("AJAX Error:", status, error);
+                    }
+                });
+            },
+            select: function (event, ui) {
+                $("#TestName").val(ui.item.value);
+                $("#hfTestId").val(ui.item.id);
+                $("#hfPrice").val(ui.item.price);
+                $("#hfLabPrice").val(ui.item.labprice);
+                return false;
+            }
+        }).autocomplete("instance")._renderItem = function (ul, item) {
+            return $("<li>")
+                .append("<div>" + item.label + "</div>")
+                .appendTo(ul);
+        };
+    });
 </script>
 
 <script>
