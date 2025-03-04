@@ -13,5 +13,6 @@ namespace Lab.DTO.Masters.Interfaces
         List<DTOTest> GetAll();
         Int64 Create(DTOTest _objTestDetails);
         Task<List<DTOTest>> GetTestsAsync(string searchtext);
+        Task<string> GetLastTestIdForDate(string datePart);
     }
 }

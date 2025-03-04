@@ -3,34 +3,17 @@
     ViewBag.Title = "CasePaper Create";
 }
 
-
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
-
-
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/myorange/SmartAdmin@4.5.1/css/smartadmin.min.css">
-
-
 <script src="https://cdn.jsdelivr.net/gh/myorange/SmartAdmin@4.5.1/js/smartadmin.min.js"></script>
-
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/smartadmin-ajax/4.5.1/js/notification/SmartNotification.min.js"></script>
-
-
 <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-
-
-
-
-
 
 <style>
     * {
@@ -521,12 +504,29 @@
                     return false;
                 }
 
+                var MatIs = [];
+                 var j = 0;
+                 $('#tblMaterials >tbody >tr').each(function () {
+                     if ($('#tblMaterials >tbody >tr').length !== j) {
+                         var tstcode, price, lprice;
+                         tstcode = $(this).find("[id^=hfTestId]").val();
+                         price = $(this).find("[id^=Price]").val();
+                         lprice = $(this).find("[id^=hfLabPrice]").val();
+
+                         if ((parseFloat(price)) > 0) {
+                             MatIs.push({ TestCode: tstcode, Price: price, LabPrice: lprice });
+                         }
+                     }
+                     j++;
+                });
+
                 var _ObjCsPaper = {
                     PatientName: $("#PName").val(),
                     DateOfBirth: $("#PBOD").val(),
                     Gender: $("#Gender").val(),
                     ConNumber: $("#PNumber").val(),
-                    DoctorRef: $("#Doctor").val()
+                    DoctorRef: $("#Doctor").val(),
+                    MatIs: MatIs,
                 };
 
                 $("#mainContent").html('<div>Loading...</div>');
@@ -539,27 +539,28 @@
                     data: JSON.stringify(_ObjCsPaper),
                     success: function (response) {
                         if (response.Status) {
-                            toastr.success("Document Number saved successfully!", "Success", {
+                            //toastr.success(`Document Number ${response.DocNo} saved successfully!`, "Success", {
+                            toastr.success(`Document Number ${response.DocNo} saved successfully!`, "Success", {
                                 timeOut: 4000,  
                                 closeButton: false,
                                 progressBar: true,
                                 positionClass: "toast-top-right"
                             });
-                            //var urlName = '/CasePaper/Index';
-                            //$.ajax({
-                            //    url: urlName,
-                            //    type: "GET",
-                            //    success: function (response, status, xhr) {
-                            //        $("#mainContent").html(response);
-                            //    },
-                            //    error: function (err) {
-                            //        $("#mainContent").html(err);
-                            //    }
-                            //});
+                           
+                            //setTimeout(function () {
+                            //    window.location.href = "/CasePaper/Index";
+                            //}, 2000);
 
-                            setTimeout(function () {
-                                window.location.href = "/CasePaper/Index"; 
-                            }, 2000);
+                            $.ajax({
+                                url: '/CasePaper/Index',
+                                type: "GET",
+                                success: function (indexResponse) {
+                                    $("#mainContent").html(indexResponse); 
+                                },
+                                error: function (err) {
+                                    $("#mainContent").html("Error loading page.");
+                                }
+                            });
                         } else {
                             toastr.error("Error saving document!", "Error", {
                                 timeOut: 5000,

@@ -145,8 +145,5 @@ namespace Lab.Businesss.Masters
             return newPatientId;
         }
 
-
-
-
     }
 }

@@ -41,28 +41,27 @@ namespace Lab_Mvc.Controllers
             return PartialView(Test.New());
         }
 
-        //[HttpPost]
-        //public async Task<ActionResult> Create(Test _ObjCsPaper)
-        //{
-        //    try
-        //    {
-        //        Int64 result = 0;
-        //        result = await Test.Create(_ObjCsPaper);
-        //        if (result != 0)
-        //        {
-        //            return Content("0");
-        //        }
-        //        else
-        //        {
-        //            return PartialView(_ObjCsPaper);
-        //        }
-        //    }
-        //    catch
-        //    {
-        //        return PartialView(_ObjCsPaper);
-        //    }
-        //    //return View();
-        //}
+        [HttpPost]
+        public async Task<ActionResult> Create(Test _ObjTest)
+        {
+            try
+            {
+                Int64 result = 0;
+                result = await Test.Create(_ObjTest);
+                if (result != 0)
+                {
+                    return Json(new { Status = true, Message = "" });
+                }
+                else
+                {
+                    return Json(new { Status = false, Message = "" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Status = false, Message = "An error occurred: " + ex.Message });
+            }
+        }
 
     } 
 }

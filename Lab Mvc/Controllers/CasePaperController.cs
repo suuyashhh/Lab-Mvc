@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Lab.Businesss.Masters;
+using Lab_Mvc.Models;
 
 namespace Lab_Mvc.Controllers
 {
@@ -48,22 +49,52 @@ namespace Lab_Mvc.Controllers
         [HttpPost]
         public async Task<ActionResult> Create(CasePaper _ObjCsPaper)
         {
+            //try
+            //{
+            //    Int64 result = 0;
+            //    result = await CasePaper.Create(_ObjCsPaper);
+            //    if (result != 0)
+            //    {
+            //        return Json(new { Status = true, Message = "" });
+            //    }
+            //    else
+            //    {
+            //        return Json(new { Status = false, Message = "" });
+            //    }
+            //}
+            //catch (Exception ex)
+            //{                
+            //    return Json(new { Status = false, Message = "An error occurred: " + ex.Message });
+            //}
+
+            var result = new SaveViewModel() { Status = true };
+
             try
-            {
-                Int64 result = 0;
-                result = await CasePaper.Create(_ObjCsPaper);
-                if (result != 0)
+            {             
+                Int64 trn_no = await CasePaper.Create(_ObjCsPaper);
+                if (trn_no != 0)
                 {
-                    return Json(new { Status = true, Message = "" });
+                    string strDocNo = trn_no.ToString().Substring(2, 6) + "-" + trn_no.ToString().Substring(trn_no.ToString().Length - 2);
+                    result.DocNo = strDocNo;
+                    result = new SaveViewModel()
+                    {
+                        Status = true,
+                        Message = "",
+                        DocNo = strDocNo
+                    };
                 }
                 else
                 {
-                    return Json(new { Status = false, Message = "" });
+                    result.Status = false;
+                    result.Message = "Something went wrong.";
                 }
+                return Json(result, JsonRequestBehavior.AllowGet);
             }
-            catch (Exception ex)
-            {                
-                return Json(new { Status = false, Message = "An error occurred: " + ex.Message });
+            catch
+            {
+                result.Status = false;
+                result.Message = "Something went wrong.";
+                return Json(result, JsonRequestBehavior.AllowGet);
             }
         }
 

@@ -78,5 +78,57 @@ namespace Lab.Businesss.Masters
                 LabPrice = t.LAB_PRICE
             }).ToList();
         }
+
+        public static async Task<Int64> Create(Test _ObjTest)
+        {
+            try
+            {
+                Int64 result = 0;
+                _dalTest = new DALTest();
+
+
+
+                string datePart = DateTime.Now.ToString("yyyyMMdd");
+                Int64 newTestId = await GenerateTestId(datePart);
+
+                DTOTest _objDtoTest = new DTOTest()
+                {
+                    TRN_NO = newTestId,
+                    TEST_NAME = _ObjTest.TestName,
+                    PRICE = _ObjTest.Price,
+                    LAB_PRICE    = _ObjTest.LabPrice,
+                    SR_NO = _ObjTest.SrNo
+                };
+
+                result = await Task.Run(() => { return _dalTest.Create(_objDtoTest); });
+
+                return result;
+            }
+            catch
+            {
+                return 0;
+            }
+        }
+
+        private static async Task<long> GenerateTestId(string datePart)
+        {
+            _dalTest = new DALTest();
+
+            string fixedPart = "03";
+
+            string lastId = await _dalTest.GetLastTestIdForDate(datePart);
+
+            int nextNumber = 1;
+            if (!string.IsNullOrEmpty(lastId) && lastId.StartsWith(datePart + fixedPart))
+            {
+                int lastNumber = int.Parse(lastId.Substring(10));
+                nextNumber = lastNumber + 1;
+            }
+
+            long newTestId = long.Parse(datePart + fixedPart + nextNumber.ToString("D3"));
+
+            return newTestId;
+        }
+
     }
 }

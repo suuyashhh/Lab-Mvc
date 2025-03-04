@@ -21,7 +21,7 @@ namespace Lab.DALDapper.Implimantation.Masters
             string connectionString = ConfigurationManager.ConnectionStrings["connstr"].ConnectionString;
             try
             {
-                string query = "SELECT * FROM MST_PATIENT";
+                string query = "SELECT * FROM MST_TEST";
                 using (SqlConnection con = new SqlConnection(connectionString))
                 {
                     con.Open();
@@ -30,7 +30,7 @@ namespace Lab.DALDapper.Implimantation.Masters
             }
             catch (Exception ex)
             {
-                throw new Exception("Error retrieving MST_PATIENT data", ex);
+                throw new Exception("Error retrieving MST_TEST data", ex);
             }
         }
         public async Task<List<DTOTest>> GetTestsAsync(string searchtext)
@@ -68,6 +68,25 @@ namespace Lab.DALDapper.Implimantation.Masters
             {
                 throw;
             }
+        }
+
+        public async Task<string> GetLastTestIdForDate(string datePart)
+        {
+            string lastTestId = null;
+            string query = "SELECT TOP 1 TRN_NO FROM MST_TEST WHERE TRN_NO LIKE @datePart + '%' ORDER BY TRN_NO DESC";
+
+            using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["connstr"].ConnectionString))
+            {
+                await conn.OpenAsync();
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@datePart", datePart);
+                    object result = await cmd.ExecuteScalarAsync();
+                    if (result != null)
+                        lastTestId = result.ToString();
+                }
+            }
+            return lastTestId;
         }
 
     }
