@@ -3,10 +3,32 @@
     ViewBag.Title = "CasePaper Create";
 }
 
-<!-- jQuery and jQuery UI -->
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/myorange/SmartAdmin@4.5.1/css/smartadmin.min.css">
+
+
+<script src="https://cdn.jsdelivr.net/gh/myorange/SmartAdmin@4.5.1/js/smartadmin.min.js"></script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/smartadmin-ajax/4.5.1/js/notification/SmartNotification.min.js"></script>
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+
+
 
 
 
@@ -277,7 +299,6 @@
         border: 1px solid #ccc;
         z-index: 9999 !important;
     }
-
 </style>
 
 <div class="body">
@@ -296,12 +317,12 @@
         <form method="POST" id="CasePaper-form">
             <div class="form-group">
                 <label>Petient Name</label>
-                <input type="text" id="PName" name="PName" class="input-field">
+                <input type="text" id="PName" name="PatientName" class="input-field">
             </div>
 
             <div class="form-group">
                 <label>Date Of Birth</label>
-                <input type="text" id="PBOD" name="PBOD" class="input-field">
+                <input type="text" id="PBOD" name="DateOfBirth" class="input-field">
             </div>
 
             <div class="row">
@@ -311,7 +332,7 @@
                 </div>
                 <div class="col form-group">
                     <label>Phone Number</label>
-                    <input type="text" id="PNumber" name="PNumber" class="input-field">
+                    <input type="text" id="PNumber" name="ConNumber" class="input-field">
                 </div>
             </div>
 
@@ -322,7 +343,7 @@
 
             <div class="form-group">
                 <label>Doctor Reference</label>
-                <input type="text" id="Doctor" name="Doctor" class="input-field">
+                <input type="text" id="Doctor" name="DoctorRef" class="input-field">
             </div>
 
             <div class="tests-section">
@@ -381,7 +402,7 @@
 
             <div class="tests-section">
                 <div class="add-test-section">
-                    <div class="test-inputs" style="justify-content:end">                        
+                    <div class="test-inputs" style="justify-content:end">
                         <button class="add-btn" id="save">Save</button>
                         @*<a class="add-btn" id="save">Save</a>*@
                         <a class="add-btn" style="background:red!important" href="/CasePaper/index" data-ajax-update="#mainContent" data-ajax-mode="replace" data-ajax-method="GET" data-ajax="true">Cancle</a>
@@ -400,170 +421,167 @@
         //$("#PNumber").select2();
         //$("#Doctor").select2();
 
-        $("#save").click(function (e) {
-            if (form.valid()) {
 
-                if ($('#tblMaterials >tbody >tr').length == 0) {
-                    $.smallBox({
-                        title: "Test",
-                        content: "Please add at least one test.",
-                        color: "#C46A69",
-                        timeout: 3000,
+
+
+        //$('#save').click(function (e) {
+        //    debugger;
+        //    var form = $("#CasePaper-form");
+        //    if (form.valid()) {
+        //        if ($('#tblMaterials > tbody > tr').length == 0) {
+        //            toastr.error("Please add at least one test.", "Test", {
+        //                timeOut: 3000,  // Auto-hide after 3 seconds
+        //                closeButton: false,  // No close button
+        //                progressBar: true,  // Show progress bar
+        //                positionClass: "toast-top-right" // Position at top right
+        //            });
+
+        //            $('#TestName').focus();
+        //            return false;
+        //        }
+
+
+        //        var MatIs = [];
+        //        var j = 0;
+        //        debugger;
+        //        $('#tblMaterials >tbody >tr').each(function () {
+        //            if ($('#tblMaterials >tbody >tr').length !== j) {
+        //                var tstcode, price, lprice;
+        //                tstcode = $(this).find("[id^=hfTestId]").val();
+        //                price = $(this).find("[id^=Price]").val();
+        //                lprice = $(this).find("[id^=hfLabPrice]").val();
+
+        //                if ((parseFloat(price)) > 0) {
+        //                    MatIs.push({ TestCode: tstcode, Price: price, LabPrice: lprice });
+        //                }
+        //            }
+        //            j++;
+        //        });
+
+        //        var _ObjCsPaper = {
+        //            PatientName: $("#PName").val(),
+        //            DateOfBirth: $("#PBOD").val(),
+        //            Gender: $("#Gender").val(),
+        //            ConNumber: $("#PNumber").val(),
+        //            DoctorRef: $("#Doctor").val()
+        //        };
+
+        //        $("#mainContent").html('<div></div>');
+
+        //        $.ajax({
+        //            url: ' CasePaper/create',
+        //            type: "POST",
+        //            async: false,
+        //            contentType: "application/json",
+        //            dataType: "json",
+        //            data: JSON.stringify(_ObjCsPaper),
+        //            success: function (response, status, xhr) {
+        //                if (response.Status) {
+        //                    toastr.success("Document Number: -", "Document Number", {
+        //                        timeOut: 7000,
+        //                        closeButton: false,
+        //                        progressBar: true,
+        //                        positionClass: "toast-top-right",
+
+        //                    });
+        //                    var urlName = ' CasePaper/Index';
+        //                    $.ajax({
+        //                        url: urlName,
+        //                        type: "GET",
+        //                        success: function (response, status, xhr) {
+        //                            $("#mainContent").html(response);
+        //                        },
+        //                        error: function (err) {
+        //                            $("#mainContent").html(err);
+        //                        }
+        //                    });
+        //                }
+        //            },
+        //            error: function (error) {
+        //                alert("Error : " + error.toSource());
+        //            }
+        //        });
+        //    }
+        //});
+
+        $('#save').click(function (e) {
+            e.preventDefault();
+            debugger;
+            var form = $("#CasePaper-form");
+
+            if (form.valid()) {
+                if ($('#tblMaterials > tbody > tr').length == 0) {
+                    toastr.error("Please add at least one test.", "Test", {
+                        timeOut: 3000,
+                        closeButton: false,
+                        progressBar: true,
+                        positionClass: "toast-top-right"
                     });
                     $('#TestName').focus();
                     return false;
                 }
 
-                var MatIs = [];
-                var j = 0;
-                debugger;
-                $('#tblMaterials >tbody >tr').each(function () {
-                    if ($('#tblMaterials >tbody >tr').length !== j) {
-                        var tstcode, price, lprice;
-                        tstcode = $(this).find("[id^=hfTestId]").val();
-                        price = $(this).find("[id^=Price]").val();
-                        lprice = $(this).find("[id^=hfLabPrice]").val();
-
-                        if ((parseFloat(qty)) > 0) {
-                            MatIs.push({ TestCode: tstcode, Price: price, LabPrice: lprice });
-                        }
-                    }
-                    j++;
-                });
-
                 var _ObjCsPaper = {
                     PatientName: $("#PName").val(),
                     DateOfBirth: $("#PBOD").val(),
                     Gender: $("#Gender").val(),
-                    Contact: $("#PNumber").val(),
-                    Doctor: $("#Doctor").val()
+                    ConNumber: $("#PNumber").val(),
+                    DoctorRef: $("#Doctor").val()
                 };
-                data.append("CasePaper", JSON.stringify(_ObjCsPaper));
+
+                $("#mainContent").html('<div>Loading...</div>');
+
                 $.ajax({
-                    url: 'CasePaper/create',
+                    url: '/CasePaper/Create',
                     type: "POST",
-                    contentType: false,
-                    processData: false,
-                    data: data,
-                    success: function (response, status, xhr) {
+                    contentType: "application/json",
+                    dataType: "json",
+                    data: JSON.stringify(_ObjCsPaper),
+                    success: function (response) {
                         if (response.Status) {
-                            $.smallBox({
-                                title: "Save",
-                                content: "Record Saved Succesfully.",
-                                color: "#739e73",
-                                timeout: 7000,
+                            toastr.success("Document Number saved successfully!", "Success", {
+                                timeOut: 4000,  
+                                closeButton: false,
+                                progressBar: true,
+                                positionClass: "toast-top-right"
                             });
-                            var urlName = 'CasePaper/Index';
-                            $.ajax({
-                                url: urlName,
-                                type: "GET",
-                                success: function (response, status, xhr) {
-                                    $("#mainContent").html(response);
-                                },
-                                error: function (err) {
-                                    $("#mainContent").html(err);
-                                }
-                            });
-                        }
-                        else {
-                            $.smallBox({
-                                title: "Failed",
-                                content: response.Message,
-                                color: "#C46A69",
-                                timeout: 7000,
+                            //var urlName = '/CasePaper/Index';
+                            //$.ajax({
+                            //    url: urlName,
+                            //    type: "GET",
+                            //    success: function (response, status, xhr) {
+                            //        $("#mainContent").html(response);
+                            //    },
+                            //    error: function (err) {
+                            //        $("#mainContent").html(err);
+                            //    }
+                            //});
+
+                            setTimeout(function () {
+                                window.location.href = "/CasePaper/Index"; 
+                            }, 2000);
+                        } else {
+                            toastr.error("Error saving document!", "Error", {
+                                timeOut: 5000,
+                                closeButton: false,
+                                progressBar: true,
+                                positionClass: "toast-top-right"
                             });
                         }
                     },
-                    error: function (error) {
-                        $.smallBox({
-                            title: "Error",
-                            content: "Something went wrong.",
-                            color: "#C46A69",
-                            timeout: 3000,
+                    error: function (xhr, status, error) {
+                        console.error(xhr.responseText);
+                        toastr.error("An error occurred: " + xhr.responseText, "Error", {
+                            timeOut: 5000,
+                            closeButton: false,
+                            progressBar: true,
+                            positionClass: "toast-top-right"
                         });
                     }
                 });
             }
         });
 
-
-
-
-
-        $('#save').click(function (e) {
-            if (form.valid()) {
-                if ($('#tblMaterials >tbody >tr').length == 0) {
-                    $.smallBox({
-                        title: "Test",
-                        content: "Please add at least one test.",
-                        color: "#C46A69",
-                        timeout: 3000,
-                    });
-                    $('#TestName').focus();
-                    return false;
-                }
-
-                var MatIs = [];
-                var j = 0;
-                debugger;
-                $('#tblMaterials >tbody >tr').each(function () {
-                    if ($('#tblMaterials >tbody >tr').length !== j) {
-                        var tstcode, price, lprice;
-                        tstcode = $(this).find("[id^=hfTestId]").val();
-                        price = $(this).find("[id^=Price]").val();
-                        lprice = $(this).find("[id^=hfLabPrice]").val();
-
-                        if ((parseFloat(qty)) > 0) {
-                            MatIs.push({ TestCode: tstcode, Price: price, LabPrice: lprice });
-                        }
-                    }
-                    j++;
-                });
-
-                var _ObjCsPaper = {
-                    PatientName: $("#PName").val(),
-                    DateOfBirth: $("#PBOD").val(),
-                    Gender: $("#Gender").val(),
-                    Contact: $("#PNumber").val(),
-                    Doctor: $("#Doctor").val()
-                };
-
-                $("#mainContent").html('<div></div>');
-
-                $.ajax({
-                    url: ' CasePaper/create',
-                    type: "POST",
-                    async: false,
-                    contentType: "application/json",
-                    dataType: "json",
-                    data: JSON.stringify(_ObjCsPaper),
-                    success: function (response, status, xhr) {
-                        if (response.Status) {
-                            $.smallBox({
-                                title: "Document Number",
-                                content: "Document Number: -",
-                                color: "#C46A69",
-                                timeout: 7000,
-                            });
-                            var urlName = ' CasePaper/Index';
-                            $.ajax({
-                                url: urlName,
-                                type: "GET",
-                                success: function (response, status, xhr) {
-                                    $("#mainContent").html(response);
-                                },
-                                error: function (err) {
-                                    $("#mainContent").html(err);
-                                }
-                            });
-                        }
-                    },
-                    error: function (error) {
-                        alert("Error : " + error.toSource());
-                    }
-                });
-            }
-        });
 
 
 
@@ -764,8 +782,7 @@
         document.querySelectorAll("#tblMaterials td[data-editable='true']").forEach(cell => {
             cell.addEventListener("click", function () {
                 let currentValue = this.textContent.trim();
-
-                // Prevent duplicate input elements
+                                
                 if (this.querySelector("input")) return;
 
                 let input = document.createElement("input");
@@ -775,12 +792,9 @@
                 this.appendChild(input);
                 input.focus();
 
-                // On losing focus, save and revert to text
                 input.addEventListener("blur", function () {
                     cell.textContent = this.value.trim();
                 });
-
-                // Save on pressing Enter
                 input.addEventListener("keypress", function (event) {
                     if (event.key === "Enter") {
                         event.preventDefault();

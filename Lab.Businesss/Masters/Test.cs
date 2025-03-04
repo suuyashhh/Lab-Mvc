@@ -69,7 +69,7 @@ namespace Lab.Businesss.Masters
             _dalTest = new DALTest();
             var dtoTests = await _dalTest.GetTestsAsync(searchtext);
 
-            // Map DTOTest to Test
+            
             return dtoTests.Select(t => new Test
             {
                 TestCode = (int)t.TEST_CODE,

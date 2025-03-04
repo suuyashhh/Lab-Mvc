@@ -59,7 +59,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Masters\CasePaper.cs" />
-    <Compile Include="Masters\SaveViewModel.cs" />
     <Compile Include="Masters\Test.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

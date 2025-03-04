@@ -32,8 +32,7 @@ namespace Lab_Mvc.Controllers
                     _lstTests = _lstTests.OrderBy(obj => obj.TestName).ToList();
                     break;
             }
-
-            // Ensure that the model is not null when passed to the view
+                        
             return View(_lstTests);
         }
 

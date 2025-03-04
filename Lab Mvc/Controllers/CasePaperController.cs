@@ -34,7 +34,7 @@ namespace Lab_Mvc.Controllers
                     break;
             }
 
-            // Ensure that the model is not null when passed to the view
+            
             return View(_lstCitys);
         }
 
@@ -54,11 +54,11 @@ namespace Lab_Mvc.Controllers
                 result = await CasePaper.Create(_ObjCsPaper);
                 if (result != 0)
                 {
-                    return Json(new { Status = true, Message = "Data saved successfully." });
+                    return Json(new { Status = true, Message = "" });
                 }
                 else
                 {
-                    return Json(new { Status = false, Message = "Failed to save data." });
+                    return Json(new { Status = false, Message = "" });
                 }
             }
             catch (Exception ex)
