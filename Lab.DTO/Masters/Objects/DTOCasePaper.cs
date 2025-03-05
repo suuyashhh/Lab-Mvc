@@ -16,5 +16,6 @@ namespace Lab.DTO.Masters.Objects
         public string DOCTOR_REF { get; set; }
         public string DATE { get; set; }
         public int STATUS_CODE { get; set; }
+        public string SHORT_TRN_NO { get; set; }
     }
 }

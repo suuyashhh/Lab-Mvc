@@ -49,24 +49,6 @@ namespace Lab_Mvc.Controllers
         [HttpPost]
         public async Task<ActionResult> Create(CasePaper _ObjCsPaper)
         {
-            //try
-            //{
-            //    Int64 result = 0;
-            //    result = await CasePaper.Create(_ObjCsPaper);
-            //    if (result != 0)
-            //    {
-            //        return Json(new { Status = true, Message = "" });
-            //    }
-            //    else
-            //    {
-            //        return Json(new { Status = false, Message = "" });
-            //    }
-            //}
-            //catch (Exception ex)
-            //{                
-            //    return Json(new { Status = false, Message = "An error occurred: " + ex.Message });
-            //}
-
             var result = new SaveViewModel() { Status = true };
 
             try
