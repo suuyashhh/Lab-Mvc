@@ -23,6 +23,7 @@ namespace Lab.Businesss.Masters
         public string Date { get; set; }
         public int StatusCode { get; set; }
         public IList<Test> MatIs { get; set; }
+        public string ShortTrnNo { get; set; }
 
         public static CasePaper New()
         {
@@ -63,7 +64,8 @@ namespace Lab.Businesss.Masters
                                 Address = dtocasepaper.ADDRESS,
                                 DoctorRef = dtocasepaper.DOCTOR_REF,
                                 Date = dtocasepaper.DATE,
-                                StatusCode = dtocasepaper.STATUS_CODE
+                                StatusCode = dtocasepaper.STATUS_CODE,
+                                ShortTrnNo = dtocasepaper.TRN_NO.ToString().Substring(2, 6) + "-" + dtocasepaper.TRN_NO.ToString().Substring(dtocasepaper.TRN_NO.ToString().Length - 2),
                             };
 
             return _citylist.AsEnumerable<CasePaper>().ToList();

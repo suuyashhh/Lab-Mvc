@@ -313,7 +313,7 @@
                 <div class="add-test-section">
                     <div class="test-inputs" style="justify-content:end">
                        <button class="add-btn" id="save">Save</button>                      
-                        <a class="add-btn" style="background:red!important" href="/CasePaper/index" data-ajax-update="#mainContent" data-ajax-mode="replace" data-ajax-method="GET" data-ajax="true">Cancle</a>
+                        <a class="add-btn" style="background:red!important" href="/Test/index" data-ajax-update="#mainContent" data-ajax-mode="replace" data-ajax-method="GET" data-ajax="true">Cancle</a>
                     </div>
                 </div>
             </div>
@@ -321,21 +321,63 @@
     </div>
 </div>
 <script type="text/javascript">
-   $(document).ready(function () {    
+    $(document).ready(function () { 
+        var form = $("#Test-Form");
+        form.validate({
+            rules: {
+                LabPrice: {
+                    required: true
+                }
+            },
+            messages: {
+                LabPrice: {
+                    required: 'Please Enter LabPrice.'
+                }
+            },
+            errorPlacement: function (error, element) {
+                error.insertAfter(element.parent());
+            }
+        });
+
+
+
        $('#save').click(function (e) {
-           var form = $("#Test-Form");
-    if (form.valid()) {
-        //if ($('#tblMaterials >tbody >tr').length == 0){
-        //    $.smallBox({
-        //        title: "Test",
-        //        content: "Please add at least one test.",
-        //        color: "#C46A69",
-        //        timeout: 3000,
-        //    });
-        //    $('#TestName').focus();
-        //    return false;
-        //}
-        
+        e.preventDefault();
+        var form = $("#Test-Form");
+
+       if (form.valid()) {
+           //if ($('#tblMaterials >tbody >tr').length == 0){
+           //    $.smallBox({
+           //        title: "Test",
+           //        content: "Please add at least one test.",
+           //        color: "#C46A69",
+           //        timeout: 3000,
+           //    });
+           //    $('#TestName').focus();
+           //    return false;
+           //}
+        if ($('#TestName').val().trim() === "") {
+            toastr.error("Please Fill The Test Name...!", "Test Name", {
+                timeOut: 3000,
+                closeButton: false,
+                progressBar: true,
+                positionClass: "toast-top-right"
+            });
+            $('#TestName').focus();
+            return false;
+        }
+
+        if ($('#Price').val().trim() === "") {
+            toastr.error("Please Fill The Test Name...!", "Test Name", {
+                timeOut: 3000,
+                closeButton: false,
+                progressBar: true,
+                positionClass: "toast-top-right"
+            });
+            $('#Price').focus();
+            return false;
+        }
+
         var _ObjTest = {
             TestName: $("#TestName").val(),
             Price: $("#Price").val(),
@@ -343,23 +385,16 @@
         };
 
         $("#mainContent").html('<div></div>');
-
+               
         $.ajax({
-            url: ' Test/create',
+            url: '/Test/Create',
             type: "POST",
-            async: false,
             contentType: "application/json",
             dataType: "json",
             data: JSON.stringify(_ObjTest),
-            success: function (response, status, xhr) {
-             if (response.Status) {
-                    $.smallBox({
-                        title: "Document Number",
-                        content: "Document Number: -",
-                        color: "#C46A69",
-                        timeout: 7000,
-                    });
-                 var urlName = ' Test/Index';
+            success: function (response) {
+                if (response.Status) {                                        
+                 var urlName = 'Test/Index';
                     $.ajax({
                         url: urlName,
                         type: "GET",
@@ -370,14 +405,30 @@
                             $("#mainContent").html(err);
                         }
                     });
+
+                    //setTimeout(function () {
+                    //    window.location.href = "/Test/Index";
+                    //});
+                } else {
+                    toastr.error("Error saving document!", "Error", {
+                        timeOut: 5000,
+                        closeButton: false,
+                        progressBar: true,
+                        positionClass: "toast-top-right"
+                    });
                 }
             },
-            error: function (error) {
-                alert("Error : " + error.toSource());
+            error: function (xhr, status, error) {
+                console.error(xhr.responseText);
+                toastr.error("An error occurred: " + xhr.responseText, "Error", {
+                    timeOut: 5000,
+                    closeButton: false,
+                    progressBar: true,
+                    positionClass: "toast-top-right"
+                });
             }
         });
-    }
-});
-});
+           }
+       });
 
 </script>
