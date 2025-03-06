@@ -1,4 +1,5 @@
 ﻿using Lab.Businesss.Masters;
+using Lab_Mvc.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,24 +44,37 @@ namespace Lab_Mvc.Controllers
 
         [HttpPost]
         public async Task<ActionResult> Create(Test _ObjTest)
-        {
+        {          
+            var result = new SaveViewModel() { Status = true };
+
             try
             {
-                Int64 result = 0;
-                result = await Test.Create(_ObjTest);
-                if (result != 0)
+                Int64 trn_no = await Test.Create(_ObjTest);
+                if (trn_no != 0)
                 {
-                    return Json(new { Status = true, Message = "" });
+                    string strDocNo = trn_no.ToString().Substring(2, 6) + "-" + trn_no.ToString().Substring(trn_no.ToString().Length - 2);
+                    result.DocNo = strDocNo;
+                    result = new SaveViewModel()
+                    {
+                        Status = true,
+                        Message = "",
+                        DocNo = strDocNo
+                    };
                 }
                 else
                 {
-                    return Json(new { Status = false, Message = "" });
+                    result.Status = false;
+                    result.Message = "Something went wrong.";
                 }
+                return Json(result, JsonRequestBehavior.AllowGet);
             }
-            catch (Exception ex)
+            catch
             {
-                return Json(new { Status = false, Message = "An error occurred: " + ex.Message });
+                result.Status = false;
+                result.Message = "Something went wrong.";
+                return Json(result, JsonRequestBehavior.AllowGet);
             }
+
         }
 
     } 

@@ -405,91 +405,8 @@
         //$("#Doctor").select2();
 
 
-
-
-        //$('#save').click(function (e) {
-        //    debugger;
-        //    var form = $("#CasePaper-form");
-        //    if (form.valid()) {
-        //        if ($('#tblMaterials > tbody > tr').length == 0) {
-        //            toastr.error("Please add at least one test.", "Test", {
-        //                timeOut: 3000,  // Auto-hide after 3 seconds
-        //                closeButton: false,  // No close button
-        //                progressBar: true,  // Show progress bar
-        //                positionClass: "toast-top-right" // Position at top right
-        //            });
-
-        //            $('#TestName').focus();
-        //            return false;
-        //        }
-
-
-        //        var MatIs = [];
-        //        var j = 0;
-        //        debugger;
-        //        $('#tblMaterials >tbody >tr').each(function () {
-        //            if ($('#tblMaterials >tbody >tr').length !== j) {
-        //                var tstcode, price, lprice;
-        //                tstcode = $(this).find("[id^=hfTestId]").val();
-        //                price = $(this).find("[id^=Price]").val();
-        //                lprice = $(this).find("[id^=hfLabPrice]").val();
-
-        //                if ((parseFloat(price)) > 0) {
-        //                    MatIs.push({ TestCode: tstcode, Price: price, LabPrice: lprice });
-        //                }
-        //            }
-        //            j++;
-        //        });
-
-        //        var _ObjCsPaper = {
-        //            PatientName: $("#PName").val(),
-        //            DateOfBirth: $("#PBOD").val(),
-        //            Gender: $("#Gender").val(),
-        //            ConNumber: $("#PNumber").val(),
-        //            DoctorRef: $("#Doctor").val()
-        //        };
-
-        //        $("#mainContent").html('<div></div>');
-
-        //        $.ajax({
-        //            url: ' CasePaper/create',
-        //            type: "POST",
-        //            async: false,
-        //            contentType: "application/json",
-        //            dataType: "json",
-        //            data: JSON.stringify(_ObjCsPaper),
-        //            success: function (response, status, xhr) {
-        //                if (response.Status) {
-        //                    toastr.success("Document Number: -", "Document Number", {
-        //                        timeOut: 7000,
-        //                        closeButton: false,
-        //                        progressBar: true,
-        //                        positionClass: "toast-top-right",
-
-        //                    });
-        //                    var urlName = ' CasePaper/Index';
-        //                    $.ajax({
-        //                        url: urlName,
-        //                        type: "GET",
-        //                        success: function (response, status, xhr) {
-        //                            $("#mainContent").html(response);
-        //                        },
-        //                        error: function (err) {
-        //                            $("#mainContent").html(err);
-        //                        }
-        //                    });
-        //                }
-        //            },
-        //            error: function (error) {
-        //                alert("Error : " + error.toSource());
-        //            }
-        //        });
-        //    }
-        //});
-
         $('#save').click(function (e) {
             e.preventDefault();
-            debugger;
             var form = $("#CasePaper-form");
 
             if (form.valid()) {
@@ -540,27 +457,27 @@
                     success: function (response) {
                         if (response.Status) {
                             //toastr.success(`Document Number ${response.DocNo} saved successfully!`, "Success", {
-                            toastr.success(`Document Number ${response.DocNo} saved successfully!`, "Success", {
-                                timeOut: 4000,  
-                                closeButton: false,
-                                progressBar: true,
-                                positionClass: "toast-top-right"
-                            });
+                            //toastr.success(`Document Number ${response.DocNo} saved successfully!`, "Success", {
+                            //    timeOut: 4000,  
+                            //    closeButton: false,
+                            //    progressBar: true,
+                            //    positionClass: "toast-top-right"
+                            //});
                            
-                            //setTimeout(function () {
-                            //    window.location.href = "/CasePaper/Index";
-                            //}, 2000);
-
-                            $.ajax({
-                                url: '/CasePaper/Index',
-                                type: "GET",
-                                success: function (indexResponse) {
-                                    $("#mainContent").html(indexResponse); 
-                                },
-                                error: function (err) {
-                                    $("#mainContent").html("Error loading page.");
-                                }
+                            setTimeout(function () {
+                                window.location.href = "/CasePaper/Index";
                             });
+
+                            //$.ajax({
+                            //    url: '/CasePaper/Index',
+                            //    type: "GET",
+                            //    success: function (indexResponse) {
+                            //        $("#mainContent").html(indexResponse); 
+                            //    },
+                            //    error: function (err) {
+                            //        $("#mainContent").html("Error loading page.");
+                            //    }
+                            //});
                         } else {
                             toastr.error("Error saving document!", "Error", {
                                 timeOut: 5000,

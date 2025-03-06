@@ -72,7 +72,7 @@ namespace Lab.Businesss.Masters
             
             return dtoTests.Select(t => new Test
             {
-                TestCode = (int)t.TEST_CODE,
+                TestCode = (Int64)t.TEST_CODE,
                 TestName = t.TEST_NAME,
                 Price = t.PRICE,
                 LabPrice = t.LAB_PRICE
@@ -93,7 +93,7 @@ namespace Lab.Businesss.Masters
 
                 DTOTest _objDtoTest = new DTOTest()
                 {
-                    TRN_NO = newTestId,
+                    TEST_CODE = newTestId,
                     TEST_NAME = _ObjTest.TestName,
                     PRICE = _ObjTest.Price,
                     LAB_PRICE    = _ObjTest.LabPrice,
