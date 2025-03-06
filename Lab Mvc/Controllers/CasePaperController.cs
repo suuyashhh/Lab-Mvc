@@ -12,29 +12,79 @@ namespace Lab_Mvc.Controllers
     public class CasePaperController : Controller
     {
         // GET: CasePaper
-        public async Task<ActionResult> Index(string sortOrder, string searchString, int? page)
+        public async Task<ActionResult> Index(string sortdir, string sortOrder, string searchString, int? page)
         {
             List<CasePaper> _lstCitys = await CasePaper.GetAllAsync();
 
+            string strSortDir = "";
             ViewBag.CurrentSort = sortOrder;
-            ViewBag.NameSortParam = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            //ViewBag.NameSortParam = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+                  
 
             if (!string.IsNullOrEmpty(searchString))
             {
                 ViewBag.CurrentFilter = searchString;
-                _lstCitys = _lstCitys.Where(obj => obj.PatientName != null && obj.PatientName.ToUpper().Contains(searchString.ToUpper())).ToList();
+
+                _lstCitys = _lstCitys.Where(obj =>
+                    (obj.Date != null && obj.Date.ToString().ToUpper().Contains(searchString.ToUpper())) ||
+                    (obj.ShortTrnNo != null && obj.ShortTrnNo.ToUpper().Contains(searchString.ToUpper())) ||
+                    (obj.PatientName != null && obj.PatientName.ToUpper().Contains(searchString.ToUpper())) 
+                    //(obj.CreatedBy != null && obj.CreatedBy.ToUpper().Contains(searchString.ToUpper())) ||
+                    //(obj.AppBy != null && obj.AppBy.ToUpper().Contains(searchString.ToUpper()))
+                ).ToList();
             }
+
+            if (!string.IsNullOrEmpty(sortdir))
+            {
+                strSortDir = sortdir;
+                if (sortdir == "desc")
+                {
+                    ViewBag.SortDir = "asc";
+                }
+                else
+                {
+                    ViewBag.SortDir = "desc";
+                }
+            }
+
 
             switch (sortOrder)
             {
-                case "name_desc":
-                    _lstCitys = _lstCitys.OrderByDescending(obj => obj.PatientName).ToList();
+                case "TrnNo":
+                    if (strSortDir == "desc")
+                    {
+                        _lstCitys = _lstCitys.OrderByDescending(obj => obj.TrnNo).ToList();
+                    }
+                    else
+                    {
+                        _lstCitys = _lstCitys.OrderBy(obj => obj.TrnNo).ToList();
+                    }
+                    break;
+                case "Date":
+                    if (strSortDir == "desc")
+                    {
+                        _lstCitys = _lstCitys.OrderByDescending(obj => obj.Date).ToList();
+                    }
+                    else
+                    {
+                        _lstCitys = _lstCitys.OrderBy(obj => obj.Date).ToList();
+                    }
+                    break;
+                case "PatientName":
+                    if (strSortDir == "desc")
+                    {
+                        _lstCitys = _lstCitys.OrderByDescending(obj => obj.PatientName).ToList();
+                    }
+                    else
+                    {
+                        _lstCitys = _lstCitys.OrderBy(obj => obj.PatientName).ToList();
+                    }
                     break;
                 default:
-                    _lstCitys = _lstCitys.OrderBy(obj => obj.PatientName).ToList();
+                    _lstCitys = _lstCitys.OrderByDescending(obj => obj.Date).ThenByDescending(p => p.TrnNo).ToList();
+                    ViewBag.SortDir = "asc";
                     break;
             }
-
             
             return View(_lstCitys);
         }
