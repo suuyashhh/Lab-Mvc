@@ -54,8 +54,8 @@ namespace Lab.DALDapper.Implimantation.Masters
         {
             try
             {
-                string query = @"INSERT INTO MST_TEST (TRN_NO,TEST_CODE,TEST_NAME,PRICE,LAB_PRICE,SR_NO)";
-                query = query + " VALUES(@TRN_NO,@TEST_CODE,@TEST_NAME,@PRICE,@LAB_PRICE,@SR_NO);SELECT @TRN_NO";
+                string query = @"INSERT INTO MST_TEST (TEST_CODE,TEST_NAME,PRICE,LAB_PRICE)";
+                query = query + " VALUES(@TEST_CODE,@TEST_NAME,@PRICE,@LAB_PRICE);SELECT @TEST_CODE";
                 Int64 i;
                 using (SqlConnection con = new SqlConnection(_connectionString))
                 {
@@ -73,7 +73,7 @@ namespace Lab.DALDapper.Implimantation.Masters
         public async Task<string> GetLastTestIdForDate(string datePart)
         {
             string lastTestId = null;
-            string query = "SELECT TOP 1 TRN_NO FROM MST_TEST WHERE TRN_NO LIKE @datePart + '%' ORDER BY TRN_NO DESC";
+            string query = "SELECT TOP 1 TEST_CODE FROM MST_TEST WHERE TEST_CODE LIKE @datePart + '%' ORDER BY TEST_CODE DESC";
 
             using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["connstr"].ConnectionString))
             {
