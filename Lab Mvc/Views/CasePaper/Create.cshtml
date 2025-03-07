@@ -275,13 +275,59 @@
         }
     }
 
-    .ui-autocomplete {
+   /* .ui-autocomplete {
         max-height: 200px;
         overflow-y: auto;
         background: white;
         border: 1px solid #ccc;
         z-index: 9999 !important;
+    }*/
+       
+    #tblMaterials td,
+    #tblMaterials th {
+        padding: 8px; 
+        text-align: center; 
+        vertical-align: middle;
     }
+    
+    .editable-input {
+        width: 50%; 
+        padding: 4px; 
+        border: 1px solid #ccc; 
+        border-radius: 4px; 
+        font-size: 14px;
+        box-sizing: border-box; 
+        text-align: center; 
+        margin: 0; 
+    }
+    
+    #tblMaterials td[data-editable="true"] {
+        padding: 0; 
+    }
+
+    .ui-autocomplete {
+        max-height: 200px;
+        overflow-y: auto;
+        background: #fff;
+        border: 1px solid #ddd;
+        z-index: 9999 !important;
+        border-radius: 6px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 5px 0;
+    }
+
+    .ui-menu-item {
+        padding: 10px 14px;
+        font-size: 15px;
+        color: #333;
+        cursor: pointer;
+        transition: background 0.2s ease-in-out;
+    }
+
+        .ui-menu-item:hover {
+            background-color: #f5f5f5; /* Soft hover effect */
+        }
+
 </style>
 
 <div class="body">
@@ -333,6 +379,7 @@
                 <h3 class="section-subtitle" style="color: #333; margin: 30px 0 20px;">Blood Tests</h3>
 
                 <!-- Table -->
+
                 <div class="table-responsive">
                     <table class="blood-tests-table" id="tblMaterials">
                         <thead>
@@ -340,6 +387,7 @@
                                 <th>Sr No</th>
                                 <th>Test Name</th>
                                 <th>Price (₹)</th>
+                                <th>Lab Price (₹)</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -349,6 +397,7 @@
                             <tr>
                                 <th colspan="2">Total Amount</th>
                                 <th id="totalPrice">₹0</th>
+                                <th id="LabtotalPrice">₹0</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -398,13 +447,7 @@
 <script type="text/javascript">
     $(document).ready(function () {
         var form = $("#CasePaper-form");
-        //$("#PName").select2();
-        //$("#PBOD").select2();
-        //$("#Gender").select2();
-        //$("#PNumber").select2();
-        //$("#Doctor").select2();
-
-
+       
         $('#save').click(function (e) {
             e.preventDefault();
             var form = $("#CasePaper-form");
@@ -421,20 +464,21 @@
                     return false;
                 }
 
+                debugger;
                 var MatIs = [];
-                 var j = 0;
-                 $('#tblMaterials >tbody >tr').each(function () {
-                     if ($('#tblMaterials >tbody >tr').length !== j) {
-                         var tstcode, price, lprice;
-                         tstcode = $(this).find("[id^=hfTestId]").val();
-                         price = $(this).find("[id^=Price]").val();
-                         lprice = $(this).find("[id^=hfLabPrice]").val();
+                var j = 0;
+                $('#tblMaterials > tbody > tr').each(function () {
+                    if ($('#tblMaterials > tbody > tr').length !== j) {
+                        var tstcode, price, lprice;
+                        tstcode = $(this).find("[id^=hfTestId]").val(); // Get TestCode from hidden input
+                        price = $(this).find("td[id^=Amount]").text(); // Get Price from <td> text
+                        lprice = $(this).find("td[id^=LabAmount]").text(); // Get LabPrice from <td> text
 
-                         if ((parseFloat(price)) > 0) {
-                             MatIs.push({ TestCode: tstcode, Price: price, LabPrice: lprice });
-                         }
-                     }
-                     j++;
+                        if ((parseFloat(price)) > 0) {
+                            MatIs.push({ TestCode: tstcode, Price: price, LabPrice: lprice });
+                        }
+                    }
+                    j++;
                 });
 
                 var _ObjCsPaper = {
@@ -456,28 +500,11 @@
                     data: JSON.stringify(_ObjCsPaper),
                     success: function (response) {
                         if (response.Status) {
-                            //toastr.success(`Document Number ${response.DocNo} saved successfully!`, "Success", {
-                            //toastr.success(`Document Number ${response.DocNo} saved successfully!`, "Success", {
-                            //    timeOut: 4000,  
-                            //    closeButton: false,
-                            //    progressBar: true,
-                            //    positionClass: "toast-top-right"
-                            //});
-                           
+                          
                             setTimeout(function () {
                                 window.location.href = "/CasePaper/Index";
                             });
-
-                            //$.ajax({
-                            //    url: '/CasePaper/Index',
-                            //    type: "GET",
-                            //    success: function (indexResponse) {
-                            //        $("#mainContent").html(indexResponse); 
-                            //    },
-                            //    error: function (err) {
-                            //        $("#mainContent").html("Error loading page.");
-                            //    }
-                            //});
+                                                      
                         } else {
                             toastr.error("Error saving document!", "Error", {
                                 timeOut: 5000,
@@ -505,13 +532,13 @@
 
         $("#btnAdd").click(function () {
             if ($("#hfTestId").val() == 0 || $("#TestName").val().trim() === "") {
-                $.smallBox({
-                    title: "Test",
-                    content: "Please select proper Test.",
-                    color: "#C46A69",
-                    timeout: 3000,
+                toastr.error("Please select proper Test.", "Test", {
+                    timeOut: 3000,
+                    closeButton: false,
+                    progressBar: true,
+                    positionClass: "toast-top-right"
                 });
-                $("#TestName").focus();
+                $('#TestName').focus();
                 return false;
             }
 
@@ -522,32 +549,33 @@
             let labprice = $("#hfLabPrice").val();
 
             if (document.getElementById(TestCode)) {
-                $.smallBox({
-                    title: "Duplicate",
-                    content: "Duplicate Not Allowed.",
-                    color: "#C46A69",
-                    timeout: 3000,
+                toastr.error("Duplicate Not Allowed.", "Duplicate", {
+                    timeOut: 3000,
+                    closeButton: false,
+                    progressBar: true,
+                    positionClass: "toast-top-right"
                 });
                 return;
             }
 
             let row = `
-            <tr id="row${cur_row_num}">
-                <td>${cur_row_num}</td>
-                <td>${TestName}
-                    <input type='hidden' id='TestCode${cur_row_num}' value='${TestCode}'>
-                    <input type='hidden' id='${TestCode}' value='${TestCode}'>
-                    <input type='hidden' id='Price${cur_row_num}' value='${labprice}'>
-                </td>
-                <td id="Amount${cur_row_num}">${price}</td>
-                <td>
-                    <a class="delete-btn remove-row" href="javascript:void(0);">Delete</a>
-                </td>
-            </tr>
-        `;
+                <tr id="row${cur_row_num}">
+                    <td>${cur_row_num}</td>
+                    <td>${TestName}
+                        <input type='hidden' id='TestCode${cur_row_num}' value='${TestCode}'>
+                        <input type='hidden' id='hfTestId${cur_row_num}' value='${TestCode}'>
+                        <input type='hidden' id='Price${cur_row_num}' value='${price}'>
+                        <input type='hidden' id='hfLabPrice${cur_row_num}' value='${labprice}'>
+                    </td>
+                    <td id="Amount${cur_row_num}" data-editable="true">${price}</td>
+                    <td id="LabAmount${cur_row_num}" data-editable="true">${labprice}</td>
+                    <td>
+                        <a class="delete-btn remove-row" href="javascript:void(0);">Delete</a>
+                    </td>
+                </tr>
+            `;
 
             $("#tblMaterials tbody").append(row);
-
 
             $("#TestName").val('');
             $("#hfTestId").val(0);
@@ -556,8 +584,8 @@
 
             regen_srno();
             calculateSum();
+            attachEditableListeners(); 
         });
-
 
         $("#tblMaterials").on("click", ".remove-row", function () {
             $(this).closest("tr").remove();
@@ -573,73 +601,89 @@
 
         function calculateSum() {
             let total = 0;
+            let labtotal = 0;
             $("#tblMaterials tbody tr").each(function () {
                 let amount = parseFloat($(this).find("td[id^=Amount]").text()) || 0;
+                let Labamount = parseFloat($(this).find("td[id^=LabAmount]").text()) || 0;
                 total += amount;
+                labtotal += Labamount;
             });
             $("#totalPrice").text("₹" + total);
+            $("#LabtotalPrice").text("₹" + labtotal);
         }
-    });
 
+        function attachEditableListeners() {
+            document.querySelectorAll("#tblMaterials td[data-editable='true']").forEach(cell => {
+                cell.removeEventListener("click", handleCellClick); // Remove existing listeners to avoid duplicates
+                cell.addEventListener("click", handleCellClick);
+            });
+        }
 
-    $('#tblMaterials').on('click', '.remove-row', function () {
-        $(this).closest('tr').remove();
-        regen_srno();
-        calculateSum();
-    });
+        function handleCellClick() {
+            let currentValue = this.textContent.trim();
 
-    $('#tblMaterials').on('input', '.qty-field, .rate-field', function () {
-        calculateAmt(this);
-    });
+            if (this.querySelector("input")) return;
 
-    function regen_srno() {
-        $('#tblMaterials > tbody > tr').not(':last').each(function (index) {
+            let input = document.createElement("input");
+            input.type = "text";
+            input.value = currentValue;
+            input.className = "editable-input"; 
+            this.innerHTML = "";
+            this.appendChild(input);
+            input.focus();
 
-            $(this).find('td:first').text(index + 1);
-
-            $(this).find('input, label').each(function () {
-                var currentId = $(this).attr('id');
-                if (currentId) {
-
-                    var newId = currentId.replace(/\d+$/, index + 1);
-                    $(this).attr('id', newId);
+            input.addEventListener("blur", function () {
+                this.parentElement.textContent = this.value.trim();
+                calculateSum();
+            });
+            input.addEventListener("keypress", function (event) {
+                if (event.key === "Enter") {
+                    event.preventDefault();
+                    this.blur();
                 }
             });
-        });
-    }
+        }
+                
+        attachEditableListeners();
+    });
+      
 
-    function removeRow(button) {
-        $(button).closest('tr').remove();
-        regen_srno();
-        calculateSum();
-    }
+    //$('#tblMaterials').on('input', '.qty-field, .rate-field', function () {
+    //    calculateAmt(this);
+    //});     
 
-    function calculateSum() {
-        var sum = 0;
+    //function removeRow(button) {
+    //    $(button).closest('tr').remove();
+    //    regen_srno();
+    //    calculateSum();
+    //}
 
-        $('#tblMaterials').find("[id*=Amount]").each(function () {
-            sum += parseFloat($(this).val()) || 0;
-        });
-        $('#transaction').val(sum.toFixed(2));
-        assignBasicAmount();
-    }
+    //function calculateSum() {
+    //    var sum = 0;
 
-    function calculateAmt(obj) {
-        var $row = $(obj).closest('tr');
-        var NQty = parseFloat($row.find("[id^=Qty]").val()) || 0;
-        var NRate = parseFloat($row.find("[id^=Rate]").val()) || 0;
+    //    $('#tblMaterials').find("[id*=Amount]").each(function () {
+    //        sum += parseFloat($(this).val()) || 0;
+    //    });
+    //    $('#transaction').val(sum.toFixed(2));
+    //    assignBasicAmount();
+    //}
 
-        var Total = NQty * NRate;
+    //function calculateAmt(obj) {
+    //    var $row = $(obj).closest('tr');
+    //    var NQty = parseFloat($row.find("[id^=Qty]").val()) || 0;
+    //    var NRate = parseFloat($row.find("[id^=Rate]").val()) || 0;
 
-        $row.find("[id^=Amount]").val(Total.toFixed(2));
+    //    var Total = NQty * NRate;
 
-        calculateSum();
-    }
+    //    $row.find("[id^=Amount]").val(Total.toFixed(2));
 
-    function assignBasicAmount() {
-        $('#TaxAmount1').val($('#transaction').val());
-        calculate();
-    }
+    //    calculateSum();
+    //}
+
+    //function assignBasicAmount() {
+    //    $('#TaxAmount1').val($('#transaction').val());
+    //    calculate();
+    //}
 
 
     $(function () {
@@ -695,12 +739,12 @@
     });
 </script>
 
-<script>
+@*<script>
     document.addEventListener("DOMContentLoaded", function () {
         document.querySelectorAll("#tblMaterials td[data-editable='true']").forEach(cell => {
             cell.addEventListener("click", function () {
                 let currentValue = this.textContent.trim();
-                                
+
                 if (this.querySelector("input")) return;
 
                 let input = document.createElement("input");
@@ -712,6 +756,7 @@
 
                 input.addEventListener("blur", function () {
                     cell.textContent = this.value.trim();
+                    calculateSum();
                 });
                 input.addEventListener("keypress", function (event) {
                     if (event.key === "Enter") {
@@ -722,4 +767,4 @@
             });
         });
     });
-</script>
+</script>*@
