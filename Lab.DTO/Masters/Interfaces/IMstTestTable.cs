@@ -8,11 +8,8 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace Lab.DTO.Masters.Interfaces
 {
-    public interface IMSTTest
+    public interface IMstTestTable
     {
-        List<DTOTest> GetAll();
-        Int64 Create(DTOTest _objDtoTest);
-        Task<List<DTOTest>> GetTestsAsync(string searchtext);
-        Task<string> GetLastTestIdForDate(string datePart);
+        Int64 Create(DTOTestTable _objTestTableDetails);
     }
 }

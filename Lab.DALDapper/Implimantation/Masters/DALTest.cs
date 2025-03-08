@@ -50,7 +50,7 @@ namespace Lab.DALDapper.Implimantation.Masters
             }
         }
 
-        public Int64 Create(DTOTest _objTestDetails)
+        public Int64 Create(DTOTest _objDtoTest)
         {
             try
             {
@@ -60,7 +60,7 @@ namespace Lab.DALDapper.Implimantation.Masters
                 using (SqlConnection con = new SqlConnection(_connectionString))
                 {
                     con.Open();
-                    i= con.Query<Int64>(query,_objTestDetails).Single();                    
+                    i= con.Query<Int64>(query, _objDtoTest).Single();                    
                 }
                 return i;
             }

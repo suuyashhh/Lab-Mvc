@@ -396,8 +396,8 @@
                         <thead>
                             <tr>
                                 <th colspan="2">Total Amount</th>
-                                <th id="totalPrice">₹0</th>
-                                <th id="LabtotalPrice">₹0</th>
+                                <th id="totalPrice" name="totalPrice">₹0</th>
+                                <th id="LabtotalPrice" name="LabtotalPrice">₹0</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -421,7 +421,9 @@
 
             <div class="form-group">
                 <label>Dis (%)</label>
-                <input type="text" class="input-field">
+                <input type="text" id="Discount" name="Discount" value="0" class="input-field">
+                <label>Dis Amount</label>                
+                <input type="text" id="DisAmount" name="DisAmount" class="input-field" readonly>
             </div>
 
             <h2 class="section-title">Collection</h2>
@@ -447,6 +449,19 @@
 <script type="text/javascript">
     $(document).ready(function () {
         var form = $("#CasePaper-form");
+
+        $('#Discount').on('input', function () {
+            
+            let totalPrice = parseFloat($('#totalPrice').text()) || 0;            
+            let discount = parseFloat($(this).val()) || 0;            
+            let discountAmount = (totalPrice * discount) / 100;            
+            let labTotalPrice = parseFloat($('#LabtotalPrice').text()) || 0;            
+            let updatedLabTotalPrice = labTotalPrice - discountAmount;            
+            //$('#LabtotalPrice').text(updatedLabTotalPrice.toFixed(2));
+            $('#DisAmount').val(discountAmount.toFixed(2));
+            
+            let TotalProfit = updatedLabTotalPrice;
+        });
        
         $('#save').click(function (e) {
             e.preventDefault();
@@ -470,9 +485,9 @@
                 $('#tblMaterials > tbody > tr').each(function () {
                     if ($('#tblMaterials > tbody > tr').length !== j) {
                         var tstcode, price, lprice;
-                        tstcode = $(this).find("[id^=hfTestId]").val(); // Get TestCode from hidden input
-                        price = $(this).find("td[id^=Amount]").text(); // Get Price from <td> text
-                        lprice = $(this).find("td[id^=LabAmount]").text(); // Get LabPrice from <td> text
+                        tstcode = $(this).find("[id^=hfTestId]").val(); 
+                        price = $(this).find("td[id^=Amount]").text(); 
+                        lprice = $(this).find("td[id^=LabAmount]").text(); 
 
                         if ((parseFloat(price)) > 0) {
                             MatIs.push({ TestCode: tstcode, Price: price, LabPrice: lprice });
@@ -487,6 +502,10 @@
                     Gender: $("#Gender").val(),
                     ConNumber: $("#PNumber").val(),
                     DoctorRef: $("#Doctor").val(),
+                    TotalPrice: $("#totalPrice").val(),
+                    TotalLabPrice: $("#LabtotalPrice").val(),
+                    TotalProfit: TotalProfit,
+                    Discount: $("#Discount").val(),
                     MatIs: MatIs,
                 };
 
@@ -614,7 +633,7 @@
 
         function attachEditableListeners() {
             document.querySelectorAll("#tblMaterials td[data-editable='true']").forEach(cell => {
-                cell.removeEventListener("click", handleCellClick); // Remove existing listeners to avoid duplicates
+                cell.removeEventListener("click", handleCellClick); 
                 cell.addEventListener("click", handleCellClick);
             });
         }

@@ -13,7 +13,7 @@ namespace Lab.Businesss.Masters
     {
         public static IMstCasePaper _dalCasePaper;
         public static IMSTTest _dalTest;
-
+        public static IMstTestTable _dalTestTabe;
         public Int64 TrnNo { get; set; }
         public string PatientName { get; set; }
         public string Gender { get; set; }
@@ -22,8 +22,12 @@ namespace Lab.Businesss.Masters
         public string DoctorRef { get; set; }
         public string Date { get; set; }
         public int StatusCode { get; set; }
-        public IList<Test> MatIs { get; set; }
+        public IList<TestTable> MatIs { get; set; }
         public string ShortTrnNo { get; set; }
+        public decimal TotalPrice { get; set; }
+        public decimal TotalLabPrice { get; set; }
+        public decimal TotalProfit { get; set; }
+        public decimal Discount { get; set; }
 
         public static CasePaper New()
         {
@@ -96,27 +100,26 @@ namespace Lab.Businesss.Masters
                 result = await Task.Run(() => { return _dalCasePaper.Create(_objDtoCasePaper); });
 
 
-                //IList<Test> counte = _ObjCsPaper.MatIs;
-                //if (counte != null)
-                //{
-                //    int intSrNo = 1;
+                IList<TestTable> counte = _ObjCsPaper.MatIs;
+                if (counte != null)
+                {
+                    int intSrNo = 1;
 
-                //    foreach (Test _objTest in _ObjCsPaper.MatIs)
-                //    {
-                //        DTOTest _objTestDetails = new DTOTest()
-                //        {
-                //            TRN_NO = newPatientId,
-                //            TEST_CODE = _objTest.TestCode,
-                //            TEST_NAME = _objTest.TestName,
-                //            SR_NO = intSrNo,
-                //            PRICE = _objTest.Price,
-                //            LAB_PRICE = _objTest.LabPrice,
+                    foreach (TestTable _objTestTable in _ObjCsPaper.MatIs)
+                    {
+                        DTOTestTable _objTestTableDetails = new DTOTestTable()
+                        {
+                            TRN_NO = newPatientId,
+                            TEST_CODE = _objTestTable.TestCode,
+                            SR_NO = intSrNo,
+                            PRICE = _objTestTable.Price,
+                            LAB_PRICE = _objTestTable.LabPrice,
 
-                //        };
-                //        _dalTest.Create(_objTestDetails);
-                //        intSrNo++;
-                //    }
-                //}
+                        };
+                        _dalTestTabe.Create(_objTestTableDetails);
+                        intSrNo++;
+                    }
+                }
 
 
                 return result;
