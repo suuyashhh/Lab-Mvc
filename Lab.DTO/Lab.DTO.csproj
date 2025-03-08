@@ -60,8 +60,10 @@
   <ItemGroup>
     <Compile Include="Masters\Interfaces\IMstCasePaper.cs" />
     <Compile Include="Masters\Interfaces\IMSTTest.cs" />
+    <Compile Include="Masters\Interfaces\IMstTestTable.cs" />
     <Compile Include="Masters\Objects\DTOCasePaper.cs" />
     <Compile Include="Masters\Objects\DTOTest.cs" />
+    <Compile Include="Masters\Objects\DTOTestTable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

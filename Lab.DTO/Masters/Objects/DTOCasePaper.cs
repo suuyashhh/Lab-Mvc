@@ -17,5 +17,9 @@ namespace Lab.DTO.Masters.Objects
         public string DATE { get; set; }
         public int STATUS_CODE { get; set; }
         public string SHORT_TRN_NO { get; set; }
+        public decimal TOTAL_PRICE { get; set; }
+        public decimal TOTAL_LAB_PRICE { get; set; }
+        public decimal TOTAL_PROFIT { get; set; }
+        public decimal Discount { get; set; }
     }
 }
