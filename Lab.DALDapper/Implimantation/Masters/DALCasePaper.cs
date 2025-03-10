@@ -15,6 +15,7 @@ namespace Lab.DALDapper.Implimantation.Masters
 {
     public class DALCasePaper : IMstCasePaper
     {
+        string connectionString = ConfigurationManager.ConnectionStrings["connstr"].ConnectionString;
         public List<DTOCasePaper> GetAll()
         {
             string connectionString = ConfigurationManager.ConnectionStrings["connstr"].ConnectionString;
@@ -75,6 +76,28 @@ namespace Lab.DALDapper.Implimantation.Masters
                 }
             }
             return lastPatientId;
+        }
+
+
+        public DTOCasePaper GetExisting(Int64 code)
+        {
+            try
+            {
+                string query = "SELECT * FROM MST_PATIENT WHERE TRN_NO = @code";
+                DTOCasePaper lst = new DTOCasePaper();
+                using (SqlConnection con = new SqlConnection(connectionString))
+                {
+                    con.Open();
+
+                    lst = con.Query<DTOCasePaper>(query, new { code }).FirstOrDefault();
+                }
+
+                return lst;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
     }       
 }

@@ -34,5 +34,43 @@ namespace Lab.DALDapper.Implimantation.Masters
                 throw;
             }
         }
+
+        public DTOTestTable GetExisting(Int64 TEST_CODE)
+        {
+            string query = "SELECT * FROM MST_TRN_TEST WHERE TEST_CODE = @TEST_CODE";
+            DTOTestTable lst = new DTOTestTable();
+            using (SqlConnection con = new SqlConnection(_connectionString))
+            {
+                con.Open();
+
+                lst = con.Query<DTOTestTable>(query, new { TEST_CODE }).FirstOrDefault();
+            }
+
+            return lst;
+
+        }
+
+        public List<DTOTestTable> GetITableList(Int64 Trnno)
+        {
+            try
+            {
+                string query = "SELECT * FROM MST_TRN_TEST WHERE TRN_NO=@TRN_NO";
+                List<DTOTestTable> lst = new List<DTOTestTable>();
+
+                using (SqlConnection con = new SqlConnection(_connectionString))
+                {
+                    con.Open();
+
+                    lst = con.Query<DTOTestTable>(query, new { TRN_NO = Trnno }).ToList();
+                }
+
+                return lst;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
     }
 }

@@ -12,5 +12,6 @@ namespace Lab.DTO.Masters.Interfaces
         List<DTOCasePaper> GetAll();
         Int64 Create(DTOCasePaper _objDtoCasePaper);
         Task<string> GetLastPatientIdForDate(string datePart);
+        DTOCasePaper GetExisting(Int64 code);
     }
 }

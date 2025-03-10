@@ -9,6 +9,7 @@ namespace Lab.DTO.Masters.Objects
     public class DTOTestTable
     {
         public Int64 TEST_CODE { get; set; }
+        public string TEST_NAME { get; set; }
         public Int64 TRN_NO { get; set; }
         public int SR_NO { get; set; }
         public decimal PRICE { get; set; }
