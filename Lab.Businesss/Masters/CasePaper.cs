@@ -13,7 +13,7 @@ namespace Lab.Businesss.Masters
     {
         public static IMstCasePaper _dalCasePaper;
         public static IMSTTest _dalTest;
-        public static IMstTestTable _dalTestTabe;
+        public static IMstTestTable _dalTestTable;
         public Int64 TrnNo { get; set; }
         public string PatientName { get; set; }
         public string Gender { get; set; }
@@ -24,8 +24,7 @@ namespace Lab.Businesss.Masters
         public int StatusCode { get; set; }
         public IList<TestTable> MatIs { get; set; }
         public string ShortTrnNo { get; set; }
-        public decimal TotalPrice { get; set; }
-        public decimal TotalLabPrice { get; set; }
+        public decimal TotalAmount { get; set; }
         public decimal TotalProfit { get; set; }
         public decimal Discount { get; set; }
 
@@ -82,7 +81,8 @@ namespace Lab.Businesss.Masters
                 Int64 result = 0;
                 _dalCasePaper = new DALCasePaper();
                 _dalTest = new DALTest();
-                
+                _dalTestTable = new DALTestTable();
+
 
 
                 string datePart = DateTime.Now.ToString("yyyyMMdd");
@@ -94,7 +94,11 @@ namespace Lab.Businesss.Masters
                     PATIENT_NAME = _ObjCsPaper.PatientName,
                     GENDER = _ObjCsPaper.Gender,
                     CON_NUMBER = _ObjCsPaper.ConNumber,
-                    DOCTOR_REF = _ObjCsPaper.DoctorRef
+                    DOCTOR_REF = _ObjCsPaper.DoctorRef,
+                    DISCOUNT = _ObjCsPaper.Discount,
+                    TOTAL_PROFIT = _ObjCsPaper.TotalProfit,
+                    TOTAL_AMOUNT = _ObjCsPaper.TotalAmount,
+
                 };
 
                 result = await Task.Run(() => { return _dalCasePaper.Create(_objDtoCasePaper); });
@@ -116,8 +120,9 @@ namespace Lab.Businesss.Masters
                             LAB_PRICE = _objTestTable.LabPrice,
 
                         };
-                        _dalTestTabe.Create(_objTestTableDetails);
                         intSrNo++;
+                        _dalTestTable.Create(_objTestTableDetails);
+                       
                     }
                 }
 

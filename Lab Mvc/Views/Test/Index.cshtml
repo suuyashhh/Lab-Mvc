@@ -162,7 +162,12 @@
                 <tr>
                     <th>Action</th>
                     <th>
-                        <a href="/masters/Test/index?sortOrder=@ViewBag.NameSortParam&searchString=@ViewBag.CurrentFilter" data-ajax-update="#mainContent" data-ajax-mode="replace" data-ajax-method="GET" data-ajax="true">
+                        <a href="/masters/Test/index?page=1&sortOrder=TestCode&sortdir=@ViewBag.SortDir&searchString=@ViewBag.CurrentFilter&FromDate=@ViewBag.FromDate&ToDate=@ViewBag.ToDate" data-ajax-update="#mainContent" data-ajax-mode="replace" data-ajax-method="GET" data-ajax="true">
+                            TestCode
+                        </a>
+                    </th>
+                    <th>
+                        <a href="/masters/Test/index?page=1&sortOrder=TestName&sortdir=@ViewBag.SortDir&searchString=@ViewBag.CurrentFilter&FromDate=@ViewBag.FromDate&ToDate=@ViewBag.ToDate" data-ajax-update="#mainContent" data-ajax-mode="replace" data-ajax-method="GET" data-ajax="true">
                             Test Name
                         </a>
                     </th>
@@ -185,6 +190,7 @@
                                     </div>
                                 }
                             </td>
+                            <td>@Html.DisplayFor(modelItem => item.ShortTrnNo)</td>
                             <td>@Html.DisplayFor(modelItem => item.TestName)</td>
                             <td>@Html.DisplayFor(modelItem => item.Price)</td>
                         </tr>                       
