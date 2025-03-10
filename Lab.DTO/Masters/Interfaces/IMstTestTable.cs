@@ -11,5 +11,6 @@ namespace Lab.DTO.Masters.Interfaces
     public interface IMstTestTable
     {
         Int64 Create(DTOTestTable _objTestTableDetails);
+        List<DTOTestTable> GetITableList(Int64 Trnno);
     }
 }

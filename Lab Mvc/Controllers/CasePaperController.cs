@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -128,6 +129,14 @@ namespace Lab_Mvc.Controllers
                 result.Message = "Something went wrong.";
                 return Json(result, JsonRequestBehavior.AllowGet);
             }
+        }
+
+        public async Task<ActionResult> Edit(Int64 TrnNo)
+
+        {            
+            List<CasePaper> _lstTD = await CasePaper.GetAllAsync();
+            
+            return PartialView(await CasePaper.GetExistingAsync(TrnNo));
         }
 
         [HttpPost]

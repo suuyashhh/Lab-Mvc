@@ -40,6 +40,37 @@ namespace Lab.Businesss.Masters
             }
         }
 
+        public static async Task<CasePaper> GetExistingAsync(Int64 code)
+        {
+            try
+            {
+                _dalCasePaper = new DALCasePaper();
+
+                DTOCasePaper dtoCasePaper = await Task.Run(() => { return _dalCasePaper.GetExisting(code); });
+               
+                if (dtoCasePaper != null)
+                    return new CasePaper()
+                    {
+                        TrnNo = dtoCasePaper.TRN_NO,
+                        //Date = DateUtility.GetFormatedDate(dtoCasePaper.DATE, 0),                      
+                        PatientName = dtoCasePaper.PATIENT_NAME,
+                        Gender = dtoCasePaper.GENDER,
+                        ConNumber = dtoCasePaper.CON_NUMBER,
+                        Address = dtoCasePaper.ADDRESS,
+                        DoctorRef = dtoCasePaper.DOCTOR_REF,
+                        Date = dtoCasePaper.DATE,
+                        StatusCode = dtoCasePaper.STATUS_CODE,
+                        MatIs = TestTable.GetITableList(dtoCasePaper.TRN_NO)
+
+                    };
+                else
+                    return null;
+            }
+            catch
+            {
+                throw new Exception("Request Failed");
+            }
+        }
         public static async Task<List<CasePaper>> GetAllAsync()
         {
             try
