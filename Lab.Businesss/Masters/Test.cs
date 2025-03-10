@@ -19,6 +19,7 @@ namespace Lab.Businesss.Masters
         public decimal LabPrice { get; set; }
         public int SrNo { get; set; }
         public int StatusCode { get; set; }
+        public string ShortTrnNo { get; set; }
 
 
         public static Test New()
@@ -59,7 +60,8 @@ namespace Lab.Businesss.Masters
                                 Price = dtotest.PRICE,
                                 LabPrice = dtotest.LAB_PRICE,
                                 SrNo = dtotest.SR_NO,
-                                StatusCode = dtotest.STATUS_CODE
+                                StatusCode = dtotest.STATUS_CODE,
+                                ShortTrnNo = dtotest.TEST_CODE.ToString().Substring(2, 6) + "-" + dtotest.TEST_CODE.ToString().Substring(dtotest.TEST_CODE.ToString().Length - 2),
                             };
 
             return _Testlist.AsEnumerable<Test>().ToList();

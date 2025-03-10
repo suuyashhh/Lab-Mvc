@@ -4,33 +4,73 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web.Mvc; // Ensure this namespace matches your Models
+using System.Web.Mvc; 
 
 namespace Lab_Mvc.Controllers
 {
     public class TestController : Controller
     {
         // GET: Test
-        public async Task<ActionResult> Index(string sortOrder, string searchString, int? page)
+        public async Task<ActionResult> Index(string sortdir, string sortOrder, string searchString, int? page)
         {
             List<Test> _lstTests = await Test.GetAllAsync();
 
+            string strSortDir = "";
             ViewBag.CurrentSort = sortOrder;
-            ViewBag.NameSortParam = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            //ViewBag.NameSortParam = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+
 
             if (!string.IsNullOrEmpty(searchString))
             {
                 ViewBag.CurrentFilter = searchString;
-                _lstTests = _lstTests.Where(obj => obj.TestName != null && obj.TestName.ToUpper().Contains(searchString.ToUpper())).ToList();
+
+                _lstTests = _lstTests.Where(obj =>
+                    (obj.ShortTrnNo != null && obj.ShortTrnNo.ToUpper().Contains(searchString.ToUpper())) ||
+                    (obj.TestName != null && obj.TestName.ToUpper().Contains(searchString.ToUpper()))
+                //(obj.CreatedBy != null && obj.CreatedBy.ToUpper().Contains(searchString.ToUpper())) ||
+                //(obj.AppBy != null && obj.AppBy.ToUpper().Contains(searchString.ToUpper()))
+                ).ToList();
+            }
+
+            if (!string.IsNullOrEmpty(sortdir))
+            {
+                strSortDir = sortdir;
+                if (sortdir == "desc")
+                {
+                    ViewBag.SortDir = "asc";
+                }
+                else
+                {
+                    ViewBag.SortDir = "desc";
+                }
             }
 
             switch (sortOrder)
             {
-                case "name_desc":
-                    _lstTests = _lstTests.OrderByDescending(obj => obj.TestName).ToList();
+                case "TestCode":
+                    if (strSortDir == "desc")
+                    {
+                        _lstTests = _lstTests.OrderByDescending(obj => obj.TestCode).ToList();
+                    }
+                    else
+                    {
+                        _lstTests = _lstTests.OrderBy(obj => obj.TestCode).ToList();
+                    }
+                    break;
+              
+                case "TestName":
+                    if (strSortDir == "desc")
+                    {
+                        _lstTests = _lstTests.OrderByDescending(obj => obj.TestName).ToList();
+                    }
+                    else
+                    {
+                        _lstTests = _lstTests.OrderBy(obj => obj.TestName).ToList();
+                    }
                     break;
                 default:
-                    _lstTests = _lstTests.OrderBy(obj => obj.TestName).ToList();
+                    _lstTests = _lstTests.OrderByDescending(p => p.TestCode).ToList();
+                    ViewBag.SortDir = "asc";
                     break;
             }
                         

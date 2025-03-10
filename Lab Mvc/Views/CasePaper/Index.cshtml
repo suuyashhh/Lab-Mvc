@@ -244,13 +244,22 @@
             <thead>
                 <tr>
                     <th>Action</th>
-                    <th>Date</th>
                     <th>
-                        <a href="/masters/CasePaper/index?sortOrder=@ViewBag.NameSortParam&searchString=@ViewBag.CurrentFilter" data-ajax-update="#mainContent" data-ajax-mode="replace" data-ajax-method="GET" data-ajax="true">
-                            ID No
+                        <a href="/masters/Test/index?page=1&sortOrder=Date&sortdir=@ViewBag.SortDir&searchString=@ViewBag.CurrentFilter&FromDate=@ViewBag.FromDate&ToDate=@ViewBag.ToDate" data-ajax-update="#mainContent" data-ajax-mode="replace" data-ajax-method="GET" data-ajax="true">
+                            Date
                         </a>
                     </th>
-                    <th>Name</th>
+                    <th>
+                        <a href="/masters/Test/index?page=1&sortOrder=TrnNo&sortdir=@ViewBag.SortDir&searchString=@ViewBag.CurrentFilter&FromDate=@ViewBag.FromDate&ToDate=@ViewBag.ToDate" data-ajax-update="#mainContent" data-ajax-mode="replace" data-ajax-method="GET" data-ajax="true">
+                            TrnNo
+                        </a>
+                       
+                    </th>
+                    <th>
+                        <a href="/masters/Test/index?page=1&sortOrder=PatientName&sortdir=@ViewBag.SortDir&searchString=@ViewBag.CurrentFilter&FromDate=@ViewBag.FromDate&ToDate=@ViewBag.ToDate" data-ajax-update="#mainContent" data-ajax-mode="replace" data-ajax-method="GET" data-ajax="true">
+                            Name
+                        </a>
+                    </th>
                     <th>Contact</th>
                 </tr>
             </thead>
