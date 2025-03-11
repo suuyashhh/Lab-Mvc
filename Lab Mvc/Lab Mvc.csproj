@@ -603,6 +603,7 @@
     <Content Include="Views\CasePaper\Index.cshtml" />
     <Content Include="Views\CasePaper\Create.cshtml" />
     <Content Include="Views\Test\Create.cshtml" />
+    <Content Include="Views\CasePaper\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

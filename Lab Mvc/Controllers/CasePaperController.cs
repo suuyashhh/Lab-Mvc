@@ -132,7 +132,6 @@ namespace Lab_Mvc.Controllers
         }
 
         public async Task<ActionResult> Edit(Int64 TrnNo)
-
         {            
             List<CasePaper> _lstTD = await CasePaper.GetAllAsync();
             
