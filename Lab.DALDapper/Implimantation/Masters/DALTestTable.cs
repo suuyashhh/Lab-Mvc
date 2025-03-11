@@ -37,7 +37,7 @@ namespace Lab.DALDapper.Implimantation.Masters
 
         public DTOTestTable GetExisting(Int64 TEST_CODE)
         {
-            string query = "SELECT * FROM MST_TRN_TEST WHERE TEST_CODE = @TEST_CODE";
+            string query = "SELECT MT.TEST_NAME, MTT.* FROM MST_TRN_TEST MTT INNER JOIN MST_TEST MT ON MT.TEST_CODE = MTT.TEST_CODE WHERE MTT.TEST_CODE = @TEST_CODE";
             DTOTestTable lst = new DTOTestTable();
             using (SqlConnection con = new SqlConnection(_connectionString))
             {
@@ -54,7 +54,7 @@ namespace Lab.DALDapper.Implimantation.Masters
         {
             try
             {
-                string query = "SELECT * FROM MST_TRN_TEST WHERE TRN_NO=@TRN_NO";
+                string query = "SELECT MT.TEST_NAME, MTT.* FROM MST_TRN_TEST MTT INNER JOIN MST_TEST MT ON MT.TEST_CODE = MTT.TEST_CODE WHERE MTT.TRN_NO =@TRN_NO";
                 List<DTOTestTable> lst = new List<DTOTestTable>();
 
                 using (SqlConnection con = new SqlConnection(_connectionString))
