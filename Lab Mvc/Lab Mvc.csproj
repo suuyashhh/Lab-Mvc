@@ -604,6 +604,7 @@
     <Content Include="Views\CasePaper\Create.cshtml" />
     <Content Include="Views\Test\Create.cshtml" />
     <Content Include="Views\CasePaper\Edit.cshtml" />
+    <Content Include="Views\CasePaper\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,7 +1,884 @@
-﻿
+﻿@using Lab.Businesss.Masters
+@model CasePaper
 @{
-    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "CasePaper Edit";
 }
 
-<h2>Edit</h2>
+@{
+    int row_num = 1;
+}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/myorange/SmartAdmin@4.5.1/css/smartadmin.min.css">
+<script src="https://cdn.jsdelivr.net/gh/myorange/SmartAdmin@4.5.1/js/smartadmin.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/smartadmin-ajax/4.5.1/js/notification/SmartNotification.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    body {
+        background-color: #f5f5f5;
+    }
+
+    .headerd {
+        background-color: #5f9278;
+        color: white;
+        padding: 20px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .back-button {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 24px;
+        cursor: pointer;
+        padding: 8px;
+    }
+
+    .headerd h1 {
+        font-size: 24px;
+        font-weight: normal;
+    }
+
+    .container {
+        padding: 20px;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .form-group {
+        margin-bottom: 24px;
+        position: relative;
+    }
+
+        .form-group label {
+            display: block;
+            color: #333;
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+    .input-field {
+        width: 100%;
+        padding: 12px 16px;
+        border: 1px solid #000;
+        border-radius: 8px;
+        font-size: 16px;
+        outline: none;
+        transition: border-color 0.3s;
+    }
+
+        .input-field:focus {
+            border-color: #5f9278;
+        }
+
+    .row {
+        display: flex;
+        gap: 20px;
+    }
+
+    .col {
+        flex: 1;
+    }
+
+    .unit-field {
+        background-color: white;
+        color: #666;
+    }
+
+    textarea.input-field {
+        min-height: 120px;
+        resize: vertical;
+    }
+
+    .section-title {
+        font-size: 24px;
+        margin: 40px 0 20px;
+    }
+
+    .section-subtitle {
+        color: #666;
+        margin-bottom: 20px;
+    }
+
+    .checkbox-group {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-top: 40px;
+    }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            border: 1px solid #000;
+            border-radius: 4px;
+        }
+
+        .checkbox-group label {
+            font-size: 16px;
+            color: #333;
+        }
+
+
+
+    .tests-section {
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+
+    .section-subtitle {
+        color: #333;
+        margin: 30px 0 20px;
+        font-size: 20px;
+        font-weight: 500;
+    }
+
+    .table-responsive {
+        overflow-x: auto;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+        max-width: 100%;
+        width: 100%;
+        background-color: #fff;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th, td {
+        padding: 12px;
+        border-bottom: 1px solid #ddd;
+        text-align: left;
+    }
+
+    th {
+        background-color: #5f9278;
+        color: white;
+    }
+
+    tr:hover {
+        background-color: #eee;
+    }
+
+    .delete-btn {
+        background-color: #dc3545;
+        color: white;
+        border: none;
+        padding: 6px 12px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+    }
+
+        .delete-btn:hover {
+            background-color: #c82333;
+        }
+
+    input {
+        width: 100%;
+        border: 1px solid #ccc;
+        padding: 6px;
+        font-size: 16px;
+        border-radius: 4px;
+        outline: none;
+    }
+
+    .blood-tests-table {
+        width: 100%;
+        min-width: 600px;
+        border-collapse: collapse;
+        background-color: #f5f5f5;
+    }
+
+        .blood-tests-table th,
+        .blood-tests-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .blood-tests-table th {
+            background-color: #5f9278;
+            color: white;
+            font-weight: bold;
+        }
+
+        .blood-tests-table tbody tr:hover {
+            background-color: #eee;
+        }
+
+    /* .delete-btn {
+        background-color: #dc3545;
+        color: white;
+        border: none;
+        padding: 6px 12px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: background-color 0.3s;
+    }
+
+        .delete-btn:hover {
+            background-color: #c82333;
+        }*/
+
+    .add-test-section {
+        margin-top: 20px;
+    }
+
+    .test-inputs {
+        display: flex;
+        gap: 15px;
+        align-items: center;
+    }
+
+    .select-test {
+        flex: 1;
+    }
+
+    .add-btn {
+        background-color: #5f9278;
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background-color 0.3s;
+        white-space: nowrap;
+    }
+
+        .add-btn:hover {
+            background-color: #4a7259;
+        }
+
+    @@media (max-width: 768px) {
+        .test-inputs {
+            flex-direction: column;
+        }
+
+        .add-btn {
+            width: 100%;
+        }
+    }
+
+    /* .ui-autocomplete {
+        max-height: 200px;
+        overflow-y: auto;
+        background: white;
+        border: 1px solid #ccc;
+        z-index: 9999 !important;
+    }*/
+
+    #tblMaterials td,
+    #tblMaterials th {
+        padding: 8px;
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    .editable-input {
+        width: 50%;
+        padding: 4px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 14px;
+        box-sizing: border-box;
+        text-align: center;
+        margin: 0;
+    }
+
+    #tblMaterials td[data-editable="true"] {
+        padding: 0;
+    }
+
+    .ui-autocomplete {
+        max-height: 200px;
+        overflow-y: auto;
+        background: #fff;
+        border: 1px solid #ddd;
+        z-index: 9999 !important;
+        border-radius: 6px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 5px 0;
+    }
+
+    .ui-menu-item {
+        padding: 10px 14px;
+        font-size: 15px;
+        color: #333;
+        cursor: pointer;
+        transition: background 0.2s ease-in-out;
+    }
+
+        .ui-menu-item:hover {
+            background-color: #f5f5f5;
+        }
+
+    .flex-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .flex-item {
+        flex: 1;
+        min-width: 200px;
+    }
+
+    .second-row {
+        margin-top: 20px;
+    }
+
+    /*.input-field {
+        width: 100%;
+        padding: 8px;
+    }*/
+
+</style>
+
+<div class="body">
+    <div class="pagetitle">
+        <input type="hidden" id="hfTrnNo" value="@Model.TrnNo" />
+        <h1>Case Paper</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                <li class="breadcrumb-item active">Edit</li>
+            </ol>
+        </nav>
+    </div>
+
+
+    <div class="container">
+        <form method="POST" id="CasePaper-form">
+            <div class="form-group">
+                <label>Petient Name</label>
+                <input type="text" id="PName" name="PatientName" value="@Model.PatientName" class="input-field">
+            </div>
+
+            <div class="form-group">
+                <label>Date Of Birth</label>
+                <input type="text" id="PBOD" name="DateOfBirth" class="input-field">
+            </div>
+
+            <div class="row">
+                <div class="col form-group">
+                    <label>Gender</label>
+                    <input type="text" id="Gender" name="Gender" value="@Model.Gender" class="input-field">
+                </div>
+                <div class="col form-group">
+                    <label>Phone Number</label>
+                    <input type="text" id="PNumber" name="ConNumber" value="@Model.ConNumber" class="input-field">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Address (Optional)</label>
+                <textarea type="text" rows="3" class="input-field"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Doctor Reference</label>
+                <input type="text" id="Doctor" name="DoctorRef" value="@Model.DoctorRef" class="input-field">
+            </div>
+
+            <div class="tests-section">
+                <h3 class="section-subtitle" style="color: #333; margin: 30px 0 20px;">Blood Tests</h3>
+
+                <!-- Table -->
+
+                <div class="table-responsive">
+                    <table class="blood-tests-table" id="tblMaterials">
+                        <thead>
+                            <tr>
+                                <th>Sr No</th>
+                                <th>Test Name</th>
+                                <th>Price (₹)</th>
+                                <th>Lab Price (₹)</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tblMaterials">
+                            @foreach (var mati in Model.MatIs)
+                            {
+                                <tr id="row(@row_num)">
+                                    <td>(@row_num)</td>
+                                    <td>
+                                        @mati.TestName
+                                        <input type='hidden' id='TestCode(@row_num)' value="@mati.TestCode" >
+                                        <input type='hidden' id='hfTestId(@row_num)' value="@mati.TestCode" >
+                                        <input type='hidden' id='Price(@row_num)' value="@mati.Price" >
+                                        <input type='hidden' id='hfLabPrice(@row_num)' value="@mati.LabPrice" >
+                                    </td>
+                                    <td id="Amount(@row_num)" data-editable="true">@mati.Price</td>
+                                    <td id="LabAmount(@row_num)" data-editable="true">@mati.LabPrice</td>
+                                    <td>
+                                        <a class="delete-btn remove-row" href="javascript:void(0);">Delete</a>
+                                    </td>
+                                </tr>
+                                row_num++;
+                            }
+                        </tbody>
+                        <thead>
+                            <tr>
+                                <th colspan="2">Total Amount</th>
+                                <th id="totalPrice" name="totalPrice">₹0</th>
+                                <th id="LabtotalPrice" name="LabtotalPrice">₹0</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+
+                <!-- Add Test Section -->
+                <div class="add-test-section">
+                    <div class="test-inputs">
+                        <input class="input-field select-test" id="TestName" name="TestName" placeholder="Test Name" type="text" autocomplete="off" />
+                        <input type="hidden" id="hfTestId" />
+                        <input type="hidden" id="hfPrice" />
+                        <input type="hidden" id="hfLabPrice" />
+                        <a class="add-btn" id="btnAdd" href="javascript:void(0);">Add Test</a>
+                    </div>
+                </div>
+            </div>
+
+            <h2 class="section-title">Discount (%)</h2>
+            <p class="section-subtitle">If you gave the discount please fill in the below field</p>
+
+
+            <div class="form-group">
+
+                <div class="flex-row">
+                    <div class="flex-item">
+                        <label>Dis (%)</label>
+                        <input type="text" id="Discount" name="Discount" value="@Model.Discount" class="input-field">
+                    </div>
+                    <div class="flex-item">
+                        <label>Dis Amount</label>
+                        <input type="text" id="DisAmount" name="DisAmount" class="input-field">
+                    </div>
+                    <div class="flex-item">
+                        <label>Total Amount</label>
+                        <input type="text" id="TotalAmount" name="TotalAmount" class="input-field" readonly>
+                    </div>
+                </div>
+
+
+                <div class="second-row">
+                    <label>Total Lab Profit</label>
+                    <input type="text" id="TotalProfit" name="TotalProfit" class="input-field" readonly>
+                </div>
+            </div>
+
+
+            <h2 class="section-title">Collection</h2>
+            <div class="checkbox-group">
+                <input type="checkbox" id="counter-sales">
+                <label for="counter-sales">Home Collection</label>
+            </div>
+
+            <hr style="border: 2px solid Black; margin: 50px 0;">
+
+
+            <div class="d-flex justify-content-end mb-3">
+                <div class="form-group text-end">
+                    <label>Total Amount</label>
+                    <input type="text" id="TotalAmount" name="TotalAmount" style="width: 80%!important;" class="input-field">
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-end mb-3">
+                <div class="form-group text-end">
+                    <label>Total Lab Profit</label>
+                    <input type="text" id="TotalProfit" name="TotalProfit" style="width: 80%!important;" class="input-field">
+                </div>
+            </div>
+
+            <div class="row align-items-center mb-3">
+                <div class="col-auto">
+                    <label for="paymentMethod" class="col-form-label">Payment Method</label>
+                </div>
+
+                <div class="col">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="Gender" id="male" value="1">
+                        <label class="form-check-label" for="male">Cash</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="Gender" id="female" value="0" checked>
+                        <label class="form-check-label" for="female">Online</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col form-group">
+                    <label>Payment Amount</label>
+                    <input type="text" id="PaymentAmount" name="PaymentAmount" style="width: 40%!important;" class="input-field">
+                </div>
+            </div>
+
+
+
+            <div class="tests-section">
+                <div class="add-test-section">
+                    <div class="test-inputs" style="justify-content:end">
+                        <button class="add-btn" id="save">Save</button>
+                        <a class="add-btn" style="background:red!important" href="/CasePaper/index" data-ajax-update="#mainContent" data-ajax-mode="replace" data-ajax-method="GET" data-ajax="true">Cancle</a>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        calculateDiscount();
+        var TrnNo = $("#hfTrnNo").val();
+
+        $('#Discount').on('input', function () {
+            calculateDiscount();
+        });
+
+        $('#save').click(function (e) {
+            e.preventDefault();
+            var form = $("#CasePaper-form");
+
+            if (form.valid()) {
+                if ($('#tblMaterials > tbody > tr').length == 0) {
+                    toastr.error("Please add at least one test.", "Test", {
+                        timeOut: 3000,
+                        closeButton: false,
+                        progressBar: true,
+                        positionClass: "toast-top-right"
+                    });
+                    $('#TestName').focus();
+                    return false;
+                }
+
+                debugger;
+                var MatIs = [];
+                var j = 0;
+                $('#tblMaterials > tbody > tr').each(function () {
+                    if ($('#tblMaterials > tbody > tr').length !== j) {
+                        var tstcode, price, lprice;
+                        tstcode = $(this).find("[id^=hfTestId]").val();
+                        price = $(this).find("td[id^=Amount]").text();
+                        lprice = $(this).find("td[id^=LabAmount]").text();
+
+                        if ((parseFloat(price)) > 0) {
+                            MatIs.push({ TestCode: tstcode, Price: price, LabPrice: lprice });
+                        }
+                    }
+                    j++;
+                });
+
+                var _ObjCsPaper = {
+                    TrnNo: TrnNo,
+                    PatientName: $("#PName").val(),
+                    DateOfBirth: $("#PBOD").val(),
+                    Gender: $("#Gender").val(),
+                    ConNumber: $("#PNumber").val(),
+                    DoctorRef: $("#Doctor").val(),
+                    TotalPrice: $("#totalPrice").val(),
+                    TotalLabPrice: $("#LabtotalPrice").val(),
+                    TotalProfit: TotalProfit,
+                    Discount: $("#Discount").val(),
+                    TotalAmount: $("#TotalAmount").val(),
+                    MatIs: MatIs,
+                };
+
+                $("#mainContent").html('<div>Loading...</div>');
+
+                $.ajax({
+                    url: '/CasePaper/Edit',
+                    type: "POST",
+                    contentType: "application/json",
+                    dataType: "json",
+                    data: JSON.stringify(_ObjCsPaper),
+                    success: function (response) {
+                        if (response.Status) {
+
+                            setTimeout(function () {
+                                window.location.href = "/CasePaper/Index";
+                            });
+
+                        } else {
+                            toastr.error("Error saving document!", "Error", {
+                                timeOut: 5000,
+                                closeButton: false,
+                                progressBar: true,
+                                positionClass: "toast-top-right"
+                            });
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error(xhr.responseText);
+                        toastr.error("An error occurred: " + xhr.responseText, "Error", {
+                            timeOut: 5000,
+                            closeButton: false,
+                            progressBar: true,
+                            positionClass: "toast-top-right"
+                        });
+                    }
+                });
+            }
+        });
+
+
+        $("#btnAdd").click(function () {
+            if ($("#hfTestId").val() == 0 || $("#TestName").val().trim() === "") {
+                toastr.error("Please select proper Test.", "Test", {
+                    timeOut: 3000,
+                    closeButton: false,
+                    progressBar: true,
+                    positionClass: "toast-top-right"
+                });
+                $('#TestName').focus();
+                return false;
+            }
+
+            let cur_row_num = $("#tblMaterials tbody tr").length;
+            let TestCode = $("#hfTestId").val();
+            let TestName = $("#TestName").val();
+            let price = $("#hfPrice").val();
+            let labprice = $("#hfLabPrice").val();
+
+            if (document.getElementById(TestCode)) {
+                toastr.error("Duplicate Not Allowed.", "Duplicate", {
+                    timeOut: 3000,
+                    closeButton: false,
+                    progressBar: true,
+                    positionClass: "toast-top-right"
+                });
+                return;
+            }
+
+            let row = `
+                <tr id="row${cur_row_num}">
+                    <td>${cur_row_num}</td>
+                    <td>${TestName}
+                        <input type='hidden' id='TestCode${cur_row_num}' value='${TestCode}'>
+                        <input type='hidden' id='hfTestId${cur_row_num}' value='${TestCode}'>
+                        <input type='hidden' id='Price${cur_row_num}' value='${price}'>
+                        <input type='hidden' id='hfLabPrice${cur_row_num}' value='${labprice}'>
+                    </td>
+                    <td id="Amount${cur_row_num}" data-editable="true">${price}</td>
+                    <td id="LabAmount${cur_row_num}" data-editable="true">${labprice}</td>
+                    <td>
+                        <a class="delete-btn remove-row" href="javascript:void(0);">Delete</a>
+                    </td>
+                </tr>
+            `;
+
+            $("#tblMaterials tbody").append(row);
+
+            $("#TestName").val('');
+            $("#hfTestId").val(0);
+            $("#hfPrice").val('');
+            $("#hfLabPrice").val('');
+
+            regen_srno();
+            calculateSum();
+            calculateDiscount();
+            attachEditableListeners();
+        });
+
+        $("#tblMaterials").on("click", ".remove-row", function () {
+            $(this).closest("tr").remove();
+            regen_srno();
+            calculateDiscount();
+            calculateSum();
+        });
+
+        function regen_srno() {
+            $("#tblMaterials tbody tr").each(function (index) {
+                $(this).find("td:first").text(index + 1);
+            });
+        }
+
+        function calculateSum() {
+            let total = 0;
+            let labtotal = 0;
+            $("#tblMaterials tbody tr").each(function () {
+                let amount = parseFloat($(this).find("td[id^=Amount]").text()) || 0;
+                let Labamount = parseFloat($(this).find("td[id^=LabAmount]").text()) || 0;
+                total += amount;
+                labtotal += Labamount;
+            });
+            $("#totalPrice").text("₹" + total);
+            $("#LabtotalPrice").text("₹" + labtotal);
+        }
+
+        function calculateDiscount() {
+
+            debugger;
+            let totalPrice = parseFloat($('#totalPrice').text().replace('₹', '')) || 0;
+            let discount = parseFloat($('#Discount').val()) || 0;
+            let discountAmount = (totalPrice * discount) / 100;
+            let labTotalPrice = parseFloat($('#LabtotalPrice').text().replace('₹', '')) || 0;
+
+            let TotalAmount = totalPrice - discountAmount;
+            let updatedLabTotalPrice = TotalAmount - labTotalPrice;
+
+
+            $('#DisAmount').val(discountAmount.toFixed(2));
+            $('#TotalAmount').val(TotalAmount.toFixed(2));
+            $('#TotalProfit').val(updatedLabTotalPrice.toFixed(2));
+
+
+            TotalProfit = updatedLabTotalPrice;
+        }
+
+
+        function attachEditableListeners() {
+            document.querySelectorAll("#tblMaterials td[data-editable='true']").forEach(cell => {
+                cell.removeEventListener("click", handleCellClick);
+                cell.addEventListener("click", handleCellClick);
+            });
+            calculateDiscount();
+        }
+
+        function handleCellClick() {
+            let currentValue = this.textContent.trim();
+
+            if (this.querySelector("input")) return;
+
+            let input = document.createElement("input");
+            input.type = "text";
+            input.value = currentValue;
+            input.className = "editable-input";
+            this.innerHTML = "";
+            this.appendChild(input);
+            input.focus();
+
+            input.addEventListener("blur", function () {
+                this.parentElement.textContent = this.value.trim();
+                calculateSum();
+                calculateDiscount();
+            });
+            input.addEventListener("keypress", function (event) {
+                if (event.key === "Enter") {
+                    event.preventDefault();
+                    this.blur();
+                }
+            });
+
+        }
+
+        attachEditableListeners();
+    });
+
+
+    //$('#tblMaterials').on('input', '.qty-field, .rate-field', function () {
+    //    calculateAmt(this);
+    //});
+
+    //function removeRow(button) {
+    //    $(button).closest('tr').remove();
+    //    regen_srno();
+    //    calculateSum();
+    //}
+
+    //function calculateSum() {
+    //    var sum = 0;
+
+    //    $('#tblMaterials').find("[id*=Amount]").each(function () {
+    //        sum += parseFloat($(this).val()) || 0;
+    //    });
+    //    $('#transaction').val(sum.toFixed(2));
+    //    assignBasicAmount();
+    //}
+
+    //function calculateAmt(obj) {
+    //    var $row = $(obj).closest('tr');
+    //    var NQty = parseFloat($row.find("[id^=Qty]").val()) || 0;
+    //    var NRate = parseFloat($row.find("[id^=Rate]").val()) || 0;
+
+    //    var Total = NQty * NRate;
+
+    //    $row.find("[id^=Amount]").val(Total.toFixed(2));
+
+    //    calculateSum();
+    //}
+
+    //function assignBasicAmount() {
+    //    $('#TaxAmount1').val($('#transaction').val());
+    //    calculate();
+    //}
+
+
+    $(function () {
+        $('[id*=TestName]').keyup(function () {
+            if ($("#TestName").val().trim().length >= 1) {
+                dontBlock = true;
+            }
+        });
+
+        $("#TestName").autocomplete({
+            minLength: 1,
+            source: function (request, response) {
+                console.log("Request Sent:", request.term);
+                $.ajax({
+                    url: "/CasePaper/TestAutoFill",
+                    type: "POST",
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify({ searchtext: request.term }),
+                    success: function (data) {
+                        console.log("Response Received:", data);
+                        if (!Array.isArray(data)) {
+                            console.error("Error: Response is not an array", data);
+                            return;
+                        }
+                        response($.map(data, function (item) {
+                            return {
+                                label: item.TestName + " - ₹" + item.Price,
+                                value: item.TestName,
+                                id: item.TestCode,
+                                price: item.Price,
+                                labprice: item.LabPrice
+                            };
+                        }));
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("AJAX Error:", status, error);
+                    }
+                });
+            },
+            select: function (event, ui) {
+                $("#TestName").val(ui.item.value);
+                $("#hfTestId").val(ui.item.id);
+                $("#hfPrice").val(ui.item.price);
+                $("#hfLabPrice").val(ui.item.labprice);
+                return false;
+            }
+        }).autocomplete("instance")._renderItem = function (ul, item) {
+            return $("<li>")
+                .append("<div>" + item.label + "</div>")
+                .appendTo(ul);
+        };
+    });
+</script>
+
 

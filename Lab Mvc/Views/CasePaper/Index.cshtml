@@ -219,7 +219,7 @@
     <nav>
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-            <li class="breadcrumb-item active">Case Paper</li>
+            <li class="breadcrumb-item active">Index</li>
         </ol>
     </nav>
 </div>
@@ -236,7 +236,7 @@
             <button id="pm_searchBtn">Search</button>
         </div>
         <div class="pm_search-container">
-            <input type="text" id="pm_searchInput" placeholder="Search patients...">
+            <input type="text" id="pm_searchInput" value="@ViewBag.CurrentFilter" name="searchString" placeholder="Search patients...">
         </div>
     </div>
     <div class="pm_table-container">
@@ -245,18 +245,17 @@
                 <tr>
                     <th>Action</th>
                     <th>
-                        <a href="/masters/Test/index?page=1&sortOrder=Date&sortdir=@ViewBag.SortDir&searchString=@ViewBag.CurrentFilter&FromDate=@ViewBag.FromDate&ToDate=@ViewBag.ToDate" data-ajax-update="#mainContent" data-ajax-mode="replace" data-ajax-method="GET" data-ajax="true">
+                        <a href="/CasePaper/index?page=1&sortOrder=Date&sortdir=@ViewBag.SortDir&searchString=@ViewBag.CurrentFilter&FromDate=@ViewBag.FromDate&ToDate=@ViewBag.ToDate" data-ajax-update="#mainContent" data-ajax-mode="replace" data-ajax-method="GET" data-ajax="true">
                             Date
                         </a>
                     </th>
                     <th>
-                        <a href="/masters/Test/index?page=1&sortOrder=TrnNo&sortdir=@ViewBag.SortDir&searchString=@ViewBag.CurrentFilter&FromDate=@ViewBag.FromDate&ToDate=@ViewBag.ToDate" data-ajax-update="#mainContent" data-ajax-mode="replace" data-ajax-method="GET" data-ajax="true">
+                        <a href="/CasePaper/index?page=1&sortOrder=TrnNo&sortdir=@ViewBag.SortDir&searchString=@ViewBag.CurrentFilter&FromDate=@ViewBag.FromDate&ToDate=@ViewBag.ToDate" data-ajax-update="#mainContent" data-ajax-mode="replace" data-ajax-method="GET" data-ajax="true">
                             TrnNo
-                        </a>
-                       
+                        </a>                       
                     </th>
                     <th>
-                        <a href="/masters/Test/index?page=1&sortOrder=PatientName&sortdir=@ViewBag.SortDir&searchString=@ViewBag.CurrentFilter&FromDate=@ViewBag.FromDate&ToDate=@ViewBag.ToDate" data-ajax-update="#mainContent" data-ajax-mode="replace" data-ajax-method="GET" data-ajax="true">
+                        <a href="/CasePaper/index?page=1&sortOrder=PatientName&sortdir=@ViewBag.SortDir&searchString=@ViewBag.CurrentFilter&FromDate=@ViewBag.FromDate&ToDate=@ViewBag.ToDate" data-ajax-update="#mainContent" data-ajax-mode="replace" data-ajax-method="GET" data-ajax="true">
                             Name
                         </a>
                     </th>
@@ -274,13 +273,13 @@
                                 {
                                     <div class="pm_action-buttons">
                                         <a class="pm_edit-btn" data-id="1" title="Edit" href="/CasePaper/Edit?TrnNo=@item.TrnNo">Edit</a>
-                                        <a class="pm_delete-btn" data-id="1" title="Delete" href="/masters/CasePaper/delete?TrnNo=@item.TrnNo">Delete</a>
+                                        <a class="pm_delete-btn" data-id="1" title="Delete" href="/CasePaper/delete?TrnNo=@item.TrnNo">Delete</a>
                                     </div>
                                 }
                             </td>
                             <td>@Html.DisplayFor(modelItem => item.Date)</td>
                             <td>
-                                <a title="View" href="/masters/City/details?CityCode=@item.TrnNo">
+                                <a title="View" href="/City/details?CityCode=@item.TrnNo">
                                     @Html.DisplayFor(modelItem => item.ShortTrnNo)
                                 </a>
                             </td>
