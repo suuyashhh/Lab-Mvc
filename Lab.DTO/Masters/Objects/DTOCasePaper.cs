@@ -20,5 +20,6 @@ namespace Lab.DTO.Masters.Objects
         public decimal TOTAL_AMOUNT { get; set; }
         public decimal TOTAL_PROFIT { get; set; }
         public decimal DISCOUNT { get; set; }
+        public string DELETE_REASON { get; set; }
     }
 }

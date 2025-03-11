@@ -40,8 +40,8 @@ namespace Lab.DALDapper.Implimantation.Masters
                 Int64 patientId = 0; 
                 string connectionString = ConfigurationManager.ConnectionStrings["connstr"].ConnectionString;
 
-                string query = @"INSERT INTO MST_PATIENT (TRN_NO, PATIENT_NAME, GENDER, CON_NUMBER, DOCTOR_REF,DISCOUNT,TOTAL_PROFIT,TOTAL_AMOUNT) 
-                         VALUES (@TRN_NO, @PATIENT_NAME, @GENDER, @CON_NUMBER, @DOCTOR_REF,@DISCOUNT,@TOTAL_PROFIT,@TOTAL_AMOUNT); 
+                string query = @"INSERT INTO MST_PATIENT (TRN_NO, PATIENT_NAME,DATE, GENDER, CON_NUMBER, DOCTOR_REF,DISCOUNT,TOTAL_PROFIT,TOTAL_AMOUNT) 
+                         VALUES (@TRN_NO, @PATIENT_NAME, @DATE, @GENDER, @CON_NUMBER, @DOCTOR_REF,@DISCOUNT,@TOTAL_PROFIT,@TOTAL_AMOUNT); 
                          SELECT @TRN_NO;"; 
 
                 using (SqlConnection con = new SqlConnection(connectionString))
@@ -55,6 +55,79 @@ namespace Lab.DALDapper.Implimantation.Masters
             catch (Exception ex)
             {
                 throw new Exception("Error while inserting patient record: " + ex.Message, ex);
+            }
+        }
+
+        public Int64 Edit(DTOCasePaper _objDtoCasePaper)
+        {
+            try
+            {
+                Int64 patientId = 0;
+                                
+                string connectionString = ConfigurationManager.ConnectionStrings["connstr"].ConnectionString;
+
+                string query = @"UPDATE MST_PATIENT SET ";
+                query += " PATIENT_NAME = '" + _objDtoCasePaper.PATIENT_NAME + "'";
+                query += " ,GENDER = '" + _objDtoCasePaper.GENDER + "'";
+                query += " ,CON_NUMBER = '" + _objDtoCasePaper.CON_NUMBER + "'";
+                query += " ,DOCTOR_REF = '" + _objDtoCasePaper.DOCTOR_REF + "'";
+                query += " ,DISCOUNT = '" + _objDtoCasePaper.DISCOUNT + "'";
+                query += " ,TOTAL_PROFIT = '" + _objDtoCasePaper.TOTAL_PROFIT + "'";
+                query += " ,TOTAL_AMOUNT = '" + _objDtoCasePaper.TOTAL_AMOUNT + "'";
+                query += " WHERE TRN_NO = '" + _objDtoCasePaper.TRN_NO + "'";
+
+                using (SqlConnection con = new SqlConnection(connectionString))
+                {
+                    con.Open();
+
+                    using (SqlCommand cmd = new SqlCommand(query, con))
+                    {
+                        int rowsAffected = cmd.ExecuteNonQuery();
+
+                        if (rowsAffected > 0)
+                        {
+                            patientId = _objDtoCasePaper.TRN_NO; 
+                        }
+                        else
+                        {
+                            throw new Exception("No record updated.");
+                        }
+                    }
+                }
+
+                return patientId;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while updating patient record: " + ex.Message, ex);
+            }
+        }
+
+        public Int64 Delete(DTOCasePaper _objDelete)
+        {
+            try
+            {
+                string connectionString = ConfigurationManager.ConnectionStrings["connstr"].ConnectionString;
+
+                string query = @"DELETE FROM MST_PATIENT WHERE TRN_NO = @TRN_NO";
+
+                Int64 rowsAffected = 0;
+
+                using (SqlConnection con = new SqlConnection(connectionString))
+                {
+                    con.Open();
+
+                    rowsAffected = con.Execute(query, new
+                    {
+                        TRN_NO = _objDelete.TRN_NO
+                    });
+                }
+
+                return rowsAffected;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while permanently deleting record: " + ex.Message, ex);
             }
         }
 

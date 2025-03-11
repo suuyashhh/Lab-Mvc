@@ -12,5 +12,6 @@ namespace Lab.DTO.Masters.Interfaces
     {
         Int64 Create(DTOTestTable _objTestTableDetails);
         List<DTOTestTable> GetITableList(Int64 Trnno);
+        Int64 DelPermenantData(Int64 Code);
     }
 }

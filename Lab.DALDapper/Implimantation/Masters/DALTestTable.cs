@@ -72,5 +72,27 @@ namespace Lab.DALDapper.Implimantation.Masters
             }
         }
 
+        public Int64 DelPermenantData(Int64 EmpCode)
+        {
+            try
+            {
+                string query = "DELETE FROM MST_TRN_TEST WHERE TRN_NO = @TRN_NO";
+                Int64 rowsAffected = 0;
+
+                using (SqlConnection con = new SqlConnection(_connectionString))
+                {
+                    con.Open();
+                    rowsAffected = con.Execute(query, new { TRN_NO = EmpCode });
+                }
+
+                return rowsAffected;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while deleting record: " + ex.Message, ex);
+            }
+        }
+
+
     }
 }
