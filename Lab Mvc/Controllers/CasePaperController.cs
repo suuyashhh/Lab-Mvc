@@ -94,7 +94,7 @@ namespace Lab_Mvc.Controllers
 
         public ActionResult Create()
         {
-            //ViewData["currentdate"] = DateUtility.GetCurrentDate();
+            ViewData["currentdate"] = DateUtility.GetCurrentDate();
             return PartialView(CasePaper.New());
         }
 

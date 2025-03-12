@@ -377,8 +377,8 @@
             </div>
 
             <div class="form-group">
-                <label>Date Of Birth</label>
-                <input type="text" id="PBOD" name="DateOfBirth" class="input-field">
+                <label>Date</label>
+                <input type="date" id="Date" name="Date" value="@Model.Date" class="input-field">
             </div>
 
             <div class="row">
@@ -425,10 +425,10 @@
                                     <td>(@row_num)</td>
                                     <td>
                                         @mati.TestName
-                                        <input type='hidden' id='TestCode(@row_num)' value="@mati.TestCode" >
-                                        <input type='hidden' id='hfTestId(@row_num)' value="@mati.TestCode" >
-                                        <input type='hidden' id='Price(@row_num)' value="@mati.Price" >
-                                        <input type='hidden' id='hfLabPrice(@row_num)' value="@mati.LabPrice" >
+                                        <input type='hidden' id='TestCode(@row_num)' value="@mati.TestCode">
+                                        <input type='hidden' id='hfTestId(@row_num)' value="@mati.TestCode">
+                                        <input type='hidden' id='Price(@row_num)' value="@mati.Price">
+                                        <input type='hidden' id='hfLabPrice(@row_num)' value="@mati.LabPrice">
                                     </td>
                                     <td id="Amount(@row_num)" data-editable="true">@mati.Price</td>
                                     <td id="LabAmount(@row_num)" data-editable="true">@mati.LabPrice</td>
