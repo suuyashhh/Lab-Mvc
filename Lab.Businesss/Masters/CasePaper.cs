@@ -99,6 +99,7 @@ namespace Lab.Businesss.Masters
                                 DoctorRef = dtocasepaper.DOCTOR_REF,
                                 Date = dtocasepaper.DATE,
                                 StatusCode = dtocasepaper.STATUS_CODE,
+                                Discount = dtocasepaper.DISCOUNT,
                                 ShortTrnNo = dtocasepaper.TRN_NO.ToString().Substring(2, 6) + "-" + dtocasepaper.TRN_NO.ToString().Substring(dtocasepaper.TRN_NO.ToString().Length - 2),
                             };
 
@@ -204,7 +205,7 @@ namespace Lab.Businesss.Masters
                     {
                         DTOTestTable _objTestTableDetails = new DTOTestTable()
                         {
-                            TRN_NO = _objTestTable.TrnNo,
+                            TRN_NO = _ObjCsPaper.TrnNo,
                             TEST_CODE = _objTestTable.TestCode,
                             SR_NO = intSrNo,
                             PRICE = _objTestTable.Price,
