@@ -54,7 +54,7 @@ namespace Lab.DALDapper.Implimantation.Masters
         {
             try
             {
-                string query = "SELECT MT.TEST_NAME, MTT.* FROM MST_TRN_TEST MTT INNER JOIN MST_TEST MT ON MT.TEST_CODE = MTT.TEST_CODE WHERE MTT.TRN_NO =@TRN_NO";
+                string query = "SELECT MT.TEST_NAME, MTT.* FROM MST_TRN_TEST MTT INNER JOIN MST_TEST MT ON MT.TEST_CODE = MTT.TEST_CODE WHERE MTT.TRN_NO =@TRN_NO ORDER BY MTT.SR_NO";
                 List<DTOTestTable> lst = new List<DTOTestTable>();
 
                 using (SqlConnection con = new SqlConnection(_connectionString))

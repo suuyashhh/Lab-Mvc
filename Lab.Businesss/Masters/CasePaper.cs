@@ -60,6 +60,7 @@ namespace Lab.Businesss.Masters
                         Address = dtoCasePaper.ADDRESS,
                         DoctorRef = dtoCasePaper.DOCTOR_REF,
                         StatusCode = dtoCasePaper.STATUS_CODE,
+                        Discount= dtoCasePaper.DISCOUNT,
                         MatIs = TestTable.GetITableList(dtoCasePaper.TRN_NO)
 
                     };

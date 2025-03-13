@@ -423,7 +423,7 @@
                             @foreach (var mati in Model.MatIs)
                             {
                                 <tr id="row(@row_num)">
-                                    <td>(@row_num)</td>
+                                    <td>@row_num</td>
                                     <td>
                                         @mati.TestName
                                         <input type='hidden' id='TestCode(@row_num)' value="@mati.TestCode">
@@ -478,17 +478,17 @@
                         <label>Dis Amount</label>
                         <input type="text" id="DisAmount" name="DisAmount" class="input-field">
                     </div>
-                    <div class="flex-item">
+                    @*<div class="flex-item">
                         <label>Total Amount</label>
                         <input type="text" id="TotalAmount" name="TotalAmount" class="input-field" readonly>
-                    </div>
+                    </div>*@
                 </div>
 
 
-                <div class="second-row">
+                @*<div class="second-row">
                     <label>Total Lab Profit</label>
                     <input type="text" id="TotalProfit" name="TotalProfit" class="input-field" readonly>
-                </div>
+                </div>*@
             </div>
 
 
@@ -504,14 +504,14 @@
             <div class="d-flex justify-content-end mb-3">
                 <div class="form-group text-end">
                     <label>Total Amount</label>
-                    <input type="text" id="TotalAmount" name="TotalAmount" style="width: 80%!important;" class="input-field">
+                    <input type="text" id="TotalAmount" name="TotalAmount" style="width: 40%!important;" class="input-field">
                 </div>
             </div>
 
             <div class="d-flex justify-content-end mb-3">
                 <div class="form-group text-end">
                     <label>Total Lab Profit</label>
-                    <input type="text" id="TotalProfit" name="TotalProfit" style="width: 80%!important;" class="input-field">
+                    <input type="text" id="TotalProfit" name="TotalProfit" style="width: 40%!important;" class="input-field">
                 </div>
             </div>
 
