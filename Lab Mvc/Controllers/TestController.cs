@@ -117,5 +117,88 @@ namespace Lab_Mvc.Controllers
 
         }
 
+
+        public async Task<ActionResult> Edit(Int64 TrnNo)
+        {
+            List<Test> _lstTD = await Test.GetAllAsync();
+
+            return PartialView(await Test.GetExistingAsync(TrnNo));
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> Edit(Test _ObjTest)
+        {
+            var result = new SaveViewModel() { Status = true };
+
+            try
+            {
+                Int64 trn_no = await Test.Edit(_ObjTest);
+                if (trn_no != 0)
+                {
+                    string strDocNo = trn_no.ToString().Substring(2, 6) + "-" + trn_no.ToString().Substring(trn_no.ToString().Length - 2);
+                    result.DocNo = strDocNo;
+                    result = new SaveViewModel()
+                    {
+                        Status = true,
+                        Message = "",
+                        DocNo = strDocNo
+                    };
+                }
+                else
+                {
+                    result.Status = false;
+                    result.Message = "Something went wrong.";
+                }
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+            catch
+            {
+                result.Status = false;
+                result.Message = "Something went wrong.";
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        public async Task<ActionResult> Delete(Int64 TrnNo)
+        {
+            List<Test> _lstTD = await Test.GetAllAsync();
+
+            return PartialView(await Test.GetExistingAsync(TrnNo));
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> Delete(Test _ObjTest)
+        {
+            var result = new SaveViewModel() { Status = true };
+
+            try
+            {
+                Int64 trn_no = await Test.Delete(_ObjTest);
+                if (trn_no != 0)
+                {
+                    string strDocNo = trn_no.ToString().Substring(2, 6) + "-" + trn_no.ToString().Substring(trn_no.ToString().Length - 2);
+                    result.DocNo = strDocNo;
+                    result = new SaveViewModel()
+                    {
+                        Status = true,
+                        Message = "",
+                        DocNo = strDocNo
+                    };
+                }
+                else
+                {
+                    result.Status = false;
+                    result.Message = "Something went wrong.";
+                }
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+            catch
+            {
+                result.Status = false;
+                result.Message = "Something went wrong.";
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+        }
+
     } 
 }

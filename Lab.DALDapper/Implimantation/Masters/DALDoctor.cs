@@ -1,0 +1,124 @@
+﻿using Lab.DTO.Masters.Interfaces;
+using Lab.DTO.Masters.Objects;
+using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Dapper;
+
+namespace Lab.DALDapper.Implimantation.Masters
+{
+    public class DALDoctor: IMstDoctor
+    {
+        private readonly string _connectionString = ConfigurationManager.ConnectionStrings["connstr"].ConnectionString;
+
+        public List<DTODoctor> GetAll()
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["connstr"].ConnectionString;
+            try
+            {
+                string query = "SELECT * FROM MST_TEST";
+                using (SqlConnection con = new SqlConnection(connectionString))
+                {
+                    con.Open();
+                    return con.Query<DTODoctor>(query).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error retrieving MST_TEST data", ex);
+            }
+        }
+        public Int64 Create(DTODoctor _objDtoDoctor)
+        {
+            try
+            {
+                string query = @"INSERT INTO MST_TEST (TEST_CODE,TEST_NAME,PRICE,LAB_PRICE)";
+                query = query + " VALUES(@TEST_CODE,@TEST_NAME,@PRICE,@LAB_PRICE);SELECT @TEST_CODE";
+                Int64 i;
+                using (SqlConnection con = new SqlConnection(_connectionString))
+                {
+                    con.Open();
+                    i = con.Query<Int64>(query, _objDtoDoctor).Single();
+                }
+                return i;
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        //public async Task<string> GetLastTestIdForDate(string datePart)
+        //{
+        //    string lastTestId = null;
+        //    string query = "SELECT TOP 1 TEST_CODE FROM MST_TEST WHERE TEST_CODE LIKE @datePart + '%' ORDER BY TEST_CODE DESC";
+
+        //    using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["connstr"].ConnectionString))
+        //    {
+        //        await conn.OpenAsync();
+        //        using (SqlCommand cmd = new SqlCommand(query, conn))
+        //        {
+        //            cmd.Parameters.AddWithValue("@datePart", datePart);
+        //            object result = await cmd.ExecuteScalarAsync();
+        //            if (result != null)
+        //                lastTestId = result.ToString();
+        //        }
+        //    }
+        //    return lastTestId;
+        //}
+
+        public async Task<string> GetLastTestIdForFixedParts(string fixedPart, string fixedPartSec)
+        {
+            string lastTestId = null;
+                        
+            string likePattern = fixedPart + fixedPartSec + "%";
+
+            string query = "SELECT TOP 1 TEST_CODE FROM MST_TEST WHERE TEST_CODE LIKE @likePattern ORDER BY TEST_CODE DESC";
+
+            using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["connstr"].ConnectionString))
+            {
+                await conn.OpenAsync();
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@likePattern", likePattern);
+
+                    object result = await cmd.ExecuteScalarAsync();
+                    if (result != null)
+                        lastTestId = result.ToString();
+                }
+            }
+            return lastTestId;
+        }
+
+        public List<DTODoctor> GetDoctorList()
+        {
+            try
+            {
+                string query = @"SELECT EMAIL 
+                         FROM MST_EMPLOYEE 
+                         WHERE STATUS_CODE = 0 
+                         ORDER BY EMPLOYEE_FIRST_NAME";
+
+                List<DTODoctor> lst;
+
+                using (SqlConnection con = new SqlConnection(_connectionString))
+                {
+                    con.Open();
+                    lst = con.Query<DTODoctor>(query).ToList();
+                }
+
+                return lst;
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+
+    }
+}
