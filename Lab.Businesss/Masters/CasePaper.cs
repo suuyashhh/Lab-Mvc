@@ -14,6 +14,7 @@ namespace Lab.Businesss.Masters
         public static IMstCasePaper _dalCasePaper;
         public static IMSTTest _dalTest;
         public static IMstTestTable _dalTestTable;
+        public static IMstDoctor _dalDoctor;
         public Int64 TrnNo { get; set; }
         public string PatientName { get; set; }
         public string Gender { get; set; }
@@ -40,7 +41,7 @@ namespace Lab.Businesss.Masters
                 throw new Exception("Request Failed. " + ex.Message);
             }
         }
-
+        
         public static async Task<CasePaper> GetExistingAsync(Int64 code)
         {
             try
@@ -77,7 +78,7 @@ namespace Lab.Businesss.Masters
             try
             {
                 _dalCasePaper = new DALCasePaper();
-                List<CasePaper> lstCity = await Task.Run(() => { return fillCityList(_dalCasePaper.GetAll()); });
+                List<CasePaper> lstCity = await Task.Run(() => { return fillCasePaperList(_dalCasePaper.GetAll()); });
                 return lstCity;
             }
             catch
@@ -86,7 +87,7 @@ namespace Lab.Businesss.Masters
             }
         }
 
-        private static List<CasePaper> fillCityList(List<DTOCasePaper> dtoCasePaper)
+        private static List<CasePaper> fillCasePaperList(List<DTOCasePaper> dtoCasePaper)
         {
 
             var _citylist = from dtocasepaper in dtoCasePaper

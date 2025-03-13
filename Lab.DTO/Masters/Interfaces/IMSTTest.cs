@@ -12,7 +12,10 @@ namespace Lab.DTO.Masters.Interfaces
     {
         List<DTOTest> GetAll();
         Int64 Create(DTOTest _objDtoTest);
+        Int64 Edit(DTOTest _objDtoTest);
+        Int64 Delete(DTOTest _objDtoTest);
         Task<List<DTOTest>> GetTestsAsync(string searchtext);
         Task<string> GetLastTestIdForDate(string datePart);
+        DTOTest GetExisting(Int64 code);
     }
 }

@@ -20,6 +20,7 @@ namespace Lab.Businesss.Masters
         public int SrNo { get; set; }
         public int StatusCode { get; set; }
         public string ShortTrnNo { get; set; }
+        public string DeleteReason { get; set; }
 
 
         public static Test New()
@@ -34,6 +35,33 @@ namespace Lab.Businesss.Masters
             }
         }
 
+        public static async Task<Test> GetExistingAsync(Int64 code)
+        {
+            try
+            {
+                _dalTest = new DALTest();
+
+                DTOTest dtoTest = await Task.Run(() => { return _dalTest.GetExisting(code); });
+
+                if (dtoTest != null)
+                    return new Test()
+                    {
+                        TrnNo = dtoTest.TRN_NO,
+                        TestCode = dtoTest.TEST_CODE,
+                        TestName = dtoTest.TEST_NAME,
+                        Price = dtoTest.PRICE,
+                        LabPrice = dtoTest.LAB_PRICE,
+                        SrNo = dtoTest.SR_NO
+
+                    };
+                else
+                    return null;
+            }
+            catch
+            {
+                throw new Exception("Request Failed");
+            }
+        }
         public static async Task<List<Test>> GetAllAsync()
         {
             try
@@ -112,6 +140,56 @@ namespace Lab.Businesss.Masters
             }
         }
 
+        public static async Task<Int64> Edit(Test _ObjTest)
+        {
+            try
+            {
+                Int64 result = 0;
+                _dalTest = new DALTest();
+
+
+                DTOTest _objDtoTest = new DTOTest()
+                {
+                    TEST_CODE = _ObjTest.TestCode,
+                    TEST_NAME = _ObjTest.TestName,
+                    PRICE = _ObjTest.Price,
+                    LAB_PRICE = _ObjTest.LabPrice,
+                    SR_NO = _ObjTest.SrNo
+                };
+
+                result = await Task.Run(() => { return _dalTest.Edit(_objDtoTest); });
+
+                return result;
+            }
+            catch
+            {
+                return 0;
+            }
+        }
+
+        public static async Task<Int64> Delete(Test _ObjTest)
+        {
+            try
+            {
+                Int64 result = 0;
+                _dalTest = new DALTest();
+
+
+                DTOTest _objDtoTest = new DTOTest()
+                {
+                    TEST_CODE = _ObjTest.TestCode,
+                    DELETE_REASON = _ObjTest.DeleteReason,
+                };
+
+                result = await Task.Run(() => { return _dalTest.Delete(_objDtoTest); });
+
+                return result;
+            }
+            catch
+            {
+                return 0;
+            }
+        }
         private static async Task<long> GenerateTestId(string datePart)
         {
             _dalTest = new DALTest();

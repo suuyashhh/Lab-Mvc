@@ -70,6 +70,76 @@ namespace Lab.DALDapper.Implimantation.Masters
             }
         }
 
+        public Int64 Edit(DTOTest _objDtoTest)
+        {
+            try
+            {
+                string query = @"UPDATE MST_TEST SET ";
+                query += " TEST_NAME = '" + _objDtoTest.TEST_NAME + "'";
+                query += " ,PRICE = '" + _objDtoTest.PRICE + "'";
+                query += " ,LAB_PRICE = '" + _objDtoTest.LAB_PRICE + "'";
+                query += " WHERE TEST_CODE = '" + _objDtoTest.TEST_CODE + "'";
+                Int64 i;
+                using (SqlConnection con = new SqlConnection(_connectionString))
+                {
+                    con.Open();
+                    i = con.Query<Int64>(query, _objDtoTest).Single();
+                }
+                return i;
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        public Int64 Delete(DTOTest _objDelete)
+        {
+            try
+            {
+                string connectionString = ConfigurationManager.ConnectionStrings["connstr"].ConnectionString;
+
+                string query = @"DELETE FROM MST_TEST WHERE TEST_CODE = @TEST_CODE";
+
+                Int64 rowsAffected = 0;
+
+                using (SqlConnection con = new SqlConnection(connectionString))
+                {
+                    con.Open();
+
+                    rowsAffected = con.Execute(query, new
+                    {
+                        TEST_CODE = _objDelete.TEST_CODE
+                    });
+                }
+
+                return rowsAffected;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while permanently deleting record: " + ex.Message, ex);
+            }
+        }
+        public DTOTest GetExisting(Int64 code)
+        {
+            try
+            {
+                string query = "SELECT * FROM MST_TEST WHERE TRN_NO = @code";
+                DTOTest lst = new DTOTest();
+                using (SqlConnection con = new SqlConnection(_connectionString))
+                {
+                    con.Open();
+
+                    lst = con.Query<DTOTest>(query, new { code }).FirstOrDefault();
+                }
+
+                return lst;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
         public async Task<string> GetLastTestIdForDate(string datePart)
         {
             string lastTestId = null;
