@@ -16,5 +16,6 @@ namespace Lab.DTO.Masters.Objects
         public int SR_NO { get; set; }
         public int STATUS_CODE{ get; set; }
         public string SHORT_TRN_NO { get; set; }
+        public string DELETE_REASON { get; set; }
     }
 }

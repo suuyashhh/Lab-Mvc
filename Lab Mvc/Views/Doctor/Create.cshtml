@@ -1,7 +1,7 @@
 ﻿
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewBag.Title = "Test Create";
+    ViewBag.Title = "Doctor Create";
 }
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -288,7 +288,7 @@
 
 <div class="body">
     <div class="pagetitle">
-        <h1>Test Master</h1>
+        <h1>Doctor Master</h1>
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="index.html">Masters</a></li>
@@ -301,18 +301,18 @@
     <div class="container">
         <form id="Test-Form">
             <div class="form-group">
-                <label>Test Name</label>
-                <input type="text" id="TestName" name="TestName" class="input-field">
+                <label>Doctor Name</label>
+                <input type="text" id="DoctorName" name="DoctorName" class="input-field">
             </div>
 
             <div class="row">
                 <div class="col form-group">
-                    <label>Price</label>
-                    <input type="text" id="Price" name="Price" class="number input-field">
+                    <label>Number</label>
+                    <input type="text" id="DNumber" name="DNumber" class="number input-field">
                 </div>
                 <div class="col form-group">
-                    <label>Lab Price</label>
-                    <input type="text" id="LabPrice" name="LabPrice" class="number input-field unit-field">
+                    <label>Address</label>
+                    <input type="text" id="DAddress" name="DAddress" class="input-field unit-field">
                 </div>
             </div>
 
@@ -320,7 +320,7 @@
                 <div class="add-test-section">
                     <div class="test-inputs" style="justify-content:end">
                         <button class="add-btn" id="save">Save</button>
-                        <a class="add-btn" style="background:red!important" href="/Test/index" data-ajax-update="#mainContent" data-ajax-mode="replace" data-ajax-method="GET" data-ajax="true">Cancle</a>
+                        <a class="add-btn" style="background:red!important" href="/Doctor/index" data-ajax-update="#mainContent" data-ajax-mode="replace" data-ajax-method="GET" data-ajax="true">Cancle</a>
                     </div>
                 </div>
             </div>
@@ -334,60 +334,39 @@
         $('#save').click(function (e) {
             e.preventDefault();
 
-            if ($("#TestName").val().trim() === "") {
-                toastr.error("Please Enter TestName..!", "TestName", {
+            if ($("#DoctorName").val().trim() === "") {
+                toastr.error("Please Enter DoctorName..!", "DoctorName", {
                     timeOut: 3000,
                     closeButton: false,
                     progressBar: true,
                     positionClass: "toast-top-right"
                 });
-                $('#TestName').focus();
+                $('#DoctorName').focus();
                 return false;
             }
 
-            if ($("#Price").val().trim() === "") {
-                toastr.error("Please Enter Price..!", "Price", {
-                    timeOut: 3000,
-                    closeButton: false,
-                    progressBar: true,
-                    positionClass: "toast-top-right"
-                });
-                $('#Price').focus();
-                return false;
-            }
-
-            if ($("#LabPrice").val().trim() === "") {
-                toastr.error("Please Enter LabPrice..!", "LabPrice", {
-                    timeOut: 3000,
-                    closeButton: false,
-                    progressBar: true,
-                    positionClass: "toast-top-right"
-                });
-                $('#LabPrice').focus();
-                return false;
-            }
 
             if (form.valid()) {
-                var _ObjTest = {
-                    TestName: $("#TestName").val(),
-                    Price: $("#Price").val(),
-                    LabPrice: $("#LabPrice").val()
+                var _ObjDoctor = {
+                    DoctorName: $("#DoctorName").val(),
+                    DoctorNumber: $("#DNumber").val(),
+                    DoctorAddress: $("#DAddress").val()
                 };
-                            
+
                     $("#mainContent").html('<div>Loading...</div>');
-            
+
 
                 $.ajax({
-                    url: '/Test/Create',
+                    url: '/Doctor/Create',
                     type: "POST",
                     contentType: "application/json",
                     dataType: "json",
-                    data: JSON.stringify(_ObjTest),
+                    data: JSON.stringify(_ObjDoctor),
                     success: function (response) {
-                        
+
                         if (response.Status) {
                             setTimeout(function () {
-                                window.location.href = "/Test/Index";
+                                window.location.href = "/Doctor/Index";
                             });
                         } else {
                             toastr.error("Error saving document!", "Error", {

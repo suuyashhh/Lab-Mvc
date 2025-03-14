@@ -89,10 +89,10 @@ namespace Lab_Mvc.Controllers
 
             try
             {
-                Int64 trn_no = await Test.Create(_ObjTest);
-                if (trn_no != 0)
+                Int64 Test_Code = await Test.Create(_ObjTest);
+                if (Test_Code != 0)
                 {
-                    string strDocNo = trn_no.ToString().Substring(2, 6) + "-" + trn_no.ToString().Substring(trn_no.ToString().Length - 2);
+                    string strDocNo = Test_Code.ToString().Substring(2) + "-" + Test_Code.ToString().Substring(Test_Code.ToString().Length - 2);
                     result.DocNo = strDocNo;
                     result = new SaveViewModel()
                     {
@@ -115,6 +115,89 @@ namespace Lab_Mvc.Controllers
                 return Json(result, JsonRequestBehavior.AllowGet);
             }
 
+        }
+
+
+        public async Task<ActionResult> Edit(Int64 TestCode)
+        {
+            List<Test> _lstTD = await Test.GetAllAsync();
+
+            return PartialView(await Test.GetExistingAsync(TestCode));
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> Edit(Test _ObjTest)
+        {
+            var result = new SaveViewModel() { Status = true };
+
+            try
+            {
+                Int64 Test_Code = await Test.Edit(_ObjTest);
+                if (Test_Code != 0)
+                {
+                    string strDocNo = Test_Code.ToString().Substring(2) + "-" + Test_Code.ToString().Substring(Test_Code.ToString().Length - 2);
+                    result.DocNo = strDocNo;
+                    result = new SaveViewModel()
+                    {
+                        Status = true,
+                        Message = "",
+                        DocNo = strDocNo
+                    };
+                }
+                else
+                {
+                    result.Status = false;
+                    result.Message = "Something went wrong.";
+                }
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+            catch
+            {
+                result.Status = false;
+                result.Message = "Something went wrong.";
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        public async Task<ActionResult> Delete(Int64 TestCode)
+        {
+            List<Test> _lstTD = await Test.GetAllAsync();
+
+            return PartialView(await Test.GetExistingAsync(TestCode));
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> Delete(Test _ObjTest)
+        {
+            var result = new SaveViewModel() { Status = true };
+
+            try
+            {
+                Int64 Test_Code = await Test.Delete(_ObjTest);
+                if (Test_Code != 0)
+                {
+                    string strDocNo = Test_Code.ToString().Substring(2) + "-" + Test_Code.ToString().Substring(Test_Code.ToString().Length - 2);
+                    result.DocNo = strDocNo;
+                    result = new SaveViewModel()
+                    {
+                        Status = true,
+                        Message = "",
+                        DocNo = strDocNo
+                    };
+                }
+                else
+                {
+                    result.Status = false;
+                    result.Message = "Something went wrong.";
+                }
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+            catch
+            {
+                result.Status = false;
+                result.Message = "Something went wrong.";
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
         }
 
     } 

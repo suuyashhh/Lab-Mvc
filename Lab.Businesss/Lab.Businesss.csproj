@@ -59,6 +59,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Masters\CasePaper.cs" />
+    <Compile Include="Masters\DateUtility.cs" />
+    <Compile Include="Masters\Doctor.cs" />
     <Compile Include="Masters\Test.cs" />
     <Compile Include="Masters\TestTable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

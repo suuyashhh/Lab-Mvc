@@ -1,7 +1,9 @@
-﻿
+﻿@using Lab.Businesss.Masters
+@model Test
+
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewBag.Title = "Test Create";
+    ViewBag.Title = "Test Edit";
 }
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -288,11 +290,12 @@
 
 <div class="body">
     <div class="pagetitle">
+        <input type="hidden" id="hfTestCode" value="@Model.TestCode" />
         <h1>Test Master</h1>
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="index.html">Masters</a></li>
-                <li class="breadcrumb-item active">Create</li>
+                <li class="breadcrumb-item active">Edit</li>
             </ol>
         </nav>
     </div>
@@ -302,18 +305,23 @@
         <form id="Test-Form">
             <div class="form-group">
                 <label>Test Name</label>
-                <input type="text" id="TestName" name="TestName" class="input-field">
+                <input type="text" id="TestName" name="TestName" value="@Model.TestName" class="input-field">
             </div>
 
             <div class="row">
                 <div class="col form-group">
                     <label>Price</label>
-                    <input type="text" id="Price" name="Price" class="number input-field">
+                    <input type="text" id="Price" name="Price" value="@Model.Price" class="number input-field">
                 </div>
                 <div class="col form-group">
                     <label>Lab Price</label>
-                    <input type="text" id="LabPrice" name="LabPrice" class="number input-field unit-field">
+                    <input type="text" id="LabPrice" name="LabPrice" value="@Model.LabPrice" class="number input-field unit-field">
                 </div>
+            </div>
+
+            <div class="form-group">
+                <label>Delete Reason</label>
+                <input type="text" id="DeleteRes" name="DeleteRes" class="input-field">
             </div>
 
             <div class="tests-section">
@@ -329,62 +337,41 @@
 </div>
 <script type="text/javascript">
     $(document).ready(function () {
+        var TestCode = $("#hfTestCode").val();
         var form = $("#Test-Form");
 
         $('#save').click(function (e) {
             e.preventDefault();
 
-            if ($("#TestName").val().trim() === "") {
-                toastr.error("Please Enter TestName..!", "TestName", {
+            if ($("#DeleteRes").val().trim() === "") {
+                toastr.error("Please Enter Delete Reason..!", "DeleteReason", {
                     timeOut: 3000,
                     closeButton: false,
                     progressBar: true,
                     positionClass: "toast-top-right"
                 });
-                $('#TestName').focus();
-                return false;
-            }
-
-            if ($("#Price").val().trim() === "") {
-                toastr.error("Please Enter Price..!", "Price", {
-                    timeOut: 3000,
-                    closeButton: false,
-                    progressBar: true,
-                    positionClass: "toast-top-right"
-                });
-                $('#Price').focus();
-                return false;
-            }
-
-            if ($("#LabPrice").val().trim() === "") {
-                toastr.error("Please Enter LabPrice..!", "LabPrice", {
-                    timeOut: 3000,
-                    closeButton: false,
-                    progressBar: true,
-                    positionClass: "toast-top-right"
-                });
-                $('#LabPrice').focus();
+                $('#DeleteRes').focus();
                 return false;
             }
 
             if (form.valid()) {
                 var _ObjTest = {
+                    TestCode: TestCode,
                     TestName: $("#TestName").val(),
-                    Price: $("#Price").val(),
+                    DeleteRes: $("#DeleteRes").val(),
                     LabPrice: $("#LabPrice").val()
                 };
-                            
+
                     $("#mainContent").html('<div>Loading...</div>');
-            
 
                 $.ajax({
-                    url: '/Test/Create',
+                    url: '/Test/Delete',
                     type: "POST",
                     contentType: "application/json",
                     dataType: "json",
                     data: JSON.stringify(_ObjTest),
                     success: function (response) {
-                        
+
                         if (response.Status) {
                             setTimeout(function () {
                                 window.location.href = "/Test/Index";

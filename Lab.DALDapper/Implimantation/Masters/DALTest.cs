@@ -70,17 +70,91 @@ namespace Lab.DALDapper.Implimantation.Masters
             }
         }
 
-        public async Task<string> GetLastTestIdForDate(string datePart)
+        public Int64 Edit(DTOTest _objDtoTest)
+        {
+            try
+            {
+                string query = @"UPDATE MST_TEST SET ";
+                query += " TEST_NAME = '" + _objDtoTest.TEST_NAME + "'";
+                query += " ,PRICE = '" + _objDtoTest.PRICE + "'";
+                query += " ,LAB_PRICE = '" + _objDtoTest.LAB_PRICE + "'";
+                query += " WHERE TEST_CODE = '" + _objDtoTest.TEST_CODE + "'";
+                Int64 i;
+                using (SqlConnection con = new SqlConnection(_connectionString))
+                {
+                    con.Open();
+                    i = con.Execute(query, _objDtoTest);
+                }
+                return _objDtoTest.TEST_CODE;
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        public Int64 Delete(DTOTest _objDelete)
+        {
+            try
+            {
+                string connectionString = ConfigurationManager.ConnectionStrings["connstr"].ConnectionString;
+
+                string query = @"DELETE FROM MST_TEST WHERE TEST_CODE = @TEST_CODE";
+
+                Int64 i = 0;
+
+                using (SqlConnection con = new SqlConnection(connectionString))
+                {
+                    con.Open();
+
+                    i = con.Execute(query, new
+                    {
+                        TEST_CODE = _objDelete.TEST_CODE
+                    });
+                }
+
+                return _objDelete.TEST_CODE;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while permanently deleting record: " + ex.Message, ex);
+            }
+        }
+        public DTOTest GetExisting(Int64 code)
+        {
+            try
+            {
+                string query = "SELECT * FROM MST_TEST WHERE TEST_CODE = @code";
+                DTOTest lst = new DTOTest();
+                using (SqlConnection con = new SqlConnection(_connectionString))
+                {
+                    con.Open();
+
+                    lst = con.Query<DTOTest>(query, new { code }).FirstOrDefault();
+                }
+
+                return lst;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        public async Task<string> GetLastTestIdForFixedParts(string fixedPart, string fixedPartSec)
         {
             string lastTestId = null;
-            string query = "SELECT TOP 1 TEST_CODE FROM MST_TEST WHERE TEST_CODE LIKE @datePart + '%' ORDER BY TEST_CODE DESC";
+
+            string likePattern = fixedPart + fixedPartSec + "%";
+
+            string query = "SELECT TOP 1 TEST_CODE FROM MST_TEST WHERE TEST_CODE LIKE @likePattern ORDER BY TEST_CODE DESC";
 
             using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["connstr"].ConnectionString))
             {
                 await conn.OpenAsync();
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
-                    cmd.Parameters.AddWithValue("@datePart", datePart);
+                    cmd.Parameters.AddWithValue("@likePattern", likePattern);
+
                     object result = await cmd.ExecuteScalarAsync();
                     if (result != null)
                         lastTestId = result.ToString();

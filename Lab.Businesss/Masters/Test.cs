@@ -20,6 +20,7 @@ namespace Lab.Businesss.Masters
         public int SrNo { get; set; }
         public int StatusCode { get; set; }
         public string ShortTrnNo { get; set; }
+        public string DeleteReason { get; set; }
 
 
         public static Test New()
@@ -34,6 +35,33 @@ namespace Lab.Businesss.Masters
             }
         }
 
+        public static async Task<Test> GetExistingAsync(Int64 code)
+        {
+            try
+            {
+                _dalTest = new DALTest();
+
+                DTOTest dtoTest = await Task.Run(() => { return _dalTest.GetExisting(code); });
+
+                if (dtoTest != null)
+                    return new Test()
+                    {
+                        TrnNo = dtoTest.TRN_NO,
+                        TestCode = dtoTest.TEST_CODE,
+                        TestName = dtoTest.TEST_NAME,
+                        Price = dtoTest.PRICE,
+                        LabPrice = dtoTest.LAB_PRICE,
+                        SrNo = dtoTest.SR_NO
+
+                    };
+                else
+                    return null;
+            }
+            catch
+            {
+                throw new Exception("Request Failed");
+            }
+        }
         public static async Task<List<Test>> GetAllAsync()
         {
             try
@@ -61,8 +89,8 @@ namespace Lab.Businesss.Masters
                                 LabPrice = dtotest.LAB_PRICE,
                                 SrNo = dtotest.SR_NO,
                                 StatusCode = dtotest.STATUS_CODE,
-                                ShortTrnNo = dtotest.TEST_CODE.ToString().Substring(2, 6) + "-" + dtotest.TEST_CODE.ToString().Substring(dtotest.TEST_CODE.ToString().Length - 2),
-                            };
+                                ShortTrnNo = dtotest.TEST_CODE.ToString().Substring(2) + "-" + dtotest.TEST_CODE.ToString().Substring(dtotest.TEST_CODE.ToString().Length - 2)
+        };
 
             return _Testlist.AsEnumerable<Test>().ToList();
         }
@@ -88,10 +116,7 @@ namespace Lab.Businesss.Masters
                 Int64 result = 0;
                 _dalTest = new DALTest();
 
-
-
-                string datePart = DateTime.Now.ToString("yyyyMMdd");
-                Int64 newTestId = await GenerateTestId(datePart);
+                Int64 newTestId = await GeneratTestId();
 
                 DTOTest _objDtoTest = new DTOTest()
                 {
@@ -112,22 +137,72 @@ namespace Lab.Businesss.Masters
             }
         }
 
-        private static async Task<long> GenerateTestId(string datePart)
+        public static async Task<Int64> Edit(Test _ObjTest)
+        {
+            try
+            {
+                Int64 result = 0;
+                _dalTest = new DALTest();
+
+
+                DTOTest _objDtoTest = new DTOTest()
+                {
+                    TEST_CODE = _ObjTest.TestCode,
+                    TEST_NAME = _ObjTest.TestName,
+                    PRICE = _ObjTest.Price,
+                    LAB_PRICE = _ObjTest.LabPrice,
+                    SR_NO = _ObjTest.SrNo
+                };
+
+                result = await Task.Run(() => { return _dalTest.Edit(_objDtoTest); });
+
+                return result;
+            }
+            catch
+            {
+                return 0;
+            }
+        }
+
+        public static async Task<Int64> Delete(Test _ObjTest)
+        {
+            try
+            {
+                Int64 result = 0;
+                _dalTest = new DALTest();
+
+
+                DTOTest _objDtoTest = new DTOTest()
+                {
+                    TEST_CODE = _ObjTest.TestCode,
+                    DELETE_REASON = _ObjTest.DeleteReason,
+                };
+
+                result = await Task.Run(() => { return _dalTest.Delete(_objDtoTest); });
+
+                return result;
+            }
+            catch
+            {
+                return 0;
+            }
+        }
+        private static async Task<long> GeneratTestId()
         {
             _dalTest = new DALTest();
+            string fixedPart = "2";
+            string fixedPartSec = "06";
 
-            string fixedPart = "03";
-
-            string lastId = await _dalTest.GetLastTestIdForDate(datePart);
+            string lastId = await _dalTest.GetLastTestIdForFixedParts(fixedPart, fixedPartSec);
 
             int nextNumber = 1;
-            if (!string.IsNullOrEmpty(lastId) && lastId.StartsWith(datePart + fixedPart))
+            if (!string.IsNullOrEmpty(lastId) && lastId.StartsWith(fixedPart + fixedPartSec))
             {
-                int lastNumber = int.Parse(lastId.Substring(10));
+                int lastNumber = int.Parse(lastId.Substring(fixedPart.Length + fixedPartSec.Length));
                 nextNumber = lastNumber + 1;
             }
 
-            long newTestId = long.Parse(datePart + fixedPart + nextNumber.ToString("D3"));
+            long newTestId = long.Parse(fixedPart + fixedPartSec + nextNumber.ToString("D3"));
 
             return newTestId;
         }

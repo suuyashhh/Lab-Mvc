@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -93,6 +94,9 @@ namespace Lab_Mvc.Controllers
 
         public ActionResult Create()
         {
+            //ViewData["currentdate"] = DateUtility.GetCurrentDate();
+            List<Doctor> _objDoctor = Doctor.GetDoctorList();
+            ViewData["doctor"] = _objDoctor;
             return PartialView(CasePaper.New());
         }
 
@@ -104,6 +108,89 @@ namespace Lab_Mvc.Controllers
             try
             {             
                 Int64 trn_no = await CasePaper.Create(_ObjCsPaper);
+                if (trn_no != 0)
+                {
+                    string strDocNo = trn_no.ToString().Substring(2, 6) + "-" + trn_no.ToString().Substring(trn_no.ToString().Length - 2);
+                    result.DocNo = strDocNo;
+                    result = new SaveViewModel()
+                    {
+                        Status = true,
+                        Message = "",
+                        DocNo = strDocNo
+                    };
+                }
+                else
+                {
+                    result.Status = false;
+                    result.Message = "Something went wrong.";
+                }
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+            catch
+            {
+                result.Status = false;
+                result.Message = "Something went wrong.";
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        public async Task<ActionResult> Edit(Int64 TrnNo)
+        {            
+            List<CasePaper> _lstTD = await CasePaper.GetAllAsync();
+            
+            return PartialView(await CasePaper.GetExistingAsync(TrnNo));
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> Edit(CasePaper _ObjCsPaper)
+        {
+            var result = new SaveViewModel() { Status = true };
+
+            try
+            {
+                Int64 trn_no = await CasePaper.Edit(_ObjCsPaper);
+                if (trn_no != 0)
+                {
+                    string strDocNo = trn_no.ToString().Substring(2, 6) + "-" + trn_no.ToString().Substring(trn_no.ToString().Length - 2);
+                    result.DocNo = strDocNo;
+                    result = new SaveViewModel()
+                    {
+                        Status = true,
+                        Message = "",
+                        DocNo = strDocNo
+                    };
+                }
+                else
+                {
+                    result.Status = false;
+                    result.Message = "Something went wrong.";
+                }
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+            catch
+            {
+                result.Status = false;
+                result.Message = "Something went wrong.";
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+
+        public async Task<ActionResult> Delete(Int64 TrnNo)
+        {
+            List<CasePaper> _lstTD = await CasePaper.GetAllAsync();
+
+            return PartialView(await CasePaper.GetExistingAsync(TrnNo));
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> Delete(CasePaper _ObjCsPaper)
+        {
+            var result = new SaveViewModel() { Status = true };
+
+            try
+            {
+                Int64 trn_no = await CasePaper.Delete(_ObjCsPaper);
                 if (trn_no != 0)
                 {
                     string strDocNo = trn_no.ToString().Substring(2, 6) + "-" + trn_no.ToString().Substring(trn_no.ToString().Length - 2);

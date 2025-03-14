@@ -1,13 +1,15 @@
 ﻿@using Lab.Businesss.Masters
+@model CasePaper
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewBag.Title = "CasePaper Create";
+    ViewBag.Title = "CasePaper Delete";
 }
 
-@{ 
-    string curr_date = ViewData["currentdate"] as string;
-   // List<Doctor> lstdoctor = ViewData["doctor"] as List<Doctor>;
+
+@{
+    int row_num = 1;
 }
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
@@ -280,34 +282,34 @@
         }
     }
 
-   /* .ui-autocomplete {
+    /* .ui-autocomplete {
         max-height: 200px;
         overflow-y: auto;
         background: white;
         border: 1px solid #ccc;
         z-index: 9999 !important;
     }*/
-       
+
     #tblMaterials td,
     #tblMaterials th {
-        padding: 8px; 
-        text-align: center; 
+        padding: 8px;
+        text-align: center;
         vertical-align: middle;
     }
-    
+
     .editable-input {
-        width: 50%; 
-        padding: 4px; 
-        border: 1px solid #ccc; 
-        border-radius: 4px; 
+        width: 50%;
+        padding: 4px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
         font-size: 14px;
-        box-sizing: border-box; 
-        text-align: center; 
-        margin: 0; 
+        box-sizing: border-box;
+        text-align: center;
+        margin: 0;
     }
-    
+
     #tblMaterials td[data-editable="true"] {
-        padding: 0; 
+        padding: 0;
     }
 
     .ui-autocomplete {
@@ -340,8 +342,8 @@
     }
 
     .flex-item {
-        flex: 1; 
-        min-width: 200px; 
+        flex: 1;
+        min-width: 200px;
     }
 
     .second-row {
@@ -357,11 +359,12 @@
 
 <div class="body">
     <div class="pagetitle">
+        <input type="hidden" id="hfTrnNo" value="@Model.TrnNo" />
         <h1>Case Paper</h1>
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                <li class="breadcrumb-item active">Create</li>
+                <li class="breadcrumb-item active">Delete</li>
             </ol>
         </nav>
     </div>
@@ -371,22 +374,22 @@
         <form method="POST" id="CasePaper-form">
             <div class="form-group">
                 <label>Petient Name</label>
-                <input type="text" id="PName" name="PatientName" class="input-field">
+                <input type="text" id="PName" name="PatientName" value="@Model.PatientName" class="input-field">
             </div>
 
             <div class="form-group">
                 <label>Date</label>
-                <input type="date" id="Date" name="Date" value="@curr_date" class="input-field">
+                <input type="date" id="Date" name="Date" value="@Model.Date" class="input-field">
             </div>
 
             <div class="row">
                 <div class="col form-group">
                     <label>Gender</label>
-                    <input type="text" id="Gender" name="Gender" class="input-field">
+                    <input type="text" id="Gender" name="Gender" value="@Model.Gender" class="input-field">
                 </div>
                 <div class="col form-group">
                     <label>Phone Number</label>
-                    <input type="text" id="PNumber" name="ConNumber" class="input-field">
+                    <input type="text" id="PNumber" name="ConNumber" value="@Model.ConNumber" class="input-field">
                 </div>
             </div>
 
@@ -397,13 +400,7 @@
 
             <div class="form-group">
                 <label>Doctor Reference</label>
-                @*<input type="text" id="Doctor" name="DoctorRef" class="input-field">*@
-                @*<select name="DoctorRef" id="Doctor" class="form-control" style="width:100%">
-                    @foreach (Doctor doc in lstdoctor)
-                    {
-                        <option value="@doc.DoctorCode"> @doc.DoctorName</option>
-                    }
-                </select>*@
+                <input type="text" id="Doctor" name="DoctorRef" value="@Model.DoctorRef" class="input-field">
             </div>
 
             <div class="tests-section">
@@ -422,7 +419,26 @@
                                 <th>Action</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="tblMaterials">
+                            @foreach (var mati in Model.MatIs)
+                            {
+                                <tr id="row(@row_num)">
+                                    <td>@row_num</td>
+                                    <td>
+                                        @mati.TestName
+                                        <input type='hidden' id='TestCode(@row_num)' value="@mati.TestCode">
+                                        <input type='hidden' id='hfTestId(@row_num)' value="@mati.TestCode">
+                                        <input type='hidden' id='Price(@row_num)' value="@mati.Price">
+                                        <input type='hidden' id='hfLabPrice(@row_num)' value="@mati.LabPrice">
+                                    </td>
+                                    <td id="Amount(@row_num)" data-editable="true">@mati.Price</td>
+                                    <td id="LabAmount(@row_num)" data-editable="true">@mati.LabPrice</td>
+                                    <td>
+                                        <a class="delete-btn remove-row" href="javascript:void(0);">Delete</a>
+                                    </td>
+                                </tr>
+                                row_num++;
+                            }
                         </tbody>
                         <thead>
                             <tr>
@@ -456,7 +472,7 @@
                 <div class="flex-row">
                     <div class="flex-item">
                         <label>Dis (%)</label>
-                        <input type="text" id="Discount" name="Discount" value="0" class="input-field">
+                        <input type="text" id="Discount" name="Discount" value="@Model.Discount" class="input-field">
                     </div>
                     <div class="flex-item">
                         <label>Dis Amount</label>
@@ -523,12 +539,17 @@
                 </div>
             </div>
 
-
+            <div class="row">
+                <div class="col form-group">
+                    <label>Delete Reason</label>
+                    <input type="text" id="DeleteReason" name="DeleteReason" class="input-field">
+                </div>
+            </div>
 
             <div class="tests-section">
                 <div class="add-test-section">
                     <div class="test-inputs" style="justify-content:end">
-                        <button class="add-btn" id="save">Save</button>
+                        <button class="add-btn" id="save">Delete</button>
                         <a class="add-btn" style="background:red!important" href="/CasePaper/index" data-ajax-update="#mainContent" data-ajax-mode="replace" data-ajax-method="GET" data-ajax="true">Cancle</a>
                     </div>
                 </div>
@@ -538,9 +559,8 @@
 </div>
 <script type="text/javascript">
     $(document).ready(function () {
-       // $("#Doctor").select2();
-
         calculateDiscount();
+        var TrnNo = $("#hfTrnNo").val();
 
         $('#Discount').on('input', function () {
             calculateDiscount();
@@ -551,6 +571,16 @@
             var form = $("#CasePaper-form");
 
             if (form.valid()) {
+                if ($("#DeleteReason").val().trim() === "") {
+                    toastr.error("Please Enter Delete Reason..!", "DeleteReason", {
+                        timeOut: 3000,
+                        closeButton: false,
+                        progressBar: true,
+                        positionClass: "toast-top-right"
+                    });
+                    $('#Price').focus();
+                    return false;
+                }
                 if ($('#tblMaterials > tbody > tr').length == 0) {
                     toastr.error("Please add at least one test.", "Test", {
                         timeOut: 3000,
@@ -568,9 +598,9 @@
                 $('#tblMaterials > tbody > tr').each(function () {
                     if ($('#tblMaterials > tbody > tr').length !== j) {
                         var tstcode, price, lprice;
-                        tstcode = $(this).find("[id^=hfTestId]").val(); 
-                        price = $(this).find("td[id^=Amount]").text(); 
-                        lprice = $(this).find("td[id^=LabAmount]").text(); 
+                        tstcode = $(this).find("[id^=hfTestId]").val();
+                        price = $(this).find("td[id^=Amount]").text();
+                        lprice = $(this).find("td[id^=LabAmount]").text();
 
                         if ((parseFloat(price)) > 0) {
                             MatIs.push({ TestCode: tstcode, Price: price, LabPrice: lprice });
@@ -580,34 +610,25 @@
                 });
 
                 var _ObjCsPaper = {
-                    PatientName: $("#PName").val(),
-                    Date: $("#Date").val(),
-                    Gender: $("#Gender").val(),
-                    ConNumber: $("#PNumber").val(),
-                    DoctorRef: $("#Doctor").val(),
-                    TotalPrice: $("#totalPrice").val(),
-                    TotalLabPrice: $("#LabtotalPrice").val(),
-                    TotalProfit: TotalProfit,
-                    Discount: $("#Discount").val(),
-                    TotalAmount: $("#TotalAmount").val(),
-                    MatIs: MatIs,
+                    TrnNo: TrnNo,
+                    DeleteReason: $("#DeleteReason").val()                   
                 };
 
                 $("#mainContent").html('<div>Loading...</div>');
 
                 $.ajax({
-                    url: '/CasePaper/Create',
+                    url: '/CasePaper/Delete',
                     type: "POST",
                     contentType: "application/json",
                     dataType: "json",
                     data: JSON.stringify(_ObjCsPaper),
                     success: function (response) {
                         if (response.Status) {
-                          
+
                             setTimeout(function () {
                                 window.location.href = "/CasePaper/Index";
                             });
-                                                      
+
                         } else {
                             toastr.error("Error saving document!", "Error", {
                                 timeOut: 5000,
@@ -631,10 +652,7 @@
         });
 
 
-
-
         $("#btnAdd").click(function () {
-            debugger;
             if ($("#hfTestId").val() == 0 || $("#TestName").val().trim() === "") {
                 toastr.error("Please select proper Test.", "Test", {
                     timeOut: 3000,
@@ -689,7 +707,7 @@
             regen_srno();
             calculateSum();
             calculateDiscount();
-            attachEditableListeners(); 
+            attachEditableListeners();
         });
 
         $("#tblMaterials").on("click", ".remove-row", function () {
@@ -719,7 +737,7 @@
         }
 
         function calculateDiscount() {
-            
+
             debugger;
             let totalPrice = parseFloat($('#totalPrice').text().replace('₹', '')) || 0;
             let discount = parseFloat($('#Discount').val()) || 0;
@@ -727,21 +745,21 @@
             let labTotalPrice = parseFloat($('#LabtotalPrice').text().replace('₹', '')) || 0;
 
             let TotalAmount = totalPrice - discountAmount;
-            let updatedLabTotalPrice = TotalAmount - labTotalPrice ;
+            let updatedLabTotalPrice = TotalAmount - labTotalPrice;
 
-            
+
             $('#DisAmount').val(discountAmount.toFixed(2));
             $('#TotalAmount').val(TotalAmount.toFixed(2));
             $('#TotalProfit').val(updatedLabTotalPrice.toFixed(2));
 
-          
+
             TotalProfit = updatedLabTotalPrice;
         }
 
 
         function attachEditableListeners() {
             document.querySelectorAll("#tblMaterials td[data-editable='true']").forEach(cell => {
-                cell.removeEventListener("click", handleCellClick); 
+                cell.removeEventListener("click", handleCellClick);
                 cell.addEventListener("click", handleCellClick);
             });
             calculateDiscount();
@@ -755,7 +773,7 @@
             let input = document.createElement("input");
             input.type = "text";
             input.value = currentValue;
-            input.className = "editable-input"; 
+            input.className = "editable-input";
             this.innerHTML = "";
             this.appendChild(input);
             input.focus();
@@ -771,50 +789,11 @@
                     this.blur();
                 }
             });
-            
+
         }
-                
+
         attachEditableListeners();
     });
-      
-
-    //$('#tblMaterials').on('input', '.qty-field, .rate-field', function () {
-    //    calculateAmt(this);
-    //});     
-
-    //function removeRow(button) {
-    //    $(button).closest('tr').remove();
-    //    regen_srno();
-    //    calculateSum();
-    //}
-
-    //function calculateSum() {
-    //    var sum = 0;
-
-    //    $('#tblMaterials').find("[id*=Amount]").each(function () {
-    //        sum += parseFloat($(this).val()) || 0;
-    //    });
-    //    $('#transaction').val(sum.toFixed(2));
-    //    assignBasicAmount();
-    //}
-
-    //function calculateAmt(obj) {
-    //    var $row = $(obj).closest('tr');
-    //    var NQty = parseFloat($row.find("[id^=Qty]").val()) || 0;
-    //    var NRate = parseFloat($row.find("[id^=Rate]").val()) || 0;
-
-    //    var Total = NQty * NRate;
-
-    //    $row.find("[id^=Amount]").val(Total.toFixed(2));
-
-    //    calculateSum();
-    //}
-
-    //function assignBasicAmount() {
-    //    $('#TaxAmount1').val($('#transaction').val());
-    //    calculate();
-    //}
-
 
     $(function () {
         $('[id*=TestName]').keyup(function () {
