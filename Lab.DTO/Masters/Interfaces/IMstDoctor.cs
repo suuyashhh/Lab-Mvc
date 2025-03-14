@@ -12,8 +12,8 @@ namespace Lab.DTO.Masters.Interfaces
         List<DTODoctor> GetAll();
         Int64 Create(DTODoctor _ObjDoctor);
         //Task<List<DTODoctor>> GetTestsAsync(string searchtext);
-        // Dont Need          Task<string> GetLastTestIdForDate(string datePart);
+        
         List<DTODoctor> GetDoctorList();
-        Task<string> GetLastTestIdForFixedParts(string fixedPart, string fixedPartSec);
+        Task<string> GetLastDoctorIdForFixedParts(string fixedPart, string fixedPartSec);
     }
 }

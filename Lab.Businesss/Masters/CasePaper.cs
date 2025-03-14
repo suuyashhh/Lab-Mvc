@@ -242,7 +242,7 @@ namespace Lab.Businesss.Masters
                 _dalTestTable = new DALTestTable();
                 _dalTestTable.DelPermenantData(_objDtoCasePaper.TrnNo);
 
-                return result;
+                return _objDtoCasePaper.TrnNo;
             }
             catch
             {

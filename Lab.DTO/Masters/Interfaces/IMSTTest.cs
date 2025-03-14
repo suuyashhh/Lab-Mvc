@@ -15,7 +15,7 @@ namespace Lab.DTO.Masters.Interfaces
         Int64 Edit(DTOTest _objDtoTest);
         Int64 Delete(DTOTest _objDtoTest);
         Task<List<DTOTest>> GetTestsAsync(string searchtext);
-        Task<string> GetLastTestIdForDate(string datePart);
+        Task<string> GetLastTestIdForFixedParts(string fixedPart, string fixedPartSec);
         DTOTest GetExisting(Int64 code);
     }
 }

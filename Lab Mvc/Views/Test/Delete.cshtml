@@ -290,6 +290,7 @@
 
 <div class="body">
     <div class="pagetitle">
+        <input type="hidden" id="hfTestCode" value="@Model.TestCode" />
         <h1>Test Master</h1>
         <nav>
             <ol class="breadcrumb">
@@ -336,6 +337,7 @@
 </div>
 <script type="text/javascript">
     $(document).ready(function () {
+        var TestCode = $("#hfTestCode").val();
         var form = $("#Test-Form");
 
         $('#save').click(function (e) {
@@ -354,6 +356,7 @@
 
             if (form.valid()) {
                 var _ObjTest = {
+                    TestCode: TestCode,
                     TestName: $("#TestName").val(),
                     DeleteRes: $("#DeleteRes").val(),
                     LabPrice: $("#LabPrice").val()

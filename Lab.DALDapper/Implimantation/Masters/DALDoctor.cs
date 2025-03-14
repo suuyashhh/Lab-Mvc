@@ -20,7 +20,7 @@ namespace Lab.DALDapper.Implimantation.Masters
             string connectionString = ConfigurationManager.ConnectionStrings["connstr"].ConnectionString;
             try
             {
-                string query = "SELECT * FROM MST_TEST";
+                string query = "SELECT * FROM MST_DOCTOR";
                 using (SqlConnection con = new SqlConnection(connectionString))
                 {
                     con.Open();
@@ -29,15 +29,15 @@ namespace Lab.DALDapper.Implimantation.Masters
             }
             catch (Exception ex)
             {
-                throw new Exception("Error retrieving MST_TEST data", ex);
+                throw new Exception("Error retrieving MST_DOCTOR data", ex);
             }
         }
         public Int64 Create(DTODoctor _objDtoDoctor)
         {
             try
             {
-                string query = @"INSERT INTO MST_TEST (TEST_CODE,TEST_NAME,PRICE,LAB_PRICE)";
-                query = query + " VALUES(@TEST_CODE,@TEST_NAME,@PRICE,@LAB_PRICE);SELECT @TEST_CODE";
+                string query = @"INSERT INTO MST_DOCTOR (DOCTOR_CODE,DOCTOR_NAME,DOCTOR_ADDRESS,DOCTOR_NUMBER)";
+                query = query + " VALUES(@DOCTOR_CODE,@DOCTOR_NAME,@DOCTOR_ADDRESS,@DOCTOR_NUMBER);SELECT @DOCTOR_CODE";
                 Int64 i;
                 using (SqlConnection con = new SqlConnection(_connectionString))
                 {
@@ -52,32 +52,13 @@ namespace Lab.DALDapper.Implimantation.Masters
             }
         }
 
-        //public async Task<string> GetLastTestIdForDate(string datePart)
-        //{
-        //    string lastTestId = null;
-        //    string query = "SELECT TOP 1 TEST_CODE FROM MST_TEST WHERE TEST_CODE LIKE @datePart + '%' ORDER BY TEST_CODE DESC";
-
-        //    using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["connstr"].ConnectionString))
-        //    {
-        //        await conn.OpenAsync();
-        //        using (SqlCommand cmd = new SqlCommand(query, conn))
-        //        {
-        //            cmd.Parameters.AddWithValue("@datePart", datePart);
-        //            object result = await cmd.ExecuteScalarAsync();
-        //            if (result != null)
-        //                lastTestId = result.ToString();
-        //        }
-        //    }
-        //    return lastTestId;
-        //}
-
-        public async Task<string> GetLastTestIdForFixedParts(string fixedPart, string fixedPartSec)
+        public async Task<string> GetLastDoctorIdForFixedParts(string fixedPart, string fixedPartSec)
         {
             string lastTestId = null;
                         
             string likePattern = fixedPart + fixedPartSec + "%";
 
-            string query = "SELECT TOP 1 TEST_CODE FROM MST_TEST WHERE TEST_CODE LIKE @likePattern ORDER BY TEST_CODE DESC";
+            string query = "SELECT TOP 1 DOCTOR_CODE FROM MST_DOCTOR WHERE DOCTOR_CODE LIKE @likePattern ORDER BY DOCTOR_CODE DESC";
 
             using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["connstr"].ConnectionString))
             {
@@ -98,10 +79,7 @@ namespace Lab.DALDapper.Implimantation.Masters
         {
             try
             {
-                string query = @"SELECT EMAIL 
-                         FROM MST_EMPLOYEE 
-                         WHERE STATUS_CODE = 0 
-                         ORDER BY EMPLOYEE_FIRST_NAME";
+                string query = @"SELECT * FROM MST_DOCTOR ORDER BY DOCTOR_CODE";
 
                 List<DTODoctor> lst;
 
