@@ -14,6 +14,8 @@ namespace Lab.Businesss.Masters
         public static IMstDoctor _dalDoctor;
         public Int64 DoctorCode { get; set; }
         public string DoctorName { get; set; }
+        public string DoctorAddress { get; set; }
+        public string DoctorNumber { get; set; }
         public string ShortTrnNo { get; set; }
 
         public static Doctor New()
@@ -106,6 +108,8 @@ namespace Lab.Businesss.Masters
                 {
                     DOCTOR_CODE = newTestId,
                     DOCTOR_NAME = _ObjDoctor.DoctorName,
+                    DOCTOR_ADDRESS = _ObjDoctor.DoctorAddress,
+                    DOCTOR_NUMBER = _ObjDoctor.DoctorNumber,
                    
                 };
 
@@ -122,11 +126,10 @@ namespace Lab.Businesss.Masters
         private static async Task<long> GenerateDoctorId()
         {
             _dalDoctor = new DALDoctor();
-            string fixedPart = "03";
+            string fixedPart = "3";
             string fixedPartSec = "06";
 
-            // Remove datePart, now it's just fixedPart + fixedPartSec
-            string lastId = await _dalDoctor.GetLastTestIdForFixedParts(fixedPart, fixedPartSec);
+            string lastId = await _dalDoctor.GetLastDoctorIdForFixedParts(fixedPart, fixedPartSec);
 
             int nextNumber = 1;
             if (!string.IsNullOrEmpty(lastId) && lastId.StartsWith(fixedPart + fixedPartSec))

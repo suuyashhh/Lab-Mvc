@@ -89,10 +89,10 @@ namespace Lab_Mvc.Controllers
 
             try
             {
-                Int64 trn_no = await Doctor.Create(_ObjDoctor);
-                if (trn_no != 0)
+                Int64 Doctor_Code = await Doctor.Create(_ObjDoctor);
+                if (Doctor_Code != 0)
                 {
-                    string strDocNo = trn_no.ToString().Substring(2, 6) + "-" + trn_no.ToString().Substring(trn_no.ToString().Length - 2);
+                    string strDocNo = Doctor_Code.ToString().Substring(2) + "-" + Doctor_Code.ToString().Substring(Doctor_Code.ToString().Length - 2);
                     result.DocNo = strDocNo;
                     result = new SaveViewModel()
                     {

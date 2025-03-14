@@ -312,7 +312,7 @@
                 </div>
                 <div class="col form-group">
                     <label>Address</label>
-                    <input type="text" id="DAddress" name="DAddress" class="number input-field unit-field">
+                    <input type="text" id="DAddress" name="DAddress" class="input-field unit-field">
                 </div>
             </div>
 
@@ -348,9 +348,9 @@
 
             if (form.valid()) {
                 var _ObjDoctor = {
-                    TestName: $("#TestName").val(),
-                    DNumber: $("#DNumber").val(),
-                    DAddress: $("#DAddress").val()
+                    DoctorName: $("#DoctorName").val(),
+                    DoctorNumber: $("#DNumber").val(),
+                    DoctorAddress: $("#DAddress").val()
                 };
 
                     $("#mainContent").html('<div>Loading...</div>');

@@ -111,19 +111,19 @@ namespace Lab.DALDapper.Implimantation.Masters
 
                 string query = @"DELETE FROM MST_PATIENT WHERE TRN_NO = @TRN_NO";
 
-                Int64 rowsAffected = 0;
+                Int64 i = 0;
 
                 using (SqlConnection con = new SqlConnection(connectionString))
                 {
                     con.Open();
 
-                    rowsAffected = con.Execute(query, new
+                    i = con.Execute(query, new
                     {
                         TRN_NO = _objDelete.TRN_NO
                     });
                 }
 
-                return rowsAffected;
+                return _objDelete.TRN_NO;
             }
             catch (Exception ex)
             {

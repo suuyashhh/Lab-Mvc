@@ -83,9 +83,9 @@ namespace Lab.DALDapper.Implimantation.Masters
                 using (SqlConnection con = new SqlConnection(_connectionString))
                 {
                     con.Open();
-                    i = con.Query<Int64>(query, _objDtoTest).Single();
+                    i = con.Execute(query, _objDtoTest);
                 }
-                return i;
+                return _objDtoTest.TEST_CODE;
             }
             catch
             {
@@ -101,19 +101,19 @@ namespace Lab.DALDapper.Implimantation.Masters
 
                 string query = @"DELETE FROM MST_TEST WHERE TEST_CODE = @TEST_CODE";
 
-                Int64 rowsAffected = 0;
+                Int64 i = 0;
 
                 using (SqlConnection con = new SqlConnection(connectionString))
                 {
                     con.Open();
 
-                    rowsAffected = con.Execute(query, new
+                    i = con.Execute(query, new
                     {
                         TEST_CODE = _objDelete.TEST_CODE
                     });
                 }
 
-                return rowsAffected;
+                return _objDelete.TEST_CODE;
             }
             catch (Exception ex)
             {
@@ -124,7 +124,7 @@ namespace Lab.DALDapper.Implimantation.Masters
         {
             try
             {
-                string query = "SELECT * FROM MST_TEST WHERE TRN_NO = @code";
+                string query = "SELECT * FROM MST_TEST WHERE TEST_CODE = @code";
                 DTOTest lst = new DTOTest();
                 using (SqlConnection con = new SqlConnection(_connectionString))
                 {
@@ -140,17 +140,21 @@ namespace Lab.DALDapper.Implimantation.Masters
                 throw ex;
             }
         }
-        public async Task<string> GetLastTestIdForDate(string datePart)
+        public async Task<string> GetLastTestIdForFixedParts(string fixedPart, string fixedPartSec)
         {
             string lastTestId = null;
-            string query = "SELECT TOP 1 TEST_CODE FROM MST_TEST WHERE TEST_CODE LIKE @datePart + '%' ORDER BY TEST_CODE DESC";
+
+            string likePattern = fixedPart + fixedPartSec + "%";
+
+            string query = "SELECT TOP 1 TEST_CODE FROM MST_TEST WHERE TEST_CODE LIKE @likePattern ORDER BY TEST_CODE DESC";
 
             using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["connstr"].ConnectionString))
             {
                 await conn.OpenAsync();
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
-                    cmd.Parameters.AddWithValue("@datePart", datePart);
+                    cmd.Parameters.AddWithValue("@likePattern", likePattern);
+
                     object result = await cmd.ExecuteScalarAsync();
                     if (result != null)
                         lastTestId = result.ToString();

@@ -9,7 +9,9 @@ namespace Lab.DTO.Masters.Objects
     public class DTODoctor
     {
         public Int64 DOCTOR_CODE { get; set; }
-        public string DOCTOR_NAME { get; set; }    
+        public string DOCTOR_NAME { get; set; }
+        public string DOCTOR_ADDRESS{ get; set; }
+        public string DOCTOR_NUMBER { get; set; }
         public string SHORT_TRN_NO { get; set; }
     }
 }

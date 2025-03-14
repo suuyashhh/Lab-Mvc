@@ -6,7 +6,7 @@
 
 @{ 
     string curr_date = ViewData["currentdate"] as string;
-    List<Doctor> lstdoctor = ViewData["doctor"] as List<Doctor>;
+   // List<Doctor> lstdoctor = ViewData["doctor"] as List<Doctor>;
 }
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
@@ -398,12 +398,12 @@
             <div class="form-group">
                 <label>Doctor Reference</label>
                 @*<input type="text" id="Doctor" name="DoctorRef" class="input-field">*@
-                <select name="DoctorRef" id="Doctor" class="form-control" style="width:100%">
+                @*<select name="DoctorRef" id="Doctor" class="form-control" style="width:100%">
                     @foreach (Doctor doc in lstdoctor)
                     {
                         <option value="@doc.DoctorCode"> @doc.DoctorName</option>
                     }
-                </select>
+                </select>*@
             </div>
 
             <div class="tests-section">
@@ -538,7 +538,7 @@
 </div>
 <script type="text/javascript">
     $(document).ready(function () {
-        $("#Doctor").select2();
+       // $("#Doctor").select2();
 
         calculateDiscount();
 
@@ -634,6 +634,7 @@
 
 
         $("#btnAdd").click(function () {
+            debugger;
             if ($("#hfTestId").val() == 0 || $("#TestName").val().trim() === "") {
                 toastr.error("Please select proper Test.", "Test", {
                     timeOut: 3000,

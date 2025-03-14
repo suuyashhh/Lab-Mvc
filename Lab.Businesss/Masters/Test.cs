@@ -89,8 +89,8 @@ namespace Lab.Businesss.Masters
                                 LabPrice = dtotest.LAB_PRICE,
                                 SrNo = dtotest.SR_NO,
                                 StatusCode = dtotest.STATUS_CODE,
-                                ShortTrnNo = dtotest.TEST_CODE.ToString().Substring(2, 6) + "-" + dtotest.TEST_CODE.ToString().Substring(dtotest.TEST_CODE.ToString().Length - 2),
-                            };
+                                ShortTrnNo = dtotest.TEST_CODE.ToString().Substring(2) + "-" + dtotest.TEST_CODE.ToString().Substring(dtotest.TEST_CODE.ToString().Length - 2)
+        };
 
             return _Testlist.AsEnumerable<Test>().ToList();
         }
@@ -116,10 +116,7 @@ namespace Lab.Businesss.Masters
                 Int64 result = 0;
                 _dalTest = new DALTest();
 
-
-
-                string datePart = DateTime.Now.ToString("yyyyMMdd");
-                Int64 newTestId = await GenerateTestId(datePart);
+                Int64 newTestId = await GeneratTestId();
 
                 DTOTest _objDtoTest = new DTOTest()
                 {
@@ -190,22 +187,22 @@ namespace Lab.Businesss.Masters
                 return 0;
             }
         }
-        private static async Task<long> GenerateTestId(string datePart)
+        private static async Task<long> GeneratTestId()
         {
             _dalTest = new DALTest();
+            string fixedPart = "2";
+            string fixedPartSec = "06";
 
-            string fixedPart = "03";
-
-            string lastId = await _dalTest.GetLastTestIdForDate(datePart);
+            string lastId = await _dalTest.GetLastTestIdForFixedParts(fixedPart, fixedPartSec);
 
             int nextNumber = 1;
-            if (!string.IsNullOrEmpty(lastId) && lastId.StartsWith(datePart + fixedPart))
+            if (!string.IsNullOrEmpty(lastId) && lastId.StartsWith(fixedPart + fixedPartSec))
             {
-                int lastNumber = int.Parse(lastId.Substring(10));
+                int lastNumber = int.Parse(lastId.Substring(fixedPart.Length + fixedPartSec.Length));
                 nextNumber = lastNumber + 1;
             }
 
-            long newTestId = long.Parse(datePart + fixedPart + nextNumber.ToString("D3"));
+            long newTestId = long.Parse(fixedPart + fixedPartSec + nextNumber.ToString("D3"));
 
             return newTestId;
         }
