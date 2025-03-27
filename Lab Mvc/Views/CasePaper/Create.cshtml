@@ -4,9 +4,10 @@
     ViewBag.Title = "CasePaper Create";
 }
 
-@{ 
+@{
+    //string curr_date = ViewData["currentdate"] as string;
     string curr_date = ViewData["currentdate"] as string;
-   // List<Doctor> lstdoctor = ViewData["doctor"] as List<Doctor>;
+    List<Doctor> lstdoctor = ViewData["doctor"] as List<Doctor>;
 }
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
@@ -19,6 +20,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/smartadmin-ajax/4.5.1/js/notification/SmartNotification.min.js"></script>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 
 <style>
     * {
@@ -280,34 +284,34 @@
         }
     }
 
-   /* .ui-autocomplete {
+    /* .ui-autocomplete {
         max-height: 200px;
         overflow-y: auto;
         background: white;
         border: 1px solid #ccc;
         z-index: 9999 !important;
     }*/
-       
+
     #tblMaterials td,
     #tblMaterials th {
-        padding: 8px; 
-        text-align: center; 
+        padding: 8px;
+        text-align: center;
         vertical-align: middle;
     }
-    
+
     .editable-input {
-        width: 50%; 
-        padding: 4px; 
-        border: 1px solid #ccc; 
-        border-radius: 4px; 
+        width: 50%;
+        padding: 4px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
         font-size: 14px;
-        box-sizing: border-box; 
-        text-align: center; 
-        margin: 0; 
+        box-sizing: border-box;
+        text-align: center;
+        margin: 0;
     }
-    
+
     #tblMaterials td[data-editable="true"] {
-        padding: 0; 
+        padding: 0;
     }
 
     .ui-autocomplete {
@@ -340,8 +344,8 @@
     }
 
     .flex-item {
-        flex: 1; 
-        min-width: 200px; 
+        flex: 1;
+        min-width: 200px;
     }
 
     .second-row {
@@ -352,6 +356,34 @@
         width: 100%;
         padding: 8px;
     }*/
+
+    /* Fix for dropdown display issue */
+    .select2-container--default .select2-selection--single {
+        height: 44px !important;
+        border: 1px solid #000 !important;
+        border-radius: 8px !important;
+        padding: 10px;
+        font-size: 16px;
+        outline: none;
+        display: flex;
+        align-items: center;
+    }
+
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            line-height: normal !important;
+            padding-left: 10px;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            height: 44px !important;
+        }
+
+    /* Ensure dropdown appears properly */
+    .select2-container {
+        width: 100% !important;
+    }
+
+
 
 </style>
 
@@ -369,14 +401,16 @@
 
     <div class="container">
         <form method="POST" id="CasePaper-form">
-            <div class="form-group">
-                <label>Petient Name</label>
-                <input type="text" id="PName" name="PatientName" class="input-field">
+            <div class="d-flex justify-content-end mb-3">
+                <div class="form-group text-end">
+                    <label>Date</label>                    
+                    <input type="date" id="Date" name="Date" value="@curr_date" class="input-field">
+                </div>
             </div>
 
             <div class="form-group">
-                <label>Date</label>
-                <input type="date" id="Date" name="Date" value="@curr_date" class="input-field">
+                <label>Petient Name</label>
+                <input type="text" id="PName" name="PatientName" class="input-field">
             </div>
 
             <div class="row">
@@ -397,14 +431,15 @@
 
             <div class="form-group">
                 <label>Doctor Reference</label>
-                @*<input type="text" id="Doctor" name="DoctorRef" class="input-field">*@
-                @*<select name="DoctorRef" id="Doctor" class="form-control" style="width:100%">
+                <select name="DoctorRef" id="Doctor" class="input-field">
+                    <option value="">Select Doctor</option>
                     @foreach (Doctor doc in lstdoctor)
                     {
                         <option value="@doc.DoctorCode"> @doc.DoctorName</option>
                     }
-                </select>*@
+                </select>
             </div>
+
 
             <div class="tests-section">
                 <h3 class="section-subtitle" style="color: #333; margin: 30px 0 20px;">Blood Tests</h3>
@@ -462,17 +497,7 @@
                         <label>Dis Amount</label>
                         <input type="text" id="DisAmount" name="DisAmount" class="input-field">
                     </div>
-                    @*<div class="flex-item">
-                        <label>Total Amount</label>
-                        <input type="text" id="TotalAmount" name="TotalAmount" class="input-field" readonly>
-                    </div>*@
                 </div>
-
-
-                @*<div class="second-row">
-                    <label>Total Lab Profit</label>
-                    <input type="text" id="TotalProfit" name="TotalProfit" class="input-field" readonly>
-                </div>*@
             </div>
 
 
@@ -538,7 +563,8 @@
 </div>
 <script type="text/javascript">
     $(document).ready(function () {
-       // $("#Doctor").select2();
+        $("#Doctor").select2();
+      
 
         calculateDiscount();
 
@@ -568,9 +594,9 @@
                 $('#tblMaterials > tbody > tr').each(function () {
                     if ($('#tblMaterials > tbody > tr').length !== j) {
                         var tstcode, price, lprice;
-                        tstcode = $(this).find("[id^=hfTestId]").val(); 
-                        price = $(this).find("td[id^=Amount]").text(); 
-                        lprice = $(this).find("td[id^=LabAmount]").text(); 
+                        tstcode = $(this).find("[id^=hfTestId]").val();
+                        price = $(this).find("td[id^=Amount]").text();
+                        lprice = $(this).find("td[id^=LabAmount]").text();
 
                         if ((parseFloat(price)) > 0) {
                             MatIs.push({ TestCode: tstcode, Price: price, LabPrice: lprice });
@@ -603,11 +629,11 @@
                     data: JSON.stringify(_ObjCsPaper),
                     success: function (response) {
                         if (response.Status) {
-                          
+
                             setTimeout(function () {
                                 window.location.href = "/CasePaper/Index";
                             });
-                                                      
+
                         } else {
                             toastr.error("Error saving document!", "Error", {
                                 timeOut: 5000,
@@ -689,7 +715,7 @@
             regen_srno();
             calculateSum();
             calculateDiscount();
-            attachEditableListeners(); 
+            attachEditableListeners();
         });
 
         $("#tblMaterials").on("click", ".remove-row", function () {
@@ -719,7 +745,7 @@
         }
 
         function calculateDiscount() {
-            
+
             debugger;
             let totalPrice = parseFloat($('#totalPrice').text().replace('₹', '')) || 0;
             let discount = parseFloat($('#Discount').val()) || 0;
@@ -727,21 +753,21 @@
             let labTotalPrice = parseFloat($('#LabtotalPrice').text().replace('₹', '')) || 0;
 
             let TotalAmount = totalPrice - discountAmount;
-            let updatedLabTotalPrice = TotalAmount - labTotalPrice ;
+            let updatedLabTotalPrice = TotalAmount - labTotalPrice;
 
-            
+
             $('#DisAmount').val(discountAmount.toFixed(2));
             $('#TotalAmount').val(TotalAmount.toFixed(2));
             $('#TotalProfit').val(updatedLabTotalPrice.toFixed(2));
 
-          
+
             TotalProfit = updatedLabTotalPrice;
         }
 
 
         function attachEditableListeners() {
             document.querySelectorAll("#tblMaterials td[data-editable='true']").forEach(cell => {
-                cell.removeEventListener("click", handleCellClick); 
+                cell.removeEventListener("click", handleCellClick);
                 cell.addEventListener("click", handleCellClick);
             });
             calculateDiscount();
@@ -755,7 +781,7 @@
             let input = document.createElement("input");
             input.type = "text";
             input.value = currentValue;
-            input.className = "editable-input"; 
+            input.className = "editable-input";
             this.innerHTML = "";
             this.appendChild(input);
             input.focus();
@@ -771,16 +797,16 @@
                     this.blur();
                 }
             });
-            
+
         }
-                
+
         attachEditableListeners();
     });
-      
+
 
     //$('#tblMaterials').on('input', '.qty-field, .rate-field', function () {
     //    calculateAmt(this);
-    //});     
+    //});
 
     //function removeRow(button) {
     //    $(button).closest('tr').remove();
