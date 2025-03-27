@@ -28,7 +28,7 @@ namespace Lab.Businesss.Masters
                     {
                         if (flag == 1)
                         {
-                            retDate = DateTime.ParseExact(strDate, "dd/MM/yyyy", null).ToString("yyyyMMdd", CultureInfo.InvariantCulture);
+                            retDate = DateTime.ParseExact(strDate, "yyyy-MM-dd", null).ToString("yyyyMMdd", CultureInfo.InvariantCulture);
                         }
                         else if (flag == 4)
                         {
@@ -54,7 +54,10 @@ namespace Lab.Businesss.Masters
 
         public static string GetCurrentDate()
         {
-            return DateTime.Now.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
+            //return DateTime.Now.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
+          
+                return DateTime.Now.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
+           
         }
 
         public static string GetCurrentMonthStartDate()

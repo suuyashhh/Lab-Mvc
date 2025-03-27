@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -95,9 +96,10 @@ namespace Lab_Mvc.Controllers
         public ActionResult Create()
         {
             //ViewData["currentdate"] = DateUtility.GetCurrentDate();
+            ViewData["currentdate"] = DateTime.Now.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
             List<Doctor> _objDoctor = Doctor.GetDoctorList();
             ViewData["doctor"] = _objDoctor;
-            return PartialView(CasePaper.New());
+            return PartialView("Create", CasePaper.New());
         }
 
         [HttpPost]
