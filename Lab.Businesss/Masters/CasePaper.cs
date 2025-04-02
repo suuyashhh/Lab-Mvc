@@ -99,7 +99,7 @@ namespace Lab.Businesss.Masters
                                 ConNumber = dtocasepaper.CON_NUMBER,
                                 Address = dtocasepaper.ADDRESS,
                                 DoctorRef = dtocasepaper.DOCTOR_REF,
-                                Date = dtocasepaper.DATE,
+                                Date = DateUtility.GetFormatedDate(dtocasepaper.DATE, 0),
                                 StatusCode = dtocasepaper.STATUS_CODE,
                                 Discount = dtocasepaper.DISCOUNT,
                                 ShortTrnNo = dtocasepaper.TRN_NO.ToString().Substring(2, 6) + "-" + dtocasepaper.TRN_NO.ToString().Substring(dtocasepaper.TRN_NO.ToString().Length - 2),
