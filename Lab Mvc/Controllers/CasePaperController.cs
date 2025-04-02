@@ -219,6 +219,13 @@ namespace Lab_Mvc.Controllers
             }
         }
 
+        public async Task<ActionResult> ApprovalPending()
+        {
+            List<CasePaper> _lstCasePaper = await CasePaper.GetApprovalPendingListAsync();
+
+            return PartialView(_lstCasePaper);
+        }
+
         [HttpPost]
         public async Task<JsonResult> TestAutoFill(string searchtext)
         {
