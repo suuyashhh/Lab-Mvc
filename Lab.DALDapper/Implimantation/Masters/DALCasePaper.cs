@@ -40,8 +40,8 @@ namespace Lab.DALDapper.Implimantation.Masters
                 Int64 patientId = 0; 
                 string connectionString = ConfigurationManager.ConnectionStrings["connstr"].ConnectionString;
 
-                string query = @"INSERT INTO MST_PATIENT (TRN_NO, PATIENT_NAME,DATE, GENDER, CON_NUMBER, DOCTOR_REF,DISCOUNT,TOTAL_PROFIT,TOTAL_AMOUNT) 
-                         VALUES (@TRN_NO, @PATIENT_NAME, @DATE, @GENDER, @CON_NUMBER, @DOCTOR_REF,@DISCOUNT,@TOTAL_PROFIT,@TOTAL_AMOUNT); 
+                string query = @"INSERT INTO MST_PATIENT (TRN_NO, PATIENT_NAME,DATE, GENDER, CON_NUMBER, DOCTOR_REF,DISCOUNT,TOTAL_PROFIT,TOTAL_AMOUNT,STATUS_CODE) 
+                         VALUES (@TRN_NO, @PATIENT_NAME, @DATE, @GENDER, @CON_NUMBER, @DOCTOR_REF,@DISCOUNT,@TOTAL_PROFIT,@TOTAL_AMOUNT,@STATUS_CODE); 
                          SELECT @TRN_NO;"; 
 
                 using (SqlConnection con = new SqlConnection(connectionString))
@@ -172,5 +172,27 @@ namespace Lab.DALDapper.Implimantation.Masters
                 throw ex;
             }
         }
-    }       
+
+        public List<DTOCasePaper> GetApprovalPendingList()
+        {
+            try
+            {
+                string connectionString = ConfigurationManager.ConnectionStrings["connstr"].ConnectionString;
+
+                string query = "SELECT * FROM MST_PATIENT WHERE STATUS_CODE = 0 ORDER BY TRN_NO ASC";
+
+                using (SqlConnection con = new SqlConnection(connectionString))
+                {
+                    con.Open();
+                    return con.Query<DTOCasePaper>(query).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while fetching approval pending list: " + ex.Message, ex);
+            }
+        }
+
+
+    }
 }

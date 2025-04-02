@@ -117,7 +117,8 @@ namespace Lab.Businesss.Masters
                 _dalTest = new DALTest();
                 _dalTestTable = new DALTestTable();
 
-
+                int intStatusCode = 0;
+                _ObjCsPaper.StatusCode = intStatusCode;
                 string strTranDate = DateUtility.GetFormatedDate(_ObjCsPaper.Date, 1);
                 string datePart = DateTime.Now.ToString("yyyyMMdd");
                 Int64 newPatientId = await GeneratePatientId(datePart);
@@ -133,6 +134,7 @@ namespace Lab.Businesss.Masters
                     DISCOUNT = _ObjCsPaper.Discount,
                     TOTAL_PROFIT = _ObjCsPaper.TotalProfit,
                     TOTAL_AMOUNT = _ObjCsPaper.TotalAmount,
+                    STATUS_CODE= _ObjCsPaper.StatusCode,
 
                 };
 
@@ -250,6 +252,19 @@ namespace Lab.Businesss.Masters
             }
         }
 
+        public static async Task<List<CasePaper>> GetApprovalPendingListAsync()
+        {
+            try
+            {
+                _dalCasePaper = new DALCasePaper();
+                List<CasePaper> lstCity = await Task.Run(() => { return fillCasePaperList(_dalCasePaper.GetApprovalPendingList()); });
+                return lstCity;
+            }
+            catch
+            {
+                throw new Exception("Request Failed");
+            }
+        }
         private static async Task<long> GeneratePatientId(string datePart)
         {
             _dalCasePaper = new DALCasePaper();
