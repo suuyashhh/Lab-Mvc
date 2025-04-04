@@ -6,6 +6,7 @@ using Lab.DTO.Masters.Objects;
 using Lab.DTO.Masters.Interfaces;
 using System.Threading.Tasks;
 using Lab.DALDapper.Implimantation.Masters;
+using System.Transactions;
 
 namespace Lab.Businesss.Masters
 {
@@ -181,6 +182,8 @@ namespace Lab.Businesss.Masters
                 _dalTest = new DALTest();
                 _dalTestTable = new DALTestTable();
 
+                int intStatusCode = 0;
+                _ObjCsPaper.StatusCode = intStatusCode;
 
                 DTOCasePaper _objDtoCasePaper = new DTOCasePaper()
                 {
@@ -192,6 +195,7 @@ namespace Lab.Businesss.Masters
                     DISCOUNT = _ObjCsPaper.Discount,
                     TOTAL_PROFIT = _ObjCsPaper.TotalProfit,
                     TOTAL_AMOUNT = _ObjCsPaper.TotalAmount,
+                    STATUS_CODE = _ObjCsPaper.StatusCode,
 
                 };
 
@@ -252,6 +256,96 @@ namespace Lab.Businesss.Masters
             }
         }
 
+        public static async Task<Int64> Approve(CasePaper _ObjCsPaper)
+        {
+            try
+            {
+                Int64 result = 0;
+                _dalCasePaper = new DALCasePaper();
+                _dalTest = new DALTest();
+                _dalTestTable = new DALTestTable();
+
+                int intStatusCode = 101;
+                _ObjCsPaper.StatusCode = intStatusCode;
+
+                DTOCasePaper _objDtoCasePaper = new DTOCasePaper()
+                {
+                    TRN_NO = _ObjCsPaper.TrnNo,
+                    PATIENT_NAME = _ObjCsPaper.PatientName,
+                    GENDER = _ObjCsPaper.Gender,
+                    CON_NUMBER = _ObjCsPaper.ConNumber,
+                    DOCTOR_REF = _ObjCsPaper.DoctorRef,
+                    DISCOUNT = _ObjCsPaper.Discount,
+                    TOTAL_PROFIT = _ObjCsPaper.TotalProfit,
+                    TOTAL_AMOUNT = _ObjCsPaper.TotalAmount,
+                    STATUS_CODE = _ObjCsPaper.StatusCode,
+
+                };
+
+                result = await Task.Run(() => { return _dalCasePaper.Approve(_objDtoCasePaper); });
+
+                _dalTestTable = new DALTestTable();
+                _dalTestTable.DelPermenantData(_ObjCsPaper.TrnNo);
+
+                //IList<TestTable> counte = _ObjCsPaper.MatIs;
+                if (_ObjCsPaper.MatIs != null)
+                {
+                    int intSrNo = 1;
+
+                    foreach (TestTable _objTestTable in _ObjCsPaper.MatIs)
+                    {
+                        DTOTestTable _objTestTableDetails = new DTOTestTable()
+                        {
+                            TRN_NO = _ObjCsPaper.TrnNo,
+                            TEST_CODE = _objTestTable.TestCode,
+                            SR_NO = intSrNo,
+                            PRICE = _objTestTable.Price,
+                            LAB_PRICE = _objTestTable.LabPrice,
+
+                        };
+                        intSrNo++;
+                        _dalTestTable.Create(_objTestTableDetails);
+
+                    }
+                }
+                return result;
+            }
+            catch
+            {
+                return 0;
+            }
+        }
+        public static async Task<int> Approve(List<Int64> TrnNos)
+        {
+            try
+            {
+                int result = 0;
+                string strTrnList = string.Join(",", TrnNos.Select(n => n.ToString()).ToArray());
+                return result = await Task.Run(() =>
+                {
+                    using (var scope = new TransactionScope())
+                    {
+                        try
+                        {
+                            _dalCasePaper = new DALCasePaper();
+
+                            result = _dalCasePaper.Approve(strTrnList);
+                            scope.Complete();
+                        }
+                        catch (Exception ex)
+                        {
+                            scope.Dispose();
+                            throw ex;
+                        }
+                    }
+                    return result;
+                });
+            }
+            catch
+            {
+                throw new Exception("Failed To Approve");
+            }
+        }
         public static async Task<List<CasePaper>> GetApprovalPendingListAsync()
         {
             try

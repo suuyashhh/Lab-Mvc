@@ -153,6 +153,17 @@
             color: white !important; 
         }
 
+    .pm_invoice-btn {
+        display: inline-block;
+        padding: 6px 12px;
+        background-color: gray;
+        color: white !important;
+        border: none;
+        border-radius: 4px;
+        text-decoration: none;
+        font-size: 14px;
+        cursor: pointer;
+    }
 
 
 
@@ -245,14 +256,14 @@
                 <tr>
                     <th>Action</th>
                     <th>
-                        <a href="/CasePaper/index?page=1&sortOrder=Date&sortdir=@ViewBag.SortDir&searchString=@ViewBag.CurrentFilter&FromDate=@ViewBag.FromDate&ToDate=@ViewBag.ToDate" data-ajax-update="#mainContent" data-ajax-mode="replace" data-ajax-method="GET" data-ajax="true">
-                            Date
+                        <a href="/CasePaper/index?page=1&sortOrder=TrnNo&sortdir=@ViewBag.SortDir&searchString=@ViewBag.CurrentFilter&FromDate=@ViewBag.FromDate&ToDate=@ViewBag.ToDate" data-ajax-update="#mainContent" data-ajax-mode="replace" data-ajax-method="GET" data-ajax="true">
+                            TrnNo
                         </a>
                     </th>
                     <th>
-                        <a href="/CasePaper/index?page=1&sortOrder=TrnNo&sortdir=@ViewBag.SortDir&searchString=@ViewBag.CurrentFilter&FromDate=@ViewBag.FromDate&ToDate=@ViewBag.ToDate" data-ajax-update="#mainContent" data-ajax-mode="replace" data-ajax-method="GET" data-ajax="true">
-                            TrnNo
-                        </a>                       
+                        <a href="/CasePaper/index?page=1&sortOrder=Date&sortdir=@ViewBag.SortDir&searchString=@ViewBag.CurrentFilter&FromDate=@ViewBag.FromDate&ToDate=@ViewBag.ToDate" data-ajax-update="#mainContent" data-ajax-mode="replace" data-ajax-method="GET" data-ajax="true">
+                            Date
+                        </a>
                     </th>
                     <th>
                         <a href="/CasePaper/index?page=1&sortOrder=PatientName&sortdir=@ViewBag.SortDir&searchString=@ViewBag.CurrentFilter&FromDate=@ViewBag.FromDate&ToDate=@ViewBag.ToDate" data-ajax-update="#mainContent" data-ajax-mode="replace" data-ajax-method="GET" data-ajax="true">
@@ -269,19 +280,25 @@
                     {
                         <tr class="@(item.StatusCode == 1 ? "deleted" : "ok")">
                             <td>
-                                @if (item.StatusCode == 0)
-                                {
-                                    <div class="pm_action-buttons">
+                              
+                                <div class="pm_action-buttons">
+                                    @if (item.StatusCode == 0)
+                                    {
                                         <a class="pm_edit-btn" data-id="1" title="Edit" href="/CasePaper/Edit?TrnNo=@item.TrnNo">Edit</a>
                                         <a class="pm_delete-btn" data-id="1" title="Delete" href="/CasePaper/delete?TrnNo=@item.TrnNo">Delete</a>
-                                    </div>
-                                }
+                                    }
+                                    <a class="pm_invoice-btn" data-id="1" title="Invoice" href="/CasePaper/delete?TrnNo=@item.TrnNo">Invoice</a>
+                                   
+                                </div>
+                              
                             </td>
-                            <td>@Html.DisplayFor(modelItem => item.Date)</td>
                             <td>
-                                <a title="View" href="/City/details?CityCode=@item.TrnNo">
-                                    @Html.DisplayFor(modelItem => item.ShortTrnNo)
+                                <a title="View" href="/CasePaper/Details?TrnNo=@item.TrnNo" data-ajax-update="#mainContent" data-ajax-mode="replace" data-ajax-method="GET" data-ajax="true">
+                                    @item.ShortTrnNo
                                 </a>
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Date)
                             </td>
                             <td>@Html.DisplayFor(modelItem => item.PatientName)</td>
                             <td>@Html.DisplayFor(modelItem => item.ConNumber)</td>

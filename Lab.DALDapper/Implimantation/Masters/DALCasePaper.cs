@@ -74,6 +74,7 @@ namespace Lab.DALDapper.Implimantation.Masters
                 query += " ,DISCOUNT = '" + _objDtoCasePaper.DISCOUNT + "'";
                 query += " ,TOTAL_PROFIT = '" + _objDtoCasePaper.TOTAL_PROFIT + "'";
                 query += " ,TOTAL_AMOUNT = '" + _objDtoCasePaper.TOTAL_AMOUNT + "'";
+                query += " ,STATUS_CODE = '" + _objDtoCasePaper.STATUS_CODE + "'";
                 query += " WHERE TRN_NO = '" + _objDtoCasePaper.TRN_NO + "'";
 
                 using (SqlConnection con = new SqlConnection(connectionString))
@@ -131,6 +132,76 @@ namespace Lab.DALDapper.Implimantation.Masters
             }
         }
 
+        public Int64 Approve(DTOCasePaper _objDtoCasePaper)
+        {
+            try
+            {
+                Int64 patientId = 0;
+
+                string connectionString = ConfigurationManager.ConnectionStrings["connstr"].ConnectionString;
+
+                string query = @"UPDATE MST_PATIENT SET ";
+                query += " PATIENT_NAME = '" + _objDtoCasePaper.PATIENT_NAME + "'";
+                query += " ,GENDER = '" + _objDtoCasePaper.GENDER + "'";
+                query += " ,CON_NUMBER = '" + _objDtoCasePaper.CON_NUMBER + "'";
+                query += " ,DOCTOR_REF = '" + _objDtoCasePaper.DOCTOR_REF + "'";
+                query += " ,DISCOUNT = '" + _objDtoCasePaper.DISCOUNT + "'";
+                query += " ,TOTAL_PROFIT = '" + _objDtoCasePaper.TOTAL_PROFIT + "'";
+                query += " ,TOTAL_AMOUNT = '" + _objDtoCasePaper.TOTAL_AMOUNT + "'";
+                query += " ,STATUS_CODE = '" + _objDtoCasePaper.STATUS_CODE + "'";
+                query += " WHERE TRN_NO = '" + _objDtoCasePaper.TRN_NO + "'";
+
+                using (SqlConnection con = new SqlConnection(connectionString))
+                {
+                    con.Open();
+
+                    using (SqlCommand cmd = new SqlCommand(query, con))
+                    {
+                        int rowsAffected = cmd.ExecuteNonQuery();
+
+                        if (rowsAffected > 0)
+                        {
+                            patientId = _objDtoCasePaper.TRN_NO;
+                        }
+                        else
+                        {
+                            throw new Exception("No record updated.");
+                        }
+                    }
+                }
+
+                return patientId;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while updating patient record: " + ex.Message, ex);
+            }
+        }
+        public int Approve(string TrnNos)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["connstr"].ConnectionString;
+            try
+            {
+                string query = @"UPDATE MST_PATIENT SET 
+                         STATUS_CODE = 101
+                         WHERE TRN_NO IN (" + TrnNos + ")";
+
+                int i = 0;
+
+                using (SqlConnection con = new SqlConnection(connectionString))
+                {
+                    con.Open();
+
+                    i = con.Execute(query);
+                }
+
+                return i;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while approving records: " + ex.Message, ex);
+            }
+        }
 
         public async Task<string> GetLastPatientIdForDate(string datePart)
         {

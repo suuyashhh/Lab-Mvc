@@ -13,6 +13,8 @@ namespace Lab.DTO.Masters.Interfaces
         Int64 Create(DTOCasePaper _objDtoCasePaper);
         Int64 Edit(DTOCasePaper _objDtoCasePaper);
         Int64 Delete(DTOCasePaper _objDtoCasePaper);
+        Int64 Approve(DTOCasePaper _objDtoCasePaper);
+        int Approve(string TrnNos);
         List<DTOCasePaper> GetApprovalPendingList();
         Task<string> GetLastPatientIdForDate(string datePart);
         DTOCasePaper GetExisting(Int64 code);

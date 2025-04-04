@@ -139,10 +139,11 @@ namespace Lab_Mvc.Controllers
         public async Task<ActionResult> Edit(Int64 TrnNo)
         {            
             List<CasePaper> _lstTD = await CasePaper.GetAllAsync();
-            
+            List<Doctor> _objDoctor = Doctor.GetDoctorList();
+            ViewData["doctor"] = _objDoctor;
             return PartialView(await CasePaper.GetExistingAsync(TrnNo));
         }
-
+        
         [HttpPost]
         public async Task<ActionResult> Edit(CasePaper _ObjCsPaper)
         {
@@ -176,8 +177,7 @@ namespace Lab_Mvc.Controllers
                 return Json(result, JsonRequestBehavior.AllowGet);
             }
         }
-
-
+        
         public async Task<ActionResult> Delete(Int64 TrnNo)
         {
             List<CasePaper> _lstTD = await CasePaper.GetAllAsync();
@@ -219,11 +219,73 @@ namespace Lab_Mvc.Controllers
             }
         }
 
+        public async Task<ActionResult> Details(Int64 TrnNo)
+        {
+            List<CasePaper> _lstTD = await CasePaper.GetAllAsync();
+
+            return PartialView(await CasePaper.GetExistingAsync(TrnNo));
+        }
+        public async Task<ActionResult> Approve(Int64 TrnNo)
+        {
+            List<CasePaper> _lstTD = await CasePaper.GetAllAsync();
+            List<Doctor> _objDoctor = Doctor.GetDoctorList();
+            ViewData["doctor"] = _objDoctor;
+            return PartialView(await CasePaper.GetExistingAsync(TrnNo));
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> Approve(CasePaper _ObjCsPaper)
+        {
+            var result = new SaveViewModel() { Status = true };
+
+            try
+            {
+                Int64 trn_no = await CasePaper.Approve(_ObjCsPaper);
+                if (trn_no != 0)
+                {
+                    string strDocNo = trn_no.ToString().Substring(2, 6) + "-" + trn_no.ToString().Substring(trn_no.ToString().Length - 2);
+                    result.DocNo = strDocNo;
+                    result = new SaveViewModel()
+                    {
+                        Status = true,
+                        Message = "",
+                        DocNo = strDocNo
+                    };
+                }
+                else
+                {
+                    result.Status = false;
+                    result.Message = "Something went wrong.";
+                }
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+            catch
+            {
+                result.Status = false;
+                result.Message = "Something went wrong.";
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+        }
         public async Task<ActionResult> ApprovalPending()
         {
             List<CasePaper> _lstCasePaper = await CasePaper.GetApprovalPendingListAsync();
 
             return PartialView(_lstCasePaper);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> ApproveMultiple(List<Int64> TrnNos)
+        {
+            int result = 0;
+            result = await CasePaper.Approve(TrnNos);
+            if (result != 0)
+            {
+                return Content("0");
+            }
+            else
+            {
+                return Content("1");
+            }
         }
 
         [HttpPost]

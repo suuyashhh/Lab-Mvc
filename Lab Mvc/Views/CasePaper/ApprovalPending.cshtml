@@ -213,6 +213,7 @@
         .test-inputs {
             flex-direction: column;
         }
+
         .add-btn {
             width: 100%;
         }
@@ -228,6 +229,7 @@
         max-width: 100%;
         overflow-x: hidden;
     }
+
     .add-test-section {
         margin-top: 20px;
     }
@@ -261,9 +263,6 @@
         border: 1px solid #000;
         border-radius: 4px;
     }
-
-        
-
 </style>
 <div class="pagetitle">
     <h1>Approve</h1>
@@ -287,10 +286,10 @@
                         </label>
                     </th>
                     <th>
-                        Date
+                        TrnNo
                     </th>
                     <th>
-                        TrnNo                        
+                        Date
                     </th>
                     <th>
                         Name
@@ -307,14 +306,16 @@
                             <td>
                                 <div class="pm_action-buttons">
                                     <input type="checkbox" id="IsCheck@(row_num)" name="IsCheck@(row_num)">
-                                    <input id="Code@(row_num)" type="hidden" value="@item.TrnNo">
+                                    <input id="TrnNo@(row_num)" type="hidden" value="@item.TrnNo">
                                 </div>
                             </td>
-                            <td>@Html.DisplayFor(modelItem => item.Date)</td>
                             <td>
-                                <a title="View" href="/City/details?CityCode=@item.TrnNo">
-                                    @Html.DisplayFor(modelItem => item.ShortTrnNo)
+                                <a title="View" href="/CasePaper/Approve?TrnNo=@item.TrnNo" data-ajax-update="#mainContent" data-ajax-mode="replace" data-ajax-method="GET" data-ajax="true">
+                                    @item.ShortTrnNo
                                 </a>
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Date)
                             </td>
                             <td>@Html.DisplayFor(modelItem => item.PatientName)</td>
                             <td>@Html.DisplayFor(modelItem => item.ConNumber)</td>
@@ -333,11 +334,11 @@
         <div class="tests-section">
             <div class="add-test-section">
                 <div class="test-inputs" style="justify-content:end">
-                    <button class="add-btn" id="save">Approve</button>
+                    <button class="add-btn" id="btnapprove" href="javascript:void(0);">Approve</button>
                 </div>
             </div>
         </div>
-    </div>   
+    </div>
 </div>
 <script src="script.js"></script>
 
@@ -347,5 +348,53 @@
             var table = $(e.target).closest('table');
             $('td input:checkbox', table).prop('checked', this.checked);
         });
-    });
+
+        $('#btnapprove').click(function (e) {
+            debugger;
+            var ShotBlastings = [];
+            $('#pm_patientTable >tbody >tr').each(function () {
+                if ($('#pm_patientTable >tbody >tr').length !== 0) {
+                    var trn_no;
+                    trn_no = $(this).find("[id^=TrnNo]").val();
+
+                    if ($(this).find("[id^=IsCheck]").is(":checked")) {
+                        ShotBlastings.push(trn_no);
+                    }
+                }
+            });
+
+            if (ShotBlastings.length != 0) {
+                var urlName = ' /CasePaper/ApproveMultiple';
+                $.ajax({
+                    async: false,
+                    contentType: "application/json",
+                    dataType: "json",
+                    data: JSON.stringify(ShotBlastings),
+                    url: urlName,
+                    type: "POST",
+                    success: function (response, status, xhr) {
+                        if (response == 0) {
+                            setTimeout(function () {
+                                window.location.href = "/CasePaper/ApprovalPending";
+                            });
+                          
+                        }
+                    },
+                    error: function (err) {
+                        alert(err.toSource());
+                        $("#mainContent").html(err);
+                    }
+                });
+            }
+            else {
+                $.smallBox({
+                    title: "Approval",
+                    content: "Please select at least one record",
+                    color: "#C46A69",
+                    timeout: 3000,
+                });
+                return false;
+            }
+        });
+    })
 </script>

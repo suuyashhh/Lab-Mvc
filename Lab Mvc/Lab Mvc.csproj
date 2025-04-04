@@ -611,6 +611,8 @@
     <Content Include="Views\Test\Edit.cshtml" />
     <Content Include="Views\Test\Delete.cshtml" />
     <Content Include="Views\CasePaper\ApprovalPending.cshtml" />
+    <Content Include="Views\CasePaper\Approve.cshtml" />
+    <Content Include="Views\CasePaper\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
