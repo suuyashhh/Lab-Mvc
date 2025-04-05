@@ -129,6 +129,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\BikeMileageController.cs" />
     <Compile Include="Controllers\CasePaperController.cs" />
     <Compile Include="Controllers\DoctorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -613,6 +614,7 @@
     <Content Include="Views\CasePaper\ApprovalPending.cshtml" />
     <Content Include="Views\CasePaper\Approve.cshtml" />
     <Content Include="Views\CasePaper\Details.cshtml" />
+    <Content Include="Views\BikeMileage\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
