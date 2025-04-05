@@ -1,0 +1,352 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Test Create";
+}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@500&display=swap" rel="stylesheet">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/myorange/SmartAdmin@4.5.1/css/smartadmin.min.css">
+<script src="https://cdn.jsdelivr.net/gh/myorange/SmartAdmin@4.5.1/js/smartadmin.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/smartadmin-ajax/4.5.1/js/notification/SmartNotification.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    body {
+        background-color: #f5f5f5;
+    }
+
+    .headerd {
+        background-color: #5f9278;
+        color: white;
+        padding: 20px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .back-button {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 24px;
+        cursor: pointer;
+        padding: 8px;
+    }
+
+    .headerd h1 {
+        font-size: 24px;
+        font-weight: normal;
+    }
+
+    .container {
+        padding: 20px;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .form-group {
+        margin-bottom: 24px;
+        position: relative;
+    }
+
+        .form-group label {
+            display: block;
+            color: #333;
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+    .input-field {
+        width: 100%;
+        padding: 12px 16px;
+        border: 1px solid #000;
+        border-radius: 8px;
+        font-size: 16px;
+        outline: none;
+        transition: border-color 0.3s;
+    }
+
+        .input-field:focus {
+            border-color: #5f9278;
+        }
+
+    .row {
+        display: flex;
+        gap: 20px;
+    }
+
+    .col {
+        flex: 1;
+    }
+
+    .unit-field {
+        background-color: white;
+        color: #666;
+    }
+
+    textarea.input-field {
+        min-height: 120px;
+        resize: vertical;
+    }
+
+    .section-title {
+        font-size: 24px;
+        margin: 40px 0 20px;
+    }
+
+    .section-subtitle {
+        color: #666;
+        margin-bottom: 20px;
+    }
+
+    .checkbox-group {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-top: 40px;
+    }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            border: 1px solid #000;
+            border-radius: 4px;
+        }
+
+        .checkbox-group label {
+            font-size: 16px;
+            color: #333;
+        }
+
+    .tests-section {
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+
+    .section-subtitle {
+        color: #333;
+        margin: 30px 0 20px;
+        font-size: 20px;
+        font-weight: 500;
+    }
+
+    /* Odometer Styles */
+    .odometer-display {
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        margin-top: 8px;
+        height: 70px;
+        align-items: center;
+        border: 1px solid #000;
+        border-radius: 8px;
+        padding: 10px;
+        background: white;
+    }
+
+    .digit-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .digit {
+        width: 40px;
+        height: 50px;
+        background-color: #333;
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: 'Roboto Mono', monospace;
+        font-size: 1.5rem;
+        border-radius: 5px;
+    }
+
+    .increment-btn, .decrement-btn {
+        width: 30px;
+        height: 30px;
+        background-color: #5f9278;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 0.9rem;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0;
+    }
+
+        .increment-btn:hover, .decrement-btn:hover {
+            background-color: #4a7259;
+        }
+
+    /* Responsive adjustments */
+    @@media (max-width: 768px) {
+        .row {
+            flex-direction: column;
+        }
+
+        .digit {
+            width: 30px;
+            height: 40px;
+            font-size: 1.2rem;
+        }
+
+        .increment-btn, .decrement-btn {
+            width: 25px;
+            height: 25px;
+        }
+    }
+</style>
+
+<div class="body">
+    <div class="pagetitle">
+        <h1>Test Master</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="index.html">Masters</a></li>
+                <li class="breadcrumb-item active">Create</li>
+            </ol>
+        </nav>
+    </div>
+
+    <div class="container">
+        <form id="Test-Form">
+            <div class="row">
+                <div class="col form-group">
+                    <label>Price</label>
+                    <div class="odometer-display">
+                        <div class="digit-container">
+                            <button class="increment-btn" data-index="0">▲</button>
+                            <div class="digit" id="digit-0">0</div>
+                            <button class="decrement-btn" data-index="0">▼</button>
+                        </div>
+                        <div class="digit-container">
+                            <button class="increment-btn" data-index="1">▲</button>
+                            <div class="digit" id="digit-1">0</div>
+                            <button class="decrement-btn" data-index="1">▼</button>
+                        </div>
+                        <div class="digit-container">
+                            <button class="increment-btn" data-index="2">▲</button>
+                            <div class="digit" id="digit-2">0</div>
+                            <button class="decrement-btn" data-index="2">▼</button>
+                        </div>
+                        <div class="digit-container">
+                            <button class="increment-btn" data-index="3">▲</button>
+                            <div class="digit" id="digit-3">0</div>
+                            <button class="decrement-btn" data-index="3">▼</button>
+                        </div>
+                        <div class="digit-container">
+                            <button class="increment-btn" data-index="4">▲</button>
+                            <div class="digit" id="digit-4">0</div>
+                            <button class="decrement-btn" data-index="4">▼</button>
+                        </div>
+                    </div>
+                    <input type="hidden" id="Price" name="Price" class="input-field">
+                </div>
+
+                <div class="col form-group">
+                    <label>Lab Price</label>
+                    <div class="odometer-display">
+                        <div class="digit-container">
+                            <button class="increment-btn" data-index="5">▲</button>
+                            <div class="digit" id="digit-5">0</div>
+                            <button class="decrement-btn" data-index="5">▼</button>
+                        </div>
+                        <div class="digit-container">
+                            <button class="increment-btn" data-index="6">▲</button>
+                            <div class="digit" id="digit-6">0</div>
+                            <button class="decrement-btn" data-index="6">▼</button>
+                        </div>
+                        <div class="digit-container">
+                            <button class="increment-btn" data-index="7">▲</button>
+                            <div class="digit" id="digit-7">0</div>
+                            <button class="decrement-btn" data-index="7">▼</button>
+                        </div>
+                        <div class="digit-container">
+                            <button class="increment-btn" data-index="8">▲</button>
+                            <div class="digit" id="digit-8">0</div>
+                            <button class="decrement-btn" data-index="8">▼</button>
+                        </div>
+                        <div class="digit-container">
+                            <button class="increment-btn" data-index="9">▲</button>
+                            <div class="digit" id="digit-9">0</div>
+                            <button class="decrement-btn" data-index="9">▼</button>
+                        </div>
+                    </div>
+                    <input type="hidden" id="LabPrice" name="LabPrice" class="input-field">
+                </div>
+            </div>
+
+            <div class="tests-section">
+                <div class="add-test-section">
+                    <div class="test-inputs" style="justify-content:end">
+                        <button class="add-btn" id="save">Save</button>
+                        <a class="add-btn" style="background:red!important" href="/Test/index" data-ajax-update="#mainContent" data-ajax-mode="replace" data-ajax-method="GET" data-ajax="true">Cancel</a>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Initialize odometers
+        const priceDigits = Array.from({ length: 5 }, (_, i) => document.getElementById(`digit-${i}`));
+        const labPriceDigits = Array.from({ length: 5 }, (_, i) => document.getElementById(`digit-${i + 5}`));
+
+        // Set up increment/decrement buttons
+        document.querySelectorAll('.increment-btn, .decrement-btn').forEach(btn => {
+            btn.addEventListener('click', function () {
+                const index = parseInt(this.getAttribute('data-index'));
+                const digitElement = document.getElementById(`digit-${index}`);
+                let value = parseInt(digitElement.textContent);
+
+                if (this.classList.contains('increment-btn')) {
+                    value = (value + 1) % 10;
+                } else {
+                    value = (value - 1 + 10) % 10;
+                }
+
+                digitElement.textContent = value;
+                updateHiddenFields();
+            });
+        });
+
+        function updateHiddenFields() {
+            const price = priceDigits.map(d => d.textContent).join('');
+            const labPrice = labPriceDigits.map(d => d.textContent).join('');
+
+            document.getElementById('Price').value = price;
+            document.getElementById('LabPrice').value = labPrice;
+        }
+
+        // Initialize hidden fields
+        updateHiddenFields();
+
+        // Form submission handling
+        $('#Test-Form').submit(function (e) {
+            e.preventDefault();
+            // Add your form submission logic here
+            console.log('Price:', $('#Price').val());
+            console.log('Lab Price:', $('#LabPrice').val());
+            // You can add AJAX submission here
+        });
+    });
+</script>
