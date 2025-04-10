@@ -42,7 +42,47 @@ namespace Lab.Businesss.Masters
                 throw new Exception("Request Failed. " + ex.Message);
             }
         }
-        
+
+       
+        public static async Task<List<CasePaper>> GetDateWiseAll(string strStartDate, string strEndDate)
+        {
+            try
+            {
+                _dalCasePaper = new DALCasePaper();
+                List<CasePaper> lstTD = new List<CasePaper>();
+
+                List<DTOCasePaper> objLstCasePaper = await _dalCasePaper.GetDateWiseAllAsync(strStartDate, strEndDate);
+              
+
+                if (objLstCasePaper != null)
+                {
+                    lstTD = (from cp in objLstCasePaper                       
+                             select new CasePaper
+                             {
+                                 TrnNo = cp.TRN_NO,
+                                 PatientName = cp.PATIENT_NAME,
+                                 Gender = cp.GENDER,
+                                 ConNumber = cp.CON_NUMBER,
+                                 Address = cp.ADDRESS,
+                                 DoctorRef = cp.DOCTOR_REF,
+                                 Date = DateUtility.GetFormatedDate(cp.DATE, 0),
+                                 StatusCode = cp.STATUS_CODE,
+                                 Discount = cp.DISCOUNT,
+                                 ShortTrnNo = cp.TRN_NO.ToString().Substring(2, 6) + "-" +
+                                              cp.TRN_NO.ToString().Substring(cp.TRN_NO.ToString().Length - 2),
+                              
+                             }).ToList();
+                }
+
+                return lstTD;
+            }
+            catch
+            {
+                throw new Exception("Request Failed");
+            }
+        }
+
+
         public static async Task<CasePaper> GetExistingAsync(Int64 code)
         {
             try

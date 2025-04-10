@@ -64,6 +64,7 @@
     <Compile Include="Masters\Doctor.cs" />
     <Compile Include="Masters\Test.cs" />
     <Compile Include="Masters\TestTable.cs" />
+    <Compile Include="Masters\TranGridSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

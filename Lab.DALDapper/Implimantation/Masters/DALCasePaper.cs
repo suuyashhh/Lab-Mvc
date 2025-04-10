@@ -264,6 +264,34 @@ namespace Lab.DALDapper.Implimantation.Masters
             }
         }
 
+       
+        public async Task<List<DTOCasePaper>> GetDateWiseAllAsync(string strStartDate, string strEndDate)
+        {
+            try
+            {
+                string connectionString = ConfigurationManager.ConnectionStrings["connstr"].ConnectionString;
+
+                string query = @"SELECT * 
+                         FROM MST_PATIENT 
+                         WHERE DATE >= @StartDate AND DATE <= @EndDate 
+                         ORDER BY DATE DESC, TRN_NO DESC";
+
+                using (SqlConnection con = new SqlConnection(connectionString))
+                {
+                    con.Open();
+                    return con.Query<DTOCasePaper>(query, new
+                    {
+                        StartDate = strStartDate,
+                        EndDate = strEndDate
+                    }).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while fetching case papers by date: " + ex.Message, ex);
+            }
+        }
+
 
     }
 }

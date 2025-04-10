@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PagedList;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Globalization;
@@ -14,11 +15,37 @@ namespace Lab_Mvc.Controllers
     public class CasePaperController : Controller
     {
         // GET: CasePaper
-        public async Task<ActionResult> Index(string sortdir, string sortOrder, string searchString, int? page)
-        {
-            List<CasePaper> _lstCitys = await CasePaper.GetAllAsync();
 
+        public async Task<ActionResult> Index(string sortdir, string sortOrder, string searchString, int? page, string FromDate, string ToDate)
+        {
+           
+            string strStartDate = "";
+            string strToDate = "";
             string strSortDir = "";
+            if (FromDate == null)
+            {
+                strStartDate = DateUtility.GetFormatedDate(DateUtility.GetCurrentMonthStartDate(), 1);
+            }
+
+            else
+            {
+                strStartDate = FromDate;
+            }
+            if (ToDate == null)
+            {
+                strToDate = DateUtility.GetFormatedDate(DateUtility.GetCurrentDate(), 1);
+            }
+            else
+            {
+                strToDate = ToDate;
+            }
+
+            List<CasePaper> _lstTD = await CasePaper.GetDateWiseAll(strStartDate, strToDate);
+            TranGridSettings _objTranGridSettings = new TranGridSettings() { TranFromDate = DateUtility.GetFormatedDate(strStartDate, 0), TranToDate = DateUtility.GetFormatedDate(strToDate, 0) };
+            ViewData["trangridsettings"] = _objTranGridSettings;
+
+            ViewBag.FromDate = strStartDate;
+            ViewBag.ToDate = strToDate;
             ViewBag.CurrentSort = sortOrder;
             //ViewBag.NameSortParam = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
                   
@@ -27,7 +54,7 @@ namespace Lab_Mvc.Controllers
             {
                 ViewBag.CurrentFilter = searchString;
 
-                _lstCitys = _lstCitys.Where(obj =>
+                _lstTD = _lstTD.Where(obj =>
                     (obj.Date != null && obj.Date.ToString().ToUpper().Contains(searchString.ToUpper())) ||
                     (obj.ShortTrnNo != null && obj.ShortTrnNo.ToUpper().Contains(searchString.ToUpper())) ||
                     (obj.PatientName != null && obj.PatientName.ToUpper().Contains(searchString.ToUpper())) 
@@ -55,40 +82,47 @@ namespace Lab_Mvc.Controllers
                 case "TrnNo":
                     if (strSortDir == "desc")
                     {
-                        _lstCitys = _lstCitys.OrderByDescending(obj => obj.TrnNo).ToList();
+                        _lstTD = _lstTD.OrderByDescending(obj => obj.TrnNo).ToList();
                     }
                     else
                     {
-                        _lstCitys = _lstCitys.OrderBy(obj => obj.TrnNo).ToList();
+                        _lstTD = _lstTD.OrderBy(obj => obj.TrnNo).ToList();
                     }
                     break;
                 case "Date":
                     if (strSortDir == "desc")
                     {
-                        _lstCitys = _lstCitys.OrderByDescending(obj => obj.Date).ToList();
+                        _lstTD = _lstTD.OrderByDescending(obj => obj.Date).ToList();
                     }
                     else
                     {
-                        _lstCitys = _lstCitys.OrderBy(obj => obj.Date).ToList();
+                        _lstTD = _lstTD.OrderBy(obj => obj.Date).ToList();
                     }
                     break;
                 case "PatientName":
                     if (strSortDir == "desc")
                     {
-                        _lstCitys = _lstCitys.OrderByDescending(obj => obj.PatientName).ToList();
+                        _lstTD = _lstTD.OrderByDescending(obj => obj.PatientName).ToList();
                     }
                     else
                     {
-                        _lstCitys = _lstCitys.OrderBy(obj => obj.PatientName).ToList();
+                        _lstTD = _lstTD.OrderBy(obj => obj.PatientName).ToList();
                     }
                     break;
                 default:
-                    _lstCitys = _lstCitys.OrderByDescending(obj => obj.Date).ThenByDescending(p => p.TrnNo).ToList();
+                    _lstTD = _lstTD.OrderByDescending(obj => obj.Date).ThenByDescending(p => p.TrnNo).ToList();
                     ViewBag.SortDir = "asc";
                     break;
             }
-            
-            return View(_lstCitys);
+            int pageSize = 20;
+            int pageNumber = 1;
+            if (page != null)
+            {
+                pageNumber = Convert.ToInt16(page);
+            }
+
+            //return View(_lstTD);
+            return PartialView(_lstTD);
         }
 
 
