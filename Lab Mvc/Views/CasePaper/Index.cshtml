@@ -1,8 +1,17 @@
-﻿@model IEnumerable<Lab.Businesss.Masters.CasePaper>
+﻿@*@model PagedList.IPagedList<Lab.Businesss.Masters.CasePaper>*@
+@model IEnumerable<Lab.Businesss.Masters.CasePaper>
+@using Lab.Businesss.Masters
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "CasePaper Index";
 }
+
+@{
+    TranGridSettings grid_settings = ViewData["trangridsettings"] as TranGridSettings;
+    int row_num = 1;
+}
+
+
 
 <style>
     * {
@@ -124,33 +133,34 @@
         background-color: #2196f3;
         display: inline-block;
         padding: 6px 12px;
-        color: white !important; 
+        color: white !important;
         border: none;
         border-radius: 4px;
-        text-decoration: none; 
+        text-decoration: none;
         font-size: 14px;
         cursor: pointer;
     }
+
         .pm_edit-btn:hover {
             background-color: #d32f2f;
             color: white !important;
         }
 
-        .pm_delete-btn {
-            display: inline-block;
-            padding: 6px 12px;
-            background-color: #f44336;
-            color: white !important;
-            border: none;
-            border-radius: 4px;
-            text-decoration: none;
-            font-size: 14px;
-            cursor: pointer;
-        }
+    .pm_delete-btn {
+        display: inline-block;
+        padding: 6px 12px;
+        background-color: #f44336;
+        color: white !important;
+        border: none;
+        border-radius: 4px;
+        text-decoration: none;
+        font-size: 14px;
+        cursor: pointer;
+    }
 
         .pm_delete-btn:hover {
-            background-color: #d32f2f; 
-            color: white !important; 
+            background-color: #d32f2f;
+            color: white !important;
         }
 
     .pm_invoice-btn {
@@ -242,8 +252,8 @@
         </div>
 
         <div class="pm_date-container">
-            <input type="date" id="pm_fromDate" placeholder="From Date">
-            <input type="date" id="pm_toDate" placeholder="To Date">
+            <input type="date" id="pm_fromDate" value="@grid_settings.TranFromDate"  placeholder="From Date">
+            <input type="date" id="pm_toDate" value="@grid_settings.TranToDate"  placeholder="To Date">
             <button id="pm_searchBtn">Search</button>
         </div>
         <div class="pm_search-container">
@@ -280,7 +290,7 @@
                     {
                         <tr class="@(item.StatusCode == 1 ? "deleted" : "ok")">
                             <td>
-                              
+
                                 <div class="pm_action-buttons">
                                     @if (item.StatusCode == 0)
                                     {
@@ -288,9 +298,9 @@
                                         <a class="pm_delete-btn" data-id="1" title="Delete" href="/CasePaper/delete?TrnNo=@item.TrnNo">Delete</a>
                                     }
                                     <a class="pm_invoice-btn" data-id="1" title="Invoice" href="/CasePaper/delete?TrnNo=@item.TrnNo">Invoice</a>
-                                   
+
                                 </div>
-                              
+
                             </td>
                             <td>
                                 <a title="View" href="/CasePaper/Details?TrnNo=@item.TrnNo" data-ajax-update="#mainContent" data-ajax-mode="replace" data-ajax-method="GET" data-ajax="true">
@@ -316,4 +326,55 @@
         </table>
     </div>
 </div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#pm_searchBtn').click(function () {
+            var fromDateRaw = $('#pm_fromDate').val();
+            var toDateRaw = $('#pm_toDate').val();
+
+            // Format to yyyyMMdd
+            var fromDate = formatDateToYYYYMMDD(fromDateRaw);
+            var toDate = formatDateToYYYYMMDD(toDateRaw);
+
+            var urlName = "CasePaper/index?FromDate='" + fromDate + "'&ToDate='" + toDate + "'";
+            $.ajax({
+                url: urlName,
+                type: "POST",
+                success: function (response, status, xhr) {
+                    $("#mainContent").html(response);
+                },
+                error: function (err) {
+                    $("#mainContent").html(err);
+                }
+            });
+
+            //$.ajax({
+            //    url: '/CasePaper/Index',
+            //    type: 'GET',
+            //    data: {
+            //        FromDate: fromDate,
+            //        ToDate: toDate
+            //    },
+            //    success: function (result) {
+            //        $('#casepaper-results').html(result);
+            //    },
+            //    error: function () {
+            //        alert('Error loading data.');
+            //    }
+            //});
+        });
+
+        function formatDateToYYYYMMDD(dateStr) {
+            if (!dateStr) return '';
+            var date = new Date(dateStr);
+            var yyyy = date.getFullYear();
+            var mm = ('0' + (date.getMonth() + 1)).slice(-2);
+            var dd = ('0' + date.getDate()).slice(-2);
+            return yyyy + mm + dd;
+        }
+    });
+
+</script>
+
 <script src="script.js"></script>
