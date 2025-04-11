@@ -21,5 +21,6 @@ namespace Lab.DTO.Masters.Objects
         public decimal TOTAL_PROFIT { get; set; }
         public decimal DISCOUNT { get; set; }
         public string DELETE_REASON { get; set; }
+        public string INVOICE_NO { get; set; }
     }
 }

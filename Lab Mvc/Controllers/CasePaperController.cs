@@ -259,6 +259,55 @@ namespace Lab_Mvc.Controllers
 
             return PartialView(await CasePaper.GetExistingAsync(TrnNo));
         }
+
+        public async Task<ActionResult> Invoice(Int64 TrnNo)
+        {
+            List<CasePaper> _lstTD = await CasePaper.GetAllAsync();
+            List<Doctor> _objDoctor = Doctor.GetDoctorList();
+            ViewData["doctor"] = _objDoctor;
+            return PartialView(await CasePaper.GetExistingAsyncInvoice(TrnNo));
+        }
+        public async Task<ActionResult> InvoiceSave(Int64 TrnNo)
+        {
+            List<CasePaper> _lstTD = await CasePaper.GetAllAsync();
+            List<Doctor> _objDoctor = Doctor.GetDoctorList();
+            ViewData["doctor"] = _objDoctor;
+            return PartialView(await CasePaper.GetExistingAsyncInvoice(TrnNo));
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> InvoiceSave(CasePaper _ObjCsPaper)
+        {
+            var result = new SaveViewModel() { Status = true };
+
+            try
+            {
+                Int64 trn_no = await CasePaper.InvoiceSave(_ObjCsPaper);
+                if (trn_no != 0)
+                {
+                    string strDocNo = trn_no.ToString().Substring(2, 6) + "-" + trn_no.ToString().Substring(trn_no.ToString().Length - 2);
+                    result.DocNo = strDocNo;
+                    result = new SaveViewModel()
+                    {
+                        Status = true,
+                        Message = "",
+                        DocNo = strDocNo
+                    };
+                }
+                else
+                {
+                    result.Status = false;
+                    result.Message = "Something went wrong.";
+                }
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+            catch
+            {
+                result.Status = false;
+                result.Message = "Something went wrong.";
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+        }
         public async Task<ActionResult> Approve(Int64 TrnNo)
         {
             List<CasePaper> _lstTD = await CasePaper.GetAllAsync();

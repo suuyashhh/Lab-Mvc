@@ -30,6 +30,7 @@ namespace Lab.Businesss.Masters
         public decimal TotalProfit { get; set; }
         public decimal Discount { get; set; }
         public string DeleteReason { get; set; }
+        public string InvoiceNo { get; set; }
 
         public static CasePaper New()
         {
@@ -68,6 +69,7 @@ namespace Lab.Businesss.Masters
                                  Date = DateUtility.GetFormatedDate(cp.DATE, 0),
                                  StatusCode = cp.STATUS_CODE,
                                  Discount = cp.DISCOUNT,
+                                 InvoiceNo = cp.INVOICE_NO,
                                  ShortTrnNo = cp.TRN_NO.ToString().Substring(2, 6) + "-" +
                                               cp.TRN_NO.ToString().Substring(cp.TRN_NO.ToString().Length - 2),
                               
@@ -90,19 +92,57 @@ namespace Lab.Businesss.Masters
                 _dalCasePaper = new DALCasePaper();
 
                 DTOCasePaper dtoCasePaper = await Task.Run(() => { return _dalCasePaper.GetExisting(code); });
-               
+
                 if (dtoCasePaper != null)
                     return new CasePaper()
                     {
                         TrnNo = dtoCasePaper.TRN_NO,
-                        Date = DateUtility.GetFormatedDate(dtoCasePaper.DATE, 0),                      
+                        Date = DateUtility.GetFormatedDate(dtoCasePaper.DATE, 0),
                         PatientName = dtoCasePaper.PATIENT_NAME,
                         Gender = dtoCasePaper.GENDER,
                         ConNumber = dtoCasePaper.CON_NUMBER,
                         Address = dtoCasePaper.ADDRESS,
                         DoctorRef = dtoCasePaper.DOCTOR_REF,
                         StatusCode = dtoCasePaper.STATUS_CODE,
-                        Discount= dtoCasePaper.DISCOUNT,
+                        Discount = dtoCasePaper.DISCOUNT,
+                        MatIs = TestTable.GetITableList(dtoCasePaper.TRN_NO)
+
+                    };
+                else
+                    return null;
+            }
+            catch
+            {
+                throw new Exception("Request Failed");
+            }
+        }
+        
+        public static async Task<CasePaper> GetExistingAsyncInvoice(Int64 code)
+        {
+            try
+            {
+                _dalCasePaper = new DALCasePaper();
+
+                DTOCasePaper dtoCasePaper = await Task.Run(() => { return _dalCasePaper.GetExisting(code); });
+                string invoiceNo = dtoCasePaper.INVOICE_NO;
+
+                if (invoiceNo == null || invoiceNo == "")
+                {
+                    invoiceNo = await GenerateInvoiceNoAsync();
+                }
+                if (dtoCasePaper != null)
+                    return new CasePaper()
+                    {
+                        TrnNo = dtoCasePaper.TRN_NO,
+                        Date = DateUtility.GetFormatedDate(dtoCasePaper.DATE, 0),
+                        PatientName = dtoCasePaper.PATIENT_NAME,
+                        Gender = dtoCasePaper.GENDER,
+                        ConNumber = dtoCasePaper.CON_NUMBER,
+                        Address = dtoCasePaper.ADDRESS,
+                        DoctorRef = dtoCasePaper.DOCTOR_REF,
+                        StatusCode = dtoCasePaper.STATUS_CODE,
+                        Discount = dtoCasePaper.DISCOUNT,
+                        InvoiceNo = invoiceNo,
                         MatIs = TestTable.GetITableList(dtoCasePaper.TRN_NO)
 
                     };
@@ -296,6 +336,31 @@ namespace Lab.Businesss.Masters
             }
         }
 
+        public static async Task<Int64> InvoiceSave(CasePaper _ObjCsPaper)
+        {
+            try
+            {
+                Int64 result = 0;
+                _dalCasePaper = new DALCasePaper();
+                                             
+
+                DTOCasePaper _objDtoCasePaper = new DTOCasePaper()
+                {
+                    TRN_NO = _ObjCsPaper.TrnNo,
+                    INVOICE_NO = _ObjCsPaper.InvoiceNo,
+                    
+                };
+
+                result = await Task.Run(() => { return _dalCasePaper.InvoiceSave(_objDtoCasePaper); });
+                              
+                return result;
+            }
+            catch
+            {
+                return 0;
+            }
+        }
+
         public static async Task<Int64> Approve(CasePaper _ObjCsPaper)
         {
             try
@@ -418,6 +483,28 @@ namespace Lab.Businesss.Masters
 
             return newPatientId;
         }
+
+        private static async Task<string> GenerateInvoiceNoAsync()
+        {
+            _dalCasePaper = new DALCasePaper();
+
+            string lastInvoice = await _dalCasePaper.GetLastInvoiceNoAsync();
+
+            int nextNumber = 1;
+
+            if (!string.IsNullOrEmpty(lastInvoice) && lastInvoice.StartsWith("INV"))
+            {
+                string numberPart = lastInvoice.Substring(3);
+                if (int.TryParse(numberPart, out int lastNumber))
+                {
+                    nextNumber = lastNumber + 1;
+                }
+            }
+
+            string newInvoice = "INV" + nextNumber.ToString("D3"); 
+            return newInvoice;
+        }
+
 
     }
 }

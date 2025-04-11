@@ -1,0 +1,157 @@
+﻿@using Lab.Businesss.Masters
+@model CasePaper
+@{
+    ViewBag.Title = "InvoiceSave";
+}
+
+@{
+    int row_num = 1;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@Model.PatientName</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        @@media print {
+            .no-print {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-light">
+
+    <div class="container my-4">
+        <input type="hidden" id="hfTrnNo" value="@Model.TrnNo" />
+        <div class="bg-white p-4 rounded shadow-sm">
+
+            <div class="text-center mb-4">
+                <h4 class="fw-bold">Tax Invoice</h4>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-12 col-md-6">
+                    <h6>Bill To:</h6>
+                    <p class="mb-1">MR. @Model.PatientName</p>
+                    <p class="mb-1">DR. @Model.DoctorRef</p>
+                    <p class="mb-0">Goa, India</p>
+                </div>
+                <div class="col-12 col-md-6 text-md-end mt-3 mt-md-0">
+                    <p class="mb-1" id="InvoiceNo" name="InvoiceNo"><strong>Invoice Number:</strong>@Model.InvoiceNo</p>
+                    <p class="mb-0"><strong>Invoice Date:</strong> 17/01/2025</p>
+                </div>
+            </div>
+
+            <div class="table-responsive mb-4">
+                <table class="table table-bordered align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Sr.No</th>
+                            <th>Test Name</th>
+                            <th class="text-end">Amount (₹)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var mati in Model.MatIs)
+                        {
+                            <tr id="row(@row_num)">
+                                <td>@row_num</td>
+                                <td id='TestCode(@row_num)'>@mati.TestName</td>
+                                <td class="text-end" id='Price(@row_num)'>@mati.Price</td>
+                            </tr>
+                            row_num++;
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="d-flex justify-content-start">
+                <div class="text-end">
+                    <p class="mb-1"><strong>Dis:</strong>@Model.Discount%</p>
+                    <p class="mb-0"><strong>Dis Total:</strong> ₹150.00</p>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-end">
+                <div class="text-end">
+                    <p class="mb-1"><strong>Subtotal:</strong> ₹570.00</p>
+                    <p class="mb-0"><strong>Total:</strong> ₹570.00</p>
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <p>
+                    <strong>Notes:</strong><br>
+                    System generated bill*
+                </p>
+            </div>
+
+            <div class="text-center mt-4 no-print">
+                <button onclick="window.print()" class="btn btn-primary px-4">
+                    🖨 Print Invoice
+                </button>
+            </div>
+
+            <div class="text-end mt-4 no-print">
+                <button class="btn btn-success px-4" id="save">
+                    🖨 Save
+                </button>
+            </div>
+
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#save').click(function (e) {
+                e.preventDefault();
+
+                var _ObjCsPaper = {
+                    TrnNo: $("#hfTrnNo").val(),
+                    InvoiceNo: $("#InvoiceNo").text().replace("Invoice Number:", "").trim()
+                };
+
+                // optional: check if you have this div, or remove this line
+                // $("#mainContent").html('<div>Loading...</div>');
+
+                $.ajax({
+                    url: '/CasePaper/InvoiceSave',
+                    type: "POST",
+                    contentType: "application/json",
+                    dataType: "json",
+                    data: JSON.stringify(_ObjCsPaper),
+                    success: function (response) {
+                        if (response.Status) {
+                            $("#save").hide();
+                        } else {
+                            toastr.error("Error saving document!", "Error", {
+                                timeOut: 5000,
+                                closeButton: false,
+                                progressBar: true,
+                                positionClass: "toast-top-right"
+                            });
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error(xhr.responseText);
+                        toastr.error("An error occurred: " + xhr.responseText, "Error", {
+                            timeOut: 5000,
+                            closeButton: false,
+                            progressBar: true,
+                            positionClass: "toast-top-right"
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>
+

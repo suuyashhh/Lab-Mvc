@@ -132,6 +132,45 @@ namespace Lab.DALDapper.Implimantation.Masters
             }
         }
 
+        public Int64 InvoiceSave(DTOCasePaper _objDtoCasePaper)
+        {
+            try
+            {
+                Int64 InvNo = 0;
+
+                string connectionString = ConfigurationManager.ConnectionStrings["connstr"].ConnectionString;
+
+                string query = @"UPDATE MST_PATIENT SET ";
+                query += " INVOICE_NO = '" + _objDtoCasePaper.INVOICE_NO + "'";
+                query += " WHERE TRN_NO = '" + _objDtoCasePaper.TRN_NO + "'";
+
+                using (SqlConnection con = new SqlConnection(connectionString))
+                {
+                    con.Open();
+
+                    using (SqlCommand cmd = new SqlCommand(query, con))
+                    {
+                        int rowsAffected = cmd.ExecuteNonQuery();
+
+                        if (rowsAffected > 0)
+                        {
+                            InvNo = _objDtoCasePaper.TRN_NO;
+                        }
+                        else
+                        {
+                            throw new Exception("No record updated.");
+                        }
+                    }
+                }
+
+                return InvNo;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while updating patient record: " + ex.Message, ex);
+            }
+        }
+
         public Int64 Approve(DTOCasePaper _objDtoCasePaper)
         {
             try
@@ -290,6 +329,25 @@ namespace Lab.DALDapper.Implimantation.Masters
             {
                 throw new Exception("Error while fetching case papers by date: " + ex.Message, ex);
             }
+        }
+
+        public async Task<string> GetLastInvoiceNoAsync()
+        {
+            string lastInvoiceNo = null;
+            string query = "SELECT TOP 1 INVOICE_NO FROM MST_PATIENT WHERE INVOICE_NO IS NOT NULL ORDER BY INVOICE_NO DESC";
+
+            using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["connstr"].ConnectionString))
+            {
+                await conn.OpenAsync();
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    object result = await cmd.ExecuteScalarAsync();
+                    if (result != null)
+                        lastInvoiceNo = result.ToString();
+                }
+            }
+
+            return lastInvoiceNo;
         }
 
 
