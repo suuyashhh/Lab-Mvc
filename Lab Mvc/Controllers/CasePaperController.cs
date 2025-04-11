@@ -130,7 +130,7 @@ namespace Lab_Mvc.Controllers
         public ActionResult Create()
         {
             //ViewData["currentdate"] = DateUtility.GetCurrentDate();
-            ViewData["currentdate"] = DateTime.Now.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
+            ViewData["currentdate"] = DateUtility.GetCurrentDate();
             List<Doctor> _objDoctor = Doctor.GetDoctorList();
             ViewData["doctor"] = _objDoctor;
             return PartialView("Create", CasePaper.New());

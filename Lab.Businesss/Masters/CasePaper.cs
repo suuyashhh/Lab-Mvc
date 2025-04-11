@@ -31,7 +31,9 @@ namespace Lab.Businesss.Masters
         public decimal Discount { get; set; }
         public string DeleteReason { get; set; }
         public string InvoiceNo { get; set; }
-
+        public decimal PaymentAmount { get; set; }
+        public int CollectionType { get; set; }
+        public int PaymentMethod { get; set; }
         public static CasePaper New()
         {
             try
@@ -216,6 +218,8 @@ namespace Lab.Businesss.Masters
                     TOTAL_PROFIT = _ObjCsPaper.TotalProfit,
                     TOTAL_AMOUNT = _ObjCsPaper.TotalAmount,
                     STATUS_CODE= _ObjCsPaper.StatusCode,
+                    ADDRESS = _ObjCsPaper.Address,
+                    PAYMENT_AMOUNT = _ObjCsPaper.PaymentAmount
 
                 };
 
