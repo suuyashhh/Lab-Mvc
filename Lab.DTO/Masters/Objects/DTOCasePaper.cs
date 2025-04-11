@@ -22,5 +22,8 @@ namespace Lab.DTO.Masters.Objects
         public decimal DISCOUNT { get; set; }
         public string DELETE_REASON { get; set; }
         public string INVOICE_NO { get; set; }
+        public decimal PAYMENT_AMOUNT { get; set; }
+        public int COLLECTION_TYPE { get; set; }
+        public int PAYMENT_METHOD { get; set; }
     }
 }
