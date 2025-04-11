@@ -401,10 +401,21 @@
 
     <div class="container">
         <form method="POST" id="CasePaper-form">
-            <div class="d-flex justify-content-end mb-3">
-                <div class="form-group text-end">
-                    <label>Date</label>                    
-                    <input type="date" id="Date" name="Date" value="@curr_date" class="input-field">
+
+            <div class="row">
+                <div class="col form-group">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="counter-sales">
+                        <label for="counter-sales">Home Collection</label>
+                    </div>
+                </div>
+                <div class="col form-group">
+                    <div class="d-flex justify-content-end mb-3">
+                        <div class="form-group text-end">
+                            <label>Date</label>
+                            <input type="date" id="Date" name="Date" value="@curr_date" class="input-field">
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -501,12 +512,6 @@
             </div>
 
 
-            <h2 class="section-title">Collection</h2>
-            <div class="checkbox-group">
-                <input type="checkbox" id="counter-sales">
-                <label for="counter-sales">Home Collection</label>
-            </div>
-
             <hr style="border: 2px solid Black; margin: 50px 0;">
 
 
@@ -564,7 +569,7 @@
 <script type="text/javascript">
     $(document).ready(function () {
         $("#Doctor").select2();
-      
+       
 
         calculateDiscount();
 

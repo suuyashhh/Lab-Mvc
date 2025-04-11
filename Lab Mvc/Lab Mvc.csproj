@@ -623,6 +623,8 @@
     <Content Include="Views\CasePaper\Details.cshtml" />
     <Content Include="Views\BikeMileage\Index.cshtml" />
     <Content Include="Views\CasePaper\_CasePaperTable.cshtml" />
+    <Content Include="Views\CasePaper\Invoice.cshtml" />
+    <Content Include="Views\CasePaper\InvoiceSave.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
