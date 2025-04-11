@@ -1,18 +1,11 @@
-﻿@*@model PagedList.IPagedList<Lab.Businesss.Masters.CasePaper>*@
-@model IEnumerable<Lab.Businesss.Masters.CasePaper>
-@using Lab.Businesss.Masters
+﻿@model IEnumerable<Lab.Businesss.Masters.CasePaper>
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewBag.Title = "CasePaper Index";
+    ViewBag.Title = "CasePaper ApprovalPending";
 }
-
 @{
-    TranGridSettings grid_settings = ViewData["trangridsettings"] as TranGridSettings;
     int row_num = 1;
 }
-
-
-
 <style>
     * {
         box-sizing: border-box;
@@ -163,29 +156,8 @@
             color: white !important;
         }
 
-    .pm_invoice-btn {
-        display: inline-block;
-        padding: 6px 12px;
-        background-color: gray;
-        color: white !important;
-        border: none;
-        border-radius: 4px;
-        text-decoration: none;
-        font-size: 14px;
-        cursor: pointer;
-    }
 
-    .pm_invoiceVal-btn {
-        display: inline-block;
-        padding: 6px 12px;
-        background-color: #4caf50;
-        color: white !important;
-        border: none;
-        border-radius: 4px;
-        text-decoration: none;
-        font-size: 14px;
-        cursor: pointer;
-    }
+
 
     .pm_table-container::-webkit-scrollbar {
         width: 10px;
@@ -237,6 +209,14 @@
         #pm_newBtn {
             width: 100%;
         }
+
+        .test-inputs {
+            flex-direction: column;
+        }
+
+        .add-btn {
+            width: 100%;
+        }
     }
 
     @@media screen and (max-width: 480px) {
@@ -244,51 +224,75 @@
             flex-direction: column;
         }
     }
+
+    .tests-section {
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+
+    .add-test-section {
+        margin-top: 20px;
+    }
+
+    .test-inputs {
+        display: flex;
+        gap: 15px;
+        align-items: center;
+    }
+
+    .add-btn {
+        background-color: #5f9278;
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background-color 0.3s;
+        white-space: nowrap;
+    }
+
+        .add-btn:hover {
+            background-color: #4a7259;
+        }
+
+
+    .pm_action-buttons input[type="checkbox"] {
+        width: 20px;
+        height: 20px;
+        border: 1px solid #000;
+        border-radius: 4px;
+    }
 </style>
 <div class="pagetitle">
-    <h1>Case Paper</h1>
+    <h1>Approve</h1>
     <nav>
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+            <li class="breadcrumb-item"><a href="index.html">Approval Pending</a></li>
             <li class="breadcrumb-item active">Index</li>
         </ol>
     </nav>
 </div>
 
 <div class="pm_container">
-    <div class="pm_header">
-        <div class="pm_new-button-container">
-            <a href="@Url.Action("Create","CasePaper")" id="pm_newBtn">New</a>
-        </div>
 
-        <div class="pm_date-container">
-            <input type="date" id="pm_fromDate" value="@grid_settings.TranFromDate"  placeholder="From Date">
-            <input type="date" id="pm_toDate" value="@grid_settings.TranToDate"  placeholder="To Date">
-            <button id="pm_searchBtn">Search</button>
-        </div>
-        <div class="pm_search-container">
-            <input type="text" id="pm_searchInput" value="@ViewBag.CurrentFilter" name="searchString" placeholder="Search patients...">
-        </div>
-    </div>
     <div class="pm_table-container">
         <table id="pm_patientTable">
             <thead>
                 <tr>
-                    <th>Action</th>
                     <th>
-                        <a href="/CasePaper/index?page=1&sortOrder=TrnNo&sortdir=@ViewBag.SortDir&searchString=@ViewBag.CurrentFilter&FromDate=@ViewBag.FromDate&ToDate=@ViewBag.ToDate" data-ajax-update="#mainContent" data-ajax-mode="replace" data-ajax-method="GET" data-ajax="true">
-                            TrnNo
-                        </a>
+                        <label class="pm_action-buttons">
+                            <input type="checkbox" id="IsAllCheck" name="IsAllCheck">
+                        </label>
                     </th>
                     <th>
-                        <a href="/CasePaper/index?page=1&sortOrder=Date&sortdir=@ViewBag.SortDir&searchString=@ViewBag.CurrentFilter&FromDate=@ViewBag.FromDate&ToDate=@ViewBag.ToDate" data-ajax-update="#mainContent" data-ajax-mode="replace" data-ajax-method="GET" data-ajax="true">
-                            Date
-                        </a>
+                        TrnNo
                     </th>
                     <th>
-                        <a href="/CasePaper/index?page=1&sortOrder=PatientName&sortdir=@ViewBag.SortDir&searchString=@ViewBag.CurrentFilter&FromDate=@ViewBag.FromDate&ToDate=@ViewBag.ToDate" data-ajax-update="#mainContent" data-ajax-mode="replace" data-ajax-method="GET" data-ajax="true">
-                            Name
-                        </a>
+                        Date
+                    </th>
+                    <th>
+                        Name
                     </th>
                     <th>Contact</th>
                 </tr>
@@ -298,30 +302,15 @@
                 {
                     foreach (var item in Model)
                     {
-                        <tr class="@(item.StatusCode == 1 ? "deleted" : "ok")">
+                        <tr>
                             <td>
-
                                 <div class="pm_action-buttons">
-                                    @if (item.StatusCode == 0)
-                                    {
-                                        <a class="pm_edit-btn" data-id="1" title="Edit" href="/CasePaper/Edit?TrnNo=@item.TrnNo">Edit</a>
-                                        <a class="pm_delete-btn" data-id="1" title="Delete" href="/CasePaper/delete?TrnNo=@item.TrnNo">Delete</a>
-                                    }
-                                    @if (item.InvoiceNo == null)
-                                    {
-                                        <a class="pm_invoiceVal-btn" data-id="1" title="Invoice" href="/CasePaper/InvoiceSave?TrnNo=@item.TrnNo">Invoice</a>
-                                    }
-                                    else
-                                    {
-                                        <a class="pm_invoice-btn" data-id="1" title="Invoice" href="/CasePaper/invoice?TrnNo=@item.TrnNo">Invoice</a>
-                                    }
-
-
+                                    <input type="checkbox" id="IsCheck@(row_num)" name="IsCheck@(row_num)">
+                                    <input id="TrnNo@(row_num)" type="hidden" value="@item.TrnNo">
                                 </div>
-
                             </td>
                             <td>
-                                <a title="View" href="/CasePaper/Details?TrnNo=@item.TrnNo" data-ajax-update="#mainContent" data-ajax-mode="replace" data-ajax-method="GET" data-ajax="true">
+                                <a title="View" href="/CasePaper/Approve?TrnNo=@item.TrnNo" data-ajax-update="#mainContent" data-ajax-mode="replace" data-ajax-method="GET" data-ajax="true">
                                     @item.ShortTrnNo
                                 </a>
                             </td>
@@ -342,57 +331,70 @@
 
             </tbody>
         </table>
+        <div class="tests-section">
+            <div class="add-test-section">
+                <div class="test-inputs" style="justify-content:end">
+                    <button class="add-btn" id="btnapprove" href="javascript:void(0);">Approve</button>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
+<script src="script.js"></script>
+
+<script type="text/javascript">
     $(document).ready(function () {
-        $('#pm_searchBtn').click(function () {
-            var fromDateRaw = $('#pm_fromDate').val();
-            var toDateRaw = $('#pm_toDate').val();
+        $('#IsAllCheck').click(function (e) {
+            var table = $(e.target).closest('table');
+            $('td input:checkbox', table).prop('checked', this.checked);
+        });
 
-            // Format to yyyyMMdd
-            var fromDate = formatDateToYYYYMMDD(fromDateRaw);
-            var toDate = formatDateToYYYYMMDD(toDateRaw);
+        $('#btnapprove').click(function (e) {
+            debugger;
+            var ShotBlastings = [];
+            $('#pm_patientTable >tbody >tr').each(function () {
+                if ($('#pm_patientTable >tbody >tr').length !== 0) {
+                    var trn_no;
+                    trn_no = $(this).find("[id^=TrnNo]").val();
 
-            var urlName = "CasePaper/index?FromDate='" + fromDate + "'&ToDate='" + toDate + "'";
-            $.ajax({
-                url: urlName,
-                type: "POST",
-                success: function (response, status, xhr) {
-                    $("#mainContent").html(response);
-                },
-                error: function (err) {
-                    $("#mainContent").html(err);
+                    if ($(this).find("[id^=IsCheck]").is(":checked")) {
+                        ShotBlastings.push(trn_no);
+                    }
                 }
             });
 
-            //$.ajax({
-            //    url: '/CasePaper/Index',
-            //    type: 'GET',
-            //    data: {
-            //        FromDate: fromDate,
-            //        ToDate: toDate
-            //    },
-            //    success: function (result) {
-            //        $('#casepaper-results').html(result);
-            //    },
-            //    error: function () {
-            //        alert('Error loading data.');
-            //    }
-            //});
+            if (ShotBlastings.length != 0) {
+                var urlName = ' /CasePaper/ApproveMultiple';
+                $.ajax({
+                    async: false,
+                    contentType: "application/json",
+                    dataType: "json",
+                    data: JSON.stringify(ShotBlastings),
+                    url: urlName,
+                    type: "POST",
+                    success: function (response, status, xhr) {
+                        if (response == 0) {
+                            setTimeout(function () {
+                                window.location.href = "/CasePaper/ApprovalPending";
+                            });
+                          
+                        }
+                    },
+                    error: function (err) {
+                        alert(err.toSource());
+                        $("#mainContent").html(err);
+                    }
+                });
+            }
+            else {
+                $.smallBox({
+                    title: "Approval",
+                    content: "Please select at least one record",
+                    color: "#C46A69",
+                    timeout: 3000,
+                });
+                return false;
+            }
         });
-
-        function formatDateToYYYYMMDD(dateStr) {
-            if (!dateStr) return '';
-            var date = new Date(dateStr);
-            var yyyy = date.getFullYear();
-            var mm = ('0' + (date.getMonth() + 1)).slice(-2);
-            var dd = ('0' + date.getDate()).slice(-2);
-            return yyyy + mm + dd;
-        }
-    });
-
+    })
 </script>
-
-<script src="script.js"></script>
