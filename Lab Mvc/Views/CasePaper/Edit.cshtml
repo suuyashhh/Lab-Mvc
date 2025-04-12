@@ -597,7 +597,6 @@
             </div>
 
 
-
             <div class="tests-section">
                 <div class="add-test-section">
                     <div class="test-inputs" style="justify-content:end">
@@ -614,6 +613,17 @@
         calculateSum();
         calculateDiscount();
         attachEditableListeners();
+        $("#Doctor").select2();
+
+        (@Model.DoctorRef != 0)
+        $('#Doctor').select2().select2('val', @Model.DoctorRef);
+
+        var $radios = $('input:radio[name=PaymentMethod]');
+        $radios.filter('[value=@Model.PaymentMethod]').prop('checked', true);
+
+        if (@Model.CollectionType == 1) {
+            $('#CollectionType').prop('checked', true);
+        }
 
         var TrnNo = $("#hfTrnNo").val();
         $("#Doctor").select2();
