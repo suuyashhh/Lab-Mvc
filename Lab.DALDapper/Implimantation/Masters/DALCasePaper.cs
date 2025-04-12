@@ -40,8 +40,8 @@ namespace Lab.DALDapper.Implimantation.Masters
                 Int64 patientId = 0; 
                 string connectionString = ConfigurationManager.ConnectionStrings["connstr"].ConnectionString;
 
-                string query = @"INSERT INTO MST_PATIENT (TRN_NO, PATIENT_NAME,DATE, GENDER, CON_NUMBER, DOCTOR_REF,DISCOUNT,TOTAL_PROFIT,TOTAL_AMOUNT,STATUS_CODE,ADDRESS,PAYMENT_AMOUNT) 
-                         VALUES (@TRN_NO, @PATIENT_NAME, @DATE, @GENDER, @CON_NUMBER, @DOCTOR_REF,@DISCOUNT,@TOTAL_PROFIT,@TOTAL_AMOUNT,@STATUS_CODE,@ADDRESS,@PAYMENT_AMOUNT); 
+                string query = @"INSERT INTO MST_PATIENT (TRN_NO, PATIENT_NAME,DATE, GENDER, CON_NUMBER, DOCTOR_REF,DISCOUNT,TOTAL_PROFIT,TOTAL_AMOUNT,STATUS_CODE,ADDRESS,PAYMENT_AMOUNT,PAYMENT_METHOD,COLLECTION_TYPE) 
+                         VALUES (@TRN_NO, @PATIENT_NAME, @DATE, @GENDER, @CON_NUMBER, @DOCTOR_REF,@DISCOUNT,@TOTAL_PROFIT,@TOTAL_AMOUNT,@STATUS_CODE,@ADDRESS,@PAYMENT_AMOUNT,@PAYMENT_METHOD,@COLLECTION_TYPE); 
                          SELECT @TRN_NO;"; 
 
                 using (SqlConnection con = new SqlConnection(connectionString))

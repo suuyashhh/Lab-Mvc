@@ -581,7 +581,7 @@
                 <div class="add-test-section">
                     <div class="test-inputs" style="justify-content:end">
                         <button class="add-btn" id="save">Save</button>
-                        <a class="add-btn" style="background:red!important" href="/CasePaper/index" data-ajax-update="#mainContent" data-ajax-mode="replace" data-ajax-method="GET" data-ajax="true">Cancle</a>
+                        <a class="add-btn" style="background:red!important;text-align:center" href="/CasePaper/index" data-ajax-update="#mainContent" data-ajax-mode="replace" data-ajax-method="GET" data-ajax="true">Cancle</a>
                     </div>
                 </div>
             </div>
@@ -652,6 +652,9 @@
                     CollectionType = 0;
                 }
 
+                var CollectionType = $('#CollectionType').is(":checked") ? 1 : 0;
+                var PaymentMethod = $('input[name="PaymentMethod"]:checked').val();
+
                 var _ObjCsPaper = {
                     PatientName: $("#PName").val(),
                     Date: $("#Date").val(),
@@ -665,8 +668,8 @@
                     Discount: $("#Discount").val(),
                     TotalAmount: $("#TotalAmount").val(),
                     PaymentAmount: $("#PaymentAmount").val(),
-                    CollectionType: $("#CollectionType").val(),
-                    PaymentMethod: $("#PaymentMethod").val(),
+                    CollectionType: CollectionType,
+                    PaymentMethod: PaymentMethod,
                     MatIs: MatIs,
                 };
 
@@ -853,44 +856,6 @@
 
         attachEditableListeners();
     });
-
-
-    //$('#tblMaterials').on('input', '.qty-field, .rate-field', function () {
-    //    calculateAmt(this);
-    //});
-
-    //function removeRow(button) {
-    //    $(button).closest('tr').remove();
-    //    regen_srno();
-    //    calculateSum();
-    //}
-
-    //function calculateSum() {
-    //    var sum = 0;
-
-    //    $('#tblMaterials').find("[id*=Amount]").each(function () {
-    //        sum += parseFloat($(this).val()) || 0;
-    //    });
-    //    $('#transaction').val(sum.toFixed(2));
-    //    assignBasicAmount();
-    //}
-
-    //function calculateAmt(obj) {
-    //    var $row = $(obj).closest('tr');
-    //    var NQty = parseFloat($row.find("[id^=Qty]").val()) || 0;
-    //    var NRate = parseFloat($row.find("[id^=Rate]").val()) || 0;
-
-    //    var Total = NQty * NRate;
-
-    //    $row.find("[id^=Amount]").val(Total.toFixed(2));
-
-    //    calculateSum();
-    //}
-
-    //function assignBasicAmount() {
-    //    $('#TaxAmount1').val($('#transaction').val());
-    //    calculate();
-    //}
 
 
     $(function () {

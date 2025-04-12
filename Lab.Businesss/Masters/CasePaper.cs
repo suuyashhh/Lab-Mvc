@@ -219,7 +219,9 @@ namespace Lab.Businesss.Masters
                     TOTAL_AMOUNT = _ObjCsPaper.TotalAmount,
                     STATUS_CODE= _ObjCsPaper.StatusCode,
                     ADDRESS = _ObjCsPaper.Address,
-                    PAYMENT_AMOUNT = _ObjCsPaper.PaymentAmount
+                    PAYMENT_AMOUNT = _ObjCsPaper.PaymentAmount,
+                    PAYMENT_METHOD = _ObjCsPaper.PaymentMethod,
+                    COLLECTION_TYPE = _ObjCsPaper.CollectionType,
 
                 };
 
