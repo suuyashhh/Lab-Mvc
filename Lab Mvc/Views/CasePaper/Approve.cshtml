@@ -6,6 +6,7 @@
 }
 
 @{
+    List<Doctor> lstdoctor = ViewData["doctor"] as List<Doctor>;
     int row_num = 1;
 }
 
@@ -20,6 +21,14 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/smartadmin-ajax/4.5.1/js/notification/SmartNotification.min.js"></script>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+
+
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css" />
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+
 
 <style>
     * {
@@ -354,6 +363,47 @@
         padding: 8px;
     }*/
 
+    /* Fix for dropdown display issue */
+    .select2-container--default .select2-selection--single {
+        height: 44px !important;
+        border: 1px solid #000 !important;
+        border-radius: 8px !important;
+        padding: 10px;
+        font-size: 16px;
+        outline: none;
+        display: flex;
+        align-items: center;
+    }
+
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            line-height: normal !important;
+            padding-left: 10px;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            height: 44px !important;
+        }
+
+    /* Ensure dropdown appears properly */
+    .select2-container {
+        width: 100% !important;
+    }
+
+    #Date {
+        background: white url('https://cdn-icons-png.flaticon.com/512/747/747310.png') no-repeat right 10px center;
+        background-size: 18px 18px;
+        cursor: pointer;
+    }
+
+        #Date:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 3px #007bff;
+        }
+
+    .ui-datepicker {
+        font-size: 14px;
+    }
 </style>
 
 <div class="body">
@@ -371,20 +421,38 @@
 
     <div class="container">
         <form method="POST" id="CasePaper-form">
+
+            <div class="row">
+                <div class="col form-group">
+                    <div class="checkbox-group">
+                        <input type="checkbox" name="CollectionType" id="CollectionType" @(Model.CollectionType == 1 ? "checked" : "")>
+                        <label for="CollectionType">Home Collection</label>
+                    </div>
+                </div>
+                <div class="col form-group">
+                    <div class="d-flex justify-content-end mb-3">
+                        <div class="form-group text-end">
+                            <label for="Date">Date</label>
+                            <input type="text" id="Date" name="Date" class="input-field form-control" placeholder="dd/mm/yyyy" readonly="readonly" value="@Model.Date" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="form-group">
                 <label>Petient Name</label>
                 <input type="text" id="PName" name="PatientName" value="@Model.PatientName" class="input-field">
             </div>
 
-            <div class="form-group">
-                <label>Date</label>
-                <input type="date" id="Date" name="Date" value="@Model.Date" class="input-field">
-            </div>
-
             <div class="row">
                 <div class="col form-group">
-                    <label>Gender</label>
-                    <input type="text" id="Gender" name="Gender" value="@Model.Gender" class="input-field">
+                    <label for="Gender">Gender</label>
+                    <select id="Gender" name="Gender" class="input-field form-control">
+                        <option value="" disabled selected>Select Gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Transgender">Transgender</option>
+                    </select>
                 </div>
                 <div class="col form-group">
                     <label>Phone Number</label>
@@ -394,12 +462,18 @@
 
             <div class="form-group">
                 <label>Address (Optional)</label>
-                <textarea type="text" rows="3" class="input-field"></textarea>
+                <textarea type="text" id="Address" name="Address" rows="3" class="input-field">@Model.Address</textarea>
             </div>
 
             <div class="form-group">
                 <label>Doctor Reference</label>
-                <input type="text" id="Doctor" name="DoctorRef" value="@Model.DoctorRef" class="input-field">
+                <select name="DoctorCode" id="Doctor" class="input-field">
+                    <option value="">Select Doctor</option>
+                    @foreach (Doctor doc in lstdoctor)
+                    {
+                        <option value="@doc.DoctorCode"> @doc.DoctorName</option>
+                    }
+                </select>
             </div>
 
             <div class="tests-section">
@@ -477,25 +551,9 @@
                         <label>Dis Amount</label>
                         <input type="text" id="DisAmount" name="DisAmount" class="input-field">
                     </div>
-                    @*<div class="flex-item">
-                            <label>Total Amount</label>
-                            <input type="text" id="TotalAmount" name="TotalAmount" class="input-field" readonly>
-                        </div>*@
                 </div>
-
-
-                @*<div class="second-row">
-                        <label>Total Lab Profit</label>
-                        <input type="text" id="TotalProfit" name="TotalProfit" class="input-field" readonly>
-                    </div>*@
             </div>
 
-
-            <h2 class="section-title">Collection</h2>
-            <div class="checkbox-group">
-                <input type="checkbox" id="counter-sales">
-                <label for="counter-sales">Home Collection</label>
-            </div>
 
             <hr style="border: 2px solid Black; margin: 50px 0;">
 
@@ -521,11 +579,11 @@
 
                 <div class="col">
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="Gender" id="male" value="1">
+                        <input class="form-check-input" type="radio" name="PaymentMethod" id="male" value="1" @(Model.PaymentMethod == 1 ? "checked" : "")>
                         <label class="form-check-label" for="male">Cash</label>
                     </div>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="Gender" id="female" value="0" checked>
+                        <input class="form-check-input" type="radio" name="PaymentMethod" id="female" value="0" @(Model.PaymentMethod == 0 ? "checked" : "")>
                         <label class="form-check-label" for="female">Online</label>
                     </div>
                 </div>
@@ -534,15 +592,16 @@
             <div class="row">
                 <div class="col form-group">
                     <label>Payment Amount</label>
-                    <input type="text" id="PaymentAmount" name="PaymentAmount" style="width: 40%!important;" class="input-field">
+                    <input type="text" id="PaymentAmount" name="PaymentAmount" value="@Model.PaymentAmount" style="width: 40%!important;" class="input-field">
                 </div>
             </div>
+
 
             <div class="tests-section">
                 <div class="add-test-section">
                     <div class="test-inputs" style="justify-content:end">
-                        <button class="add-btn" id="save">Approve</button>
-                        <a class="add-btn" style="background:red!important" href="/CasePaper/ApprovalPending" data-ajax-update="#mainContent" data-ajax-mode="replace" data-ajax-method="GET" data-ajax="true">Cancle</a>
+                        <button class="add-btn" id="save">✅ Approve</button>
+                        <a class="add-btn" style="background:red!important;text-align:center" href="/CasePaper/ApprovalPending" data-ajax-update="#mainContent" data-ajax-mode="replace" data-ajax-method="GET" data-ajax="true">❌Cancle</a>
                     </div>
                 </div>
             </div>
@@ -551,15 +610,38 @@
 </div>
 <script type="text/javascript">
     $(document).ready(function () {
+         $('#Doctor').select2();
+        if (@Model.DoctorCode != 0) {
+        $('#Doctor').val('@Model.DoctorCode').trigger('change');
+        }
+        if ('@Model.Gender' !== '') {
+        $('#Gender').val('@Model.Gender');
+        }
+
         calculateSum();
         calculateDiscount();
         attachEditableListeners();
 
-        var TrnNo = $("#hfTrnNo").val();
-
         $('#Discount').on('input', function () {
             calculateDiscount();
         });
+
+        var TrnNo = $("#hfTrnNo").val();
+
+        $(function () {
+        $("#Date").datepicker({
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true,
+            showAnim: 'slideDown',
+            showButtonPanel: true,
+            prevText: '<i class="fa fa-chevron-left"></i>',
+            nextText: '<i class="fa fa-chevron-right"></i>'
+        });
+
+              $("#Date").datepicker("option", "@Model.Date");
+      });
+
 
         $('#save').click(function (e) {
             e.preventDefault();
@@ -594,18 +676,32 @@
                     j++;
                 });
 
+                if ($('#CollectionType').is(":checked")) {
+                    CollectionType = 1;
+                }
+                else {
+                    CollectionType = 0;
+                }
+
+                var CollectionType = $('#CollectionType').is(":checked") ? 1 : 0;
+                var PaymentMethod = $('input[name="PaymentMethod"]:checked').val();
+
                 var _ObjCsPaper = {
                     TrnNo: TrnNo,
                     PatientName: $("#PName").val(),
-                    DateOfBirth: $("#PBOD").val(),
+                    Date: $("#Date").val(),
                     Gender: $("#Gender").val(),
                     ConNumber: $("#PNumber").val(),
-                    DoctorRef: $("#Doctor").val(),
+                    Address: $("#Address").val(),
+                    DoctorCode: $("#Doctor").val(),
                     TotalPrice: $("#totalPrice").val(),
                     TotalLabPrice: $("#LabtotalPrice").val(),
                     TotalProfit: TotalProfit,
                     Discount: $("#Discount").val(),
                     TotalAmount: $("#TotalAmount").val(),
+                    PaymentAmount: $("#PaymentAmount").val(),
+                    CollectionType: CollectionType,
+                    PaymentMethod: PaymentMethod,
                     MatIs: MatIs,
                 };
 
@@ -708,8 +804,8 @@
         $("#tblMaterials").on("click", ".remove-row", function () {
             $(this).closest("tr").remove();
             regen_srno();
-            calculateDiscount();
             calculateSum();
+            calculateDiscount();
         });
 
         function regen_srno() {
@@ -791,44 +887,6 @@
     });
 
 
-    //$('#tblMaterials').on('input', '.qty-field, .rate-field', function () {
-    //    calculateAmt(this);
-    //});
-
-    //function removeRow(button) {
-    //    $(button).closest('tr').remove();
-    //    regen_srno();
-    //    calculateSum();
-    //}
-
-    //function calculateSum() {
-    //    var sum = 0;
-
-    //    $('#tblMaterials').find("[id*=Amount]").each(function () {
-    //        sum += parseFloat($(this).val()) || 0;
-    //    });
-    //    $('#transaction').val(sum.toFixed(2));
-    //    assignBasicAmount();
-    //}
-
-    //function calculateAmt(obj) {
-    //    var $row = $(obj).closest('tr');
-    //    var NQty = parseFloat($row.find("[id^=Qty]").val()) || 0;
-    //    var NRate = parseFloat($row.find("[id^=Rate]").val()) || 0;
-
-    //    var Total = NQty * NRate;
-
-    //    $row.find("[id^=Amount]").val(Total.toFixed(2));
-
-    //    calculateSum();
-    //}
-
-    //function assignBasicAmount() {
-    //    $('#TaxAmount1').val($('#transaction').val());
-    //    calculate();
-    //}
-
-
     $(function () {
         $('[id*=TestName]').keyup(function () {
             if ($("#TestName").val().trim().length >= 1) {
@@ -881,5 +939,7 @@
         };
     });
 </script>
+
+
 
 
