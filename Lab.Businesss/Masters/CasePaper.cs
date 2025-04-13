@@ -107,6 +107,9 @@ namespace Lab.Businesss.Masters
                         DoctorRef = dtoCasePaper.DOCTOR_REF,
                         StatusCode = dtoCasePaper.STATUS_CODE,
                         Discount = dtoCasePaper.DISCOUNT,
+                        PaymentMethod = dtoCasePaper.PAYMENT_METHOD,
+                        PaymentAmount = dtoCasePaper.PAYMENT_AMOUNT,
+                        CollectionType = dtoCasePaper.COLLECTION_TYPE,
                         MatIs = TestTable.GetITableList(dtoCasePaper.TRN_NO)
 
                     };
