@@ -464,7 +464,7 @@
 
             <div class="form-group">
                 <label>Doctor Reference</label>
-                <select name="DoctorRef" id="Doctor" class="input-field">
+                <select name="DoctorCode" id="Doctor" class="input-field">
                     <option value="">Select Doctor</option>
                     @foreach (Doctor doc in lstdoctor)
                     {
@@ -580,8 +580,8 @@
             <div class="tests-section">
                 <div class="add-test-section">
                     <div class="test-inputs" style="justify-content:end">
-                        <button class="add-btn" id="save">Save</button>
-                        <a class="add-btn" style="background:red!important;text-align:center" href="/CasePaper/index" data-ajax-update="#mainContent" data-ajax-mode="replace" data-ajax-method="GET" data-ajax="true">Cancle</a>
+                        <button class="add-btn" id="save">💾Save</button>
+                        <a class="add-btn" style="background:red!important;text-align:center" href="/CasePaper/index" data-ajax-update="#mainContent" data-ajax-mode="replace" data-ajax-method="GET" data-ajax="true">❌Cancle</a>
                     </div>
                 </div>
             </div>
@@ -603,7 +603,7 @@
             nextText: '<i class="fa fa-chevron-right"></i>'
         });
 
-            $("#Date").datepicker("option", "maxDate", "@curr_date");
+            $("#Date").datepicker("option", "@curr_date");
     });
 
         calculateDiscount();
@@ -661,7 +661,7 @@
                     Gender: $("#Gender").val(),
                     ConNumber: $("#PNumber").val(),
                     Address: $("#Address").val(),
-                    DoctorRef: $("#Doctor").val(),
+                    DoctorCode: $("#Doctor").val(),
                     TotalPrice: $("#totalPrice").val(),
                     TotalLabPrice: $("#LabtotalPrice").val(),
                     TotalProfit: TotalProfit,

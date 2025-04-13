@@ -258,13 +258,13 @@
 <div class="pm_container">
     <div class="pm_header">
         <div class="pm_new-button-container">
-            <a href="@Url.Action("Create","CasePaper")" id="pm_newBtn">New</a>
+            <a href="@Url.Action("Create","CasePaper")" id="pm_newBtn">🆕New</a>
         </div>
 
         <div class="pm_date-container">
             <input type="date" id="pm_fromDate" value="@grid_settings.TranFromDate"  placeholder="From Date">
             <input type="date" id="pm_toDate" value="@grid_settings.TranToDate"  placeholder="To Date">
-            <button id="pm_searchBtn">Search</button>
+            <button id="pm_searchBtn">🔍 Search</button>
         </div>
         <div class="pm_search-container">
             <input type="text" id="pm_searchInput" value="@ViewBag.CurrentFilter" name="searchString" placeholder="Search patients...">
@@ -304,16 +304,16 @@
                                 <div class="pm_action-buttons">
                                     @if (item.StatusCode == 0)
                                     {
-                                        <a class="pm_edit-btn" data-id="1" title="Edit" href="/CasePaper/Edit?TrnNo=@item.TrnNo">Edit</a>
-                                        <a class="pm_delete-btn" data-id="1" title="Delete" href="/CasePaper/delete?TrnNo=@item.TrnNo">Delete</a>
+                                        <a class="pm_edit-btn" data-id="1" title="Edit" href="/CasePaper/Edit?TrnNo=@item.TrnNo">✏️Edit</a>
+                                        <a class="pm_delete-btn" data-id="1" title="Delete" href="/CasePaper/delete?TrnNo=@item.TrnNo">🗑️Delete</a>
                                     }
                                     @if (item.InvoiceNo == null)
                                     {
-                                        <a class="pm_invoiceVal-btn" data-id="1" title="Invoice" href="/CasePaper/InvoiceSave?TrnNo=@item.TrnNo">Invoice</a>
+                                        <a class="pm_invoiceVal-btn" data-id="1" title="Invoice" href="/CasePaper/InvoiceSave?TrnNo=@item.TrnNo">🧾Invoice</a>
                                     }
                                     else
                                     {
-                                        <a class="pm_invoice-btn" data-id="1" title="Invoice" href="/CasePaper/invoice?TrnNo=@item.TrnNo">Invoice</a>
+                                <a class="pm_invoice-btn" data-id="1" title="Invoice" href="/CasePaper/invoice?TrnNo=@item.TrnNo">🧾Invoice</a>
                                     }
 
 

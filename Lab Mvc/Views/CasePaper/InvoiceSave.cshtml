@@ -36,7 +36,7 @@
                 <div class="col-12 col-md-6">
                     <h6>Bill To:</h6>
                     <p class="mb-1">MR. @Model.PatientName</p>
-                    <p class="mb-1">DR. @Model.DoctorRef</p>
+                    <p class="mb-1">DR REF:. @Model.DoctorCode</p>
                     <p class="mb-0">Goa, India</p>
                 </div>
                 <div class="col-12 col-md-6 text-md-end mt-3 mt-md-0">
@@ -99,6 +99,7 @@
                 <button class="btn btn-success px-4" id="save">
                     🖨 Save
                 </button>
+                <a class="btn btn-success px-4" style="background:red!important;text-align:center" href="/CasePaper/index" data-ajax-update="#mainContent" data-ajax-mode="replace" data-ajax-method="GET" data-ajax="true">❌Cancle</a>           
             </div>
 
         </div>
