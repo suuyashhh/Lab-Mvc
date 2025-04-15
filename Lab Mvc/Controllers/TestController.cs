@@ -8,6 +8,7 @@ using System.Web.Mvc;
 
 namespace Lab_Mvc.Controllers
 {
+    [CustomAuthorize]
     public class TestController : Controller
     {
         // GET: Test
