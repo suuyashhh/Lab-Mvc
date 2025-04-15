@@ -12,6 +12,7 @@ using Lab_Mvc.Models;
 
 namespace Lab_Mvc.Controllers
 {
+    [CustomAuthorize]
     public class CasePaperController : Controller
     {
         // GET: CasePaper
@@ -185,6 +186,7 @@ namespace Lab_Mvc.Controllers
 
             try
             {
+                //_ObjCsPaper.Address = Session["UserName"].ToString();
                 Int64 trn_no = await CasePaper.Edit(_ObjCsPaper);
                 if (trn_no != 0)
                 {
@@ -383,6 +385,26 @@ namespace Lab_Mvc.Controllers
 
             return Json(testList, JsonRequestBehavior.AllowGet);
         }
-               
+
+        public ActionResult Logout()
+        {
+            // Abandon session
+            Session.Clear();
+            Session.Abandon();
+
+            // Clear cookie
+            if (Request.Cookies["UserAuth"] != null)
+            {
+                var cookie = new HttpCookie("UserAuth")
+                {
+                    Expires = DateTime.Now.AddDays(-1),
+                    Value = ""
+                };
+                Response.Cookies.Add(cookie);
+            }
+
+            return Redirect("~/Login.aspx?loggedout=true");
+
+        }
     }
 }
