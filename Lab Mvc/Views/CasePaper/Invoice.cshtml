@@ -33,8 +33,8 @@
             <div class="row mb-4">
                 <div class="col-12 col-md-6">
                     <h6>Bill To:</h6>
-                    <p class="mb-1">MR. @Model.PatientName</p>
-                    <p class="mb-1">DR. @Model.DoctorRef</p>
+                    <p class="mb-1">MR:. @Model.PatientName</p>
+                    <p class="mb-1">DR REF:. @Model.DoctorCode</p>
                     <p class="mb-0">Goa, India</p>
                 </div>
                 <div class="col-12 col-md-6 text-md-end mt-3 mt-md-0">
@@ -57,7 +57,7 @@
                         {
                             <tr id="row(@row_num)">
                                 <td>@row_num</td>
-                                <td id='TestCode(@row_num)' >@mati.TestName</td>
+                                <td id='TestCode(@row_num)'>@mati.TestName</td>
                                 <td class="text-end" id='Price(@row_num)'>@mati.Price</td>
                             </tr>
                             row_num++;
@@ -93,6 +93,9 @@
                 </button>
             </div>
 
+            <div class="text-end mt-4 no-print">             
+                <a class="btn btn-success px-4" style="background:red!important;text-align:center" href="/CasePaper/index" data-ajax-update="#mainContent" data-ajax-mode="replace" data-ajax-method="GET" data-ajax="true">❌Cancle</a>
+            </div>
 
         </div>
     </div>

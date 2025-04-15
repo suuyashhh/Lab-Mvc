@@ -7,6 +7,7 @@
 
 
 @{
+    List<Doctor> lstdoctor = ViewData["doctor"] as List<Doctor>;
     int row_num = 1;
 }
 
@@ -21,6 +22,14 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/smartadmin-ajax/4.5.1/js/notification/SmartNotification.min.js"></script>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+
+
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css" />
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+
 
 <style>
     * {
@@ -355,6 +364,47 @@
         padding: 8px;
     }*/
 
+    /* Fix for dropdown display issue */
+    .select2-container--default .select2-selection--single {
+        height: 44px !important;
+        border: 1px solid #000 !important;
+        border-radius: 8px !important;
+        padding: 10px;
+        font-size: 16px;
+        outline: none;
+        display: flex;
+        align-items: center;
+    }
+
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            line-height: normal !important;
+            padding-left: 10px;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            height: 44px !important;
+        }
+
+    /* Ensure dropdown appears properly */
+    .select2-container {
+        width: 100% !important;
+    }
+
+    #Date {
+        background: white url('https://cdn-icons-png.flaticon.com/512/747/747310.png') no-repeat right 10px center;
+        background-size: 18px 18px;
+        cursor: pointer;
+    }
+
+        #Date:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 3px #007bff;
+        }
+
+    .ui-datepicker {
+        font-size: 14px;
+    }
 </style>
 
 <div class="body">
@@ -372,20 +422,38 @@
 
     <div class="container">
         <form method="POST" id="CasePaper-form">
+
+            <div class="row">
+                <div class="col form-group">
+                    <div class="checkbox-group">
+                        <input type="checkbox" name="CollectionType" id="CollectionType" @(Model.CollectionType == 1 ? "checked" : "") disabled="disabled">
+                        <label for="CollectionType">Home Collection</label>
+                    </div>
+                </div>
+                <div class="col form-group">
+                    <div class="d-flex justify-content-end mb-3">
+                        <div class="form-group text-end">
+                            <label for="Date">Date</label>
+                            <input type="text" id="Date" name="Date" class="input-field form-control" placeholder="dd/mm/yyyy" readonly="readonly" value="@Model.Date" disabled="disabled" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="form-group">
                 <label>Petient Name</label>
                 <input type="text" id="PName" name="PatientName" value="@Model.PatientName" class="input-field" disabled="disabled">
             </div>
 
-            <div class="form-group">
-                <label>Date</label>
-                <input type="date" id="Date" name="Date" value="@Model.Date" class="input-field" disabled="disabled">
-            </div>
-
             <div class="row">
                 <div class="col form-group">
-                    <label>Gender</label>
-                    <input type="text" id="Gender" name="Gender" value="@Model.Gender" class="input-field" disabled="disabled">
+                    <label for="Gender">Gender</label>
+                    <select id="Gender" name="Gender" class="input-field form-control" disabled="disabled">
+                        <option value="" disabled selected>Select Gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Transgender">Transgender</option>
+                    </select>
                 </div>
                 <div class="col form-group">
                     <label>Phone Number</label>
@@ -395,12 +463,18 @@
 
             <div class="form-group">
                 <label>Address (Optional)</label>
-                <textarea type="text" rows="3" class="input-field" disabled="disabled"></textarea>
+                <textarea type="text" id="Address" name="Address" rows="3" class="input-field" disabled="disabled">@Model.Address</textarea>
             </div>
 
             <div class="form-group">
                 <label>Doctor Reference</label>
-                <input type="text" id="Doctor" name="DoctorRef" value="@Model.DoctorRef" class="input-field">
+                <select name="DoctorCode" id="Doctor" class="input-field" disabled="disabled">
+                    <option value="">Select Doctor</option>
+                    @foreach (Doctor doc in lstdoctor)
+                    {
+                        <option value="@doc.DoctorCode"> @doc.DoctorName</option>
+                    }
+                </select>
             </div>
 
             <div class="tests-section">
@@ -409,7 +483,7 @@
                 <!-- Table -->
 
                 <div class="table-responsive">
-                    <table class="blood-tests-table" id="tblMaterials" disabled="disabled">
+                    <table class="blood-tests-table" id="tblMaterials">
                         <thead>
                             <tr>
                                 <th>Sr No</th>
@@ -426,15 +500,15 @@
                                     <td>@row_num</td>
                                     <td>
                                         @mati.TestName
-                                        <input type='hidden' id='TestCode(@row_num)' value="@mati.TestCode">
-                                        <input type='hidden' id='hfTestId(@row_num)' value="@mati.TestCode">
-                                        <input type='hidden' id='Price(@row_num)' value="@mati.Price">
-                                        <input type='hidden' id='hfLabPrice(@row_num)' value="@mati.LabPrice">
+                                        <input type='hidden' id='TestCode(@row_num)' value="@mati.TestCode" disabled="disabled">
+                                        <input type='hidden' id='hfTestId(@row_num)' value="@mati.TestCode" disabled="disabled">
+                                        <input type='hidden' id='Price(@row_num)' value="@mati.Price" disabled="disabled">
+                                        <input type='hidden' id='hfLabPrice(@row_num)' value="@mati.LabPrice" disabled="disabled">
                                     </td>
                                     <td id="Amount(@row_num)" data-editable="true">@mati.Price</td>
                                     <td id="LabAmount(@row_num)" data-editable="true">@mati.LabPrice</td>
                                     <td>
-                                        <a class="delete-btn remove-row" href="javascript:void(0);">Delete</a>
+                                        <a class="delete-btn remove-row" href="javascript:void(0);" disabled="disabled">Delete</a>
                                     </td>
                                 </tr>
                                 row_num++;
@@ -454,7 +528,7 @@
                 <!-- Add Test Section -->
                 <div class="add-test-section">
                     <div class="test-inputs">
-                        <input class="input-field select-test" id="TestName" name="TestName" placeholder="Test Name" type="text" autocomplete="off" disabled="disabled" />
+                        <input class="input-field select-test" id="TestName" name="TestName" placeholder="Test Name" type="text" autocomplete="off" />
                         <input type="hidden" id="hfTestId" />
                         <input type="hidden" id="hfPrice" />
                         <input type="hidden" id="hfLabPrice" />
@@ -478,25 +552,9 @@
                         <label>Dis Amount</label>
                         <input type="text" id="DisAmount" name="DisAmount" class="input-field" disabled="disabled">
                     </div>
-                    @*<div class="flex-item">
-                            <label>Total Amount</label>
-                            <input type="text" id="TotalAmount" name="TotalAmount" class="input-field" readonly>
-                        </div>*@
                 </div>
-
-
-                @*<div class="second-row">
-                        <label>Total Lab Profit</label>
-                        <input type="text" id="TotalProfit" name="TotalProfit" class="input-field" readonly>
-                    </div>*@
             </div>
 
-
-            <h2 class="section-title">Collection</h2>
-            <div class="checkbox-group">
-                <input type="checkbox" id="counter-sales" disabled="disabled">
-                <label for="counter-sales">Home Collection</label>
-            </div>
 
             <hr style="border: 2px solid Black; margin: 50px 0;">
 
@@ -522,12 +580,12 @@
 
                 <div class="col">
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="Gender" id="male" value="1" disabled="disabled">
+                        <input class="form-check-input" type="radio" name="PaymentMethod" id="male" value="1" @(Model.PaymentMethod == 1 ? "checked" : "") disabled="disabled">
                         <label class="form-check-label" for="male">Cash</label>
                     </div>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="Gender" id="female" value="0" checked disabled="disabled">
-                        <label class="form-check-label" for="female" disabled="disabled">Online</label>
+                        <input class="form-check-input" type="radio" name="PaymentMethod" id="female" value="0" @(Model.PaymentMethod == 0 ? "checked" : "") disabled="disabled">
+                        <label class="form-check-label" for="female">Online</label>
                     </div>
                 </div>
             </div>
@@ -535,13 +593,14 @@
             <div class="row">
                 <div class="col form-group">
                     <label>Payment Amount</label>
-                    <input type="text" id="PaymentAmount" name="PaymentAmount" style="width: 40%!important;" class="input-field" disabled="disabled">
+                    <input type="text" id="PaymentAmount" name="PaymentAmount" value="@Model.PaymentAmount" style="width: 40%!important;" class="input-field" disabled="disabled">
                 </div>
             </div>
+
             <div class="tests-section">
                 <div class="add-test-section">
-                    <div class="test-inputs" style="justify-content:end">                      
-                        <a class="add-btn" style="background:red!important" href="/CasePaper/index" data-ajax-update="#mainContent" data-ajax-mode="replace" data-ajax-method="GET" data-ajax="true">Cancle</a>
+                    <div class="test-inputs" style="justify-content:end">
+                        <a class="add-btn" style="background:red!important;text-align:center" href="/CasePaper/index" data-ajax-update="#mainContent" data-ajax-mode="replace" data-ajax-method="GET" data-ajax="true">❌Cancle</a>
                     </div>
                 </div>
             </div>
@@ -550,12 +609,135 @@
 </div>
 <script type="text/javascript">
     $(document).ready(function () {
+         $('#Doctor').select2();
+        if (@Model.DoctorCode != 0) {
+        $('#Doctor').val('@Model.DoctorCode').trigger('change');
+        }
+        if ('@Model.Gender' !== '') {
+        $('#Gender').val('@Model.Gender');
+        }
+
+        calculateSum();
         calculateDiscount();
-        var TrnNo = $("#hfTrnNo").val();
+        attachEditableListeners();
 
         $('#Discount').on('input', function () {
             calculateDiscount();
         });
+
+        var TrnNo = $("#hfTrnNo").val();
+
+        $(function () {
+        $("#Date").datepicker({
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true,
+            showAnim: 'slideDown',
+            showButtonPanel: true,
+            prevText: '<i class="fa fa-chevron-left"></i>',
+            nextText: '<i class="fa fa-chevron-right"></i>'
+        });
+
+              $("#Date").datepicker("option", "maxDate", "@Model.Date");
+      });
+
+
+        $('#save').click(function (e) {
+            e.preventDefault();
+            var form = $("#CasePaper-form");
+
+            if (form.valid()) {
+                if ($("#DeleteReason").val().trim() === "") {
+                    toastr.error("Please Enter Delete Reason..!", "DeleteReason", {
+                        timeOut: 3000,
+                        closeButton: false,
+                        progressBar: true,
+                        positionClass: "toast-top-right"
+                    });
+                    $('#Price').focus();
+                    return false;
+                }
+
+                if ($('#tblMaterials > tbody > tr').length == 0) {
+                    toastr.error("Please add at least one test.", "Test", {
+                        timeOut: 3000,
+                        closeButton: false,
+                        progressBar: true,
+                        positionClass: "toast-top-right"
+                    });
+                    $('#TestName').focus();
+                    return false;
+                }
+
+                debugger;
+                var MatIs = [];
+                var j = 0;
+                $('#tblMaterials > tbody > tr').each(function () {
+                    if ($('#tblMaterials > tbody > tr').length !== j) {
+                        var tstcode, price, lprice;
+                        tstcode = $(this).find("[id^=hfTestId]").val();
+                        price = $(this).find("td[id^=Amount]").text();
+                        lprice = $(this).find("td[id^=LabAmount]").text();
+
+                        if ((parseFloat(price)) > 0) {
+                            MatIs.push({ TestCode: tstcode, Price: price, LabPrice: lprice });
+                        }
+                    }
+                    j++;
+                });
+
+                if ($('#CollectionType').is(":checked")) {
+                    CollectionType = 1;
+                }
+                else {
+                    CollectionType = 0;
+                }
+
+                var CollectionType = $('#CollectionType').is(":checked") ? 1 : 0;
+                var PaymentMethod = $('input[name="PaymentMethod"]:checked').val();
+
+                var _ObjCsPaper = {
+                    TrnNo: TrnNo,
+                    DeleteReason: $("#DeleteReason").val()
+                };
+
+                $("#mainContent").html('<div>Loading...</div>');
+
+                $.ajax({
+                    url: '/CasePaper/Delete',
+                    type: "POST",
+                    contentType: "application/json",
+                    dataType: "json",
+                    data: JSON.stringify(_ObjCsPaper),
+                    success: function (response) {
+                        if (response.Status) {
+
+                            setTimeout(function () {
+                                window.location.href = "/CasePaper/Index";
+                            });
+
+                        } else {
+                            toastr.error("Error saving document!", "Error", {
+                                timeOut: 5000,
+                                closeButton: false,
+                                progressBar: true,
+                                positionClass: "toast-top-right"
+                            });
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error(xhr.responseText);
+                        toastr.error("An error occurred: " + xhr.responseText, "Error", {
+                            timeOut: 5000,
+                            closeButton: false,
+                            progressBar: true,
+                            positionClass: "toast-top-right"
+                        });
+                    }
+                });
+            }
+        });
+
 
         $("#btnAdd").click(function () {
             if ($("#hfTestId").val() == 0 || $("#TestName").val().trim() === "") {
@@ -618,8 +800,8 @@
         $("#tblMaterials").on("click", ".remove-row", function () {
             $(this).closest("tr").remove();
             regen_srno();
-            calculateDiscount();
             calculateSum();
+            calculateDiscount();
         });
 
         function regen_srno() {
@@ -700,6 +882,7 @@
         attachEditableListeners();
     });
 
+
     $(function () {
         $('[id*=TestName]').keyup(function () {
             if ($("#TestName").val().trim().length >= 1) {
@@ -752,3 +935,5 @@
         };
     });
 </script>
+
+

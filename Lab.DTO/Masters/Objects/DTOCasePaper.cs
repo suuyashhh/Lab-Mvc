@@ -13,7 +13,7 @@ namespace Lab.DTO.Masters.Objects
         public string GENDER { get; set; }
         public string CON_NUMBER { get; set; }
         public string ADDRESS { get; set; }
-        public string DOCTOR_REF { get; set; }
+        public int DOCTOR_CODE { get; set; }
         public string DATE { get; set; }
         public int STATUS_CODE { get; set; }
         public string SHORT_TRN_NO { get; set; }
@@ -22,5 +22,8 @@ namespace Lab.DTO.Masters.Objects
         public decimal DISCOUNT { get; set; }
         public string DELETE_REASON { get; set; }
         public string INVOICE_NO { get; set; }
+        public decimal PAYMENT_AMOUNT { get; set; }
+        public int COLLECTION_TYPE { get; set; }
+        public int PAYMENT_METHOD { get; set; }
     }
 }

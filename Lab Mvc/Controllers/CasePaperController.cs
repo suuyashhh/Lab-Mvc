@@ -130,7 +130,7 @@ namespace Lab_Mvc.Controllers
         public ActionResult Create()
         {
             //ViewData["currentdate"] = DateUtility.GetCurrentDate();
-            ViewData["currentdate"] = DateTime.Now.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
+            ViewData["currentdate"] = DateUtility.GetCurrentDate();
             List<Doctor> _objDoctor = Doctor.GetDoctorList();
             ViewData["doctor"] = _objDoctor;
             return PartialView("Create", CasePaper.New());
@@ -172,7 +172,7 @@ namespace Lab_Mvc.Controllers
 
         public async Task<ActionResult> Edit(Int64 TrnNo)
         {            
-            List<CasePaper> _lstTD = await CasePaper.GetAllAsync();
+            
             List<Doctor> _objDoctor = Doctor.GetDoctorList();
             ViewData["doctor"] = _objDoctor;
             return PartialView(await CasePaper.GetExistingAsync(TrnNo));
@@ -214,8 +214,8 @@ namespace Lab_Mvc.Controllers
         
         public async Task<ActionResult> Delete(Int64 TrnNo)
         {
-            List<CasePaper> _lstTD = await CasePaper.GetAllAsync();
-
+            List<Doctor> _objDoctor = Doctor.GetDoctorList();
+            ViewData["doctor"] = _objDoctor;
             return PartialView(await CasePaper.GetExistingAsync(TrnNo));
         }
 
@@ -255,21 +255,21 @@ namespace Lab_Mvc.Controllers
 
         public async Task<ActionResult> Details(Int64 TrnNo)
         {
-            List<CasePaper> _lstTD = await CasePaper.GetAllAsync();
-
+            List<Doctor> _objDoctor = Doctor.GetDoctorList();
+            ViewData["doctor"] = _objDoctor;
             return PartialView(await CasePaper.GetExistingAsync(TrnNo));
         }
 
         public async Task<ActionResult> Invoice(Int64 TrnNo)
         {
-            List<CasePaper> _lstTD = await CasePaper.GetAllAsync();
+            
             List<Doctor> _objDoctor = Doctor.GetDoctorList();
             ViewData["doctor"] = _objDoctor;
             return PartialView(await CasePaper.GetExistingAsyncInvoice(TrnNo));
         }
         public async Task<ActionResult> InvoiceSave(Int64 TrnNo)
         {
-            List<CasePaper> _lstTD = await CasePaper.GetAllAsync();
+            
             List<Doctor> _objDoctor = Doctor.GetDoctorList();
             ViewData["doctor"] = _objDoctor;
             return PartialView(await CasePaper.GetExistingAsyncInvoice(TrnNo));
@@ -310,7 +310,7 @@ namespace Lab_Mvc.Controllers
         }
         public async Task<ActionResult> Approve(Int64 TrnNo)
         {
-            List<CasePaper> _lstTD = await CasePaper.GetAllAsync();
+            
             List<Doctor> _objDoctor = Doctor.GetDoctorList();
             ViewData["doctor"] = _objDoctor;
             return PartialView(await CasePaper.GetExistingAsync(TrnNo));

@@ -40,8 +40,8 @@ namespace Lab.DALDapper.Implimantation.Masters
                 Int64 patientId = 0; 
                 string connectionString = ConfigurationManager.ConnectionStrings["connstr"].ConnectionString;
 
-                string query = @"INSERT INTO MST_PATIENT (TRN_NO, PATIENT_NAME,DATE, GENDER, CON_NUMBER, DOCTOR_REF,DISCOUNT,TOTAL_PROFIT,TOTAL_AMOUNT,STATUS_CODE) 
-                         VALUES (@TRN_NO, @PATIENT_NAME, @DATE, @GENDER, @CON_NUMBER, @DOCTOR_REF,@DISCOUNT,@TOTAL_PROFIT,@TOTAL_AMOUNT,@STATUS_CODE); 
+                string query = @"INSERT INTO MST_PATIENT (TRN_NO, PATIENT_NAME,DATE, GENDER, CON_NUMBER, DOCTOR_CODE,DISCOUNT,TOTAL_PROFIT,TOTAL_AMOUNT,STATUS_CODE,ADDRESS,PAYMENT_AMOUNT,PAYMENT_METHOD,COLLECTION_TYPE) 
+                         VALUES (@TRN_NO, @PATIENT_NAME, @DATE, @GENDER, @CON_NUMBER, @DOCTOR_CODE,@DISCOUNT,@TOTAL_PROFIT,@TOTAL_AMOUNT,@STATUS_CODE,@ADDRESS,@PAYMENT_AMOUNT,@PAYMENT_METHOD,@COLLECTION_TYPE); 
                          SELECT @TRN_NO;"; 
 
                 using (SqlConnection con = new SqlConnection(connectionString))
@@ -70,11 +70,16 @@ namespace Lab.DALDapper.Implimantation.Masters
                 query += " PATIENT_NAME = '" + _objDtoCasePaper.PATIENT_NAME + "'";
                 query += " ,GENDER = '" + _objDtoCasePaper.GENDER + "'";
                 query += " ,CON_NUMBER = '" + _objDtoCasePaper.CON_NUMBER + "'";
-                query += " ,DOCTOR_REF = '" + _objDtoCasePaper.DOCTOR_REF + "'";
+                query += " ,DOCTOR_CODE = '" + _objDtoCasePaper.DOCTOR_CODE + "'";
                 query += " ,DISCOUNT = '" + _objDtoCasePaper.DISCOUNT + "'";
                 query += " ,TOTAL_PROFIT = '" + _objDtoCasePaper.TOTAL_PROFIT + "'";
                 query += " ,TOTAL_AMOUNT = '" + _objDtoCasePaper.TOTAL_AMOUNT + "'";
                 query += " ,STATUS_CODE = '" + _objDtoCasePaper.STATUS_CODE + "'";
+                query += " ,DATE = '" + _objDtoCasePaper.DATE + "'";
+                query += " ,ADDRESS = '" + _objDtoCasePaper.ADDRESS + "'";
+                query += " ,PAYMENT_AMOUNT = '" + _objDtoCasePaper.PAYMENT_AMOUNT + "'";
+                query += " ,PAYMENT_METHOD = '" + _objDtoCasePaper.PAYMENT_METHOD + "'";
+                query += " ,COLLECTION_TYPE = '" + _objDtoCasePaper.COLLECTION_TYPE + "'";
                 query += " WHERE TRN_NO = '" + _objDtoCasePaper.TRN_NO + "'";
 
                 using (SqlConnection con = new SqlConnection(connectionString))
@@ -183,11 +188,16 @@ namespace Lab.DALDapper.Implimantation.Masters
                 query += " PATIENT_NAME = '" + _objDtoCasePaper.PATIENT_NAME + "'";
                 query += " ,GENDER = '" + _objDtoCasePaper.GENDER + "'";
                 query += " ,CON_NUMBER = '" + _objDtoCasePaper.CON_NUMBER + "'";
-                query += " ,DOCTOR_REF = '" + _objDtoCasePaper.DOCTOR_REF + "'";
+                query += " ,DOCTOR_CODE = '" + _objDtoCasePaper.DOCTOR_CODE + "'";
                 query += " ,DISCOUNT = '" + _objDtoCasePaper.DISCOUNT + "'";
                 query += " ,TOTAL_PROFIT = '" + _objDtoCasePaper.TOTAL_PROFIT + "'";
                 query += " ,TOTAL_AMOUNT = '" + _objDtoCasePaper.TOTAL_AMOUNT + "'";
                 query += " ,STATUS_CODE = '" + _objDtoCasePaper.STATUS_CODE + "'";
+                query += " ,DATE = '" + _objDtoCasePaper.DATE + "'";
+                query += " ,ADDRESS = '" + _objDtoCasePaper.ADDRESS + "'";
+                query += " ,PAYMENT_AMOUNT = '" + _objDtoCasePaper.PAYMENT_AMOUNT + "'";
+                query += " ,PAYMENT_METHOD = '" + _objDtoCasePaper.PAYMENT_METHOD + "'";
+                query += " ,COLLECTION_TYPE = '" + _objDtoCasePaper.COLLECTION_TYPE + "'";
                 query += " WHERE TRN_NO = '" + _objDtoCasePaper.TRN_NO + "'";
 
                 using (SqlConnection con = new SqlConnection(connectionString))

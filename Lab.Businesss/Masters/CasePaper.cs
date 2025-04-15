@@ -21,7 +21,7 @@ namespace Lab.Businesss.Masters
         public string Gender { get; set; }
         public string ConNumber { get; set; }
         public string Address { get; set; }
-        public string DoctorRef { get; set; }
+        public int DoctorCode { get; set; }
         public string Date { get; set; }
         public int StatusCode { get; set; }
         public IList<TestTable> MatIs { get; set; }
@@ -31,7 +31,9 @@ namespace Lab.Businesss.Masters
         public decimal Discount { get; set; }
         public string DeleteReason { get; set; }
         public string InvoiceNo { get; set; }
-
+        public decimal PaymentAmount { get; set; }
+        public int CollectionType { get; set; }
+        public int PaymentMethod { get; set; }
         public static CasePaper New()
         {
             try
@@ -65,7 +67,7 @@ namespace Lab.Businesss.Masters
                                  Gender = cp.GENDER,
                                  ConNumber = cp.CON_NUMBER,
                                  Address = cp.ADDRESS,
-                                 DoctorRef = cp.DOCTOR_REF,
+                                 DoctorCode = cp.DOCTOR_CODE,
                                  Date = DateUtility.GetFormatedDate(cp.DATE, 0),
                                  StatusCode = cp.STATUS_CODE,
                                  Discount = cp.DISCOUNT,
@@ -102,9 +104,12 @@ namespace Lab.Businesss.Masters
                         Gender = dtoCasePaper.GENDER,
                         ConNumber = dtoCasePaper.CON_NUMBER,
                         Address = dtoCasePaper.ADDRESS,
-                        DoctorRef = dtoCasePaper.DOCTOR_REF,
+                        DoctorCode = dtoCasePaper.DOCTOR_CODE,
                         StatusCode = dtoCasePaper.STATUS_CODE,
                         Discount = dtoCasePaper.DISCOUNT,
+                        PaymentMethod = dtoCasePaper.PAYMENT_METHOD,
+                        PaymentAmount = dtoCasePaper.PAYMENT_AMOUNT,
+                        CollectionType = dtoCasePaper.COLLECTION_TYPE,
                         MatIs = TestTable.GetITableList(dtoCasePaper.TRN_NO)
 
                     };
@@ -139,7 +144,7 @@ namespace Lab.Businesss.Masters
                         Gender = dtoCasePaper.GENDER,
                         ConNumber = dtoCasePaper.CON_NUMBER,
                         Address = dtoCasePaper.ADDRESS,
-                        DoctorRef = dtoCasePaper.DOCTOR_REF,
+                        DoctorCode = dtoCasePaper.DOCTOR_CODE,
                         StatusCode = dtoCasePaper.STATUS_CODE,
                         Discount = dtoCasePaper.DISCOUNT,
                         InvoiceNo = invoiceNo,
@@ -179,7 +184,7 @@ namespace Lab.Businesss.Masters
                                 Gender = dtocasepaper.GENDER,
                                 ConNumber = dtocasepaper.CON_NUMBER,
                                 Address = dtocasepaper.ADDRESS,
-                                DoctorRef = dtocasepaper.DOCTOR_REF,
+                                DoctorCode = dtocasepaper.DOCTOR_CODE,
                                 Date = DateUtility.GetFormatedDate(dtocasepaper.DATE, 0),
                                 StatusCode = dtocasepaper.STATUS_CODE,
                                 Discount = dtocasepaper.DISCOUNT,
@@ -211,11 +216,15 @@ namespace Lab.Businesss.Masters
                     DATE = strTranDate,
                     GENDER = _ObjCsPaper.Gender,
                     CON_NUMBER = _ObjCsPaper.ConNumber,
-                    DOCTOR_REF = _ObjCsPaper.DoctorRef,
+                    DOCTOR_CODE = _ObjCsPaper.DoctorCode,
                     DISCOUNT = _ObjCsPaper.Discount,
                     TOTAL_PROFIT = _ObjCsPaper.TotalProfit,
                     TOTAL_AMOUNT = _ObjCsPaper.TotalAmount,
                     STATUS_CODE= _ObjCsPaper.StatusCode,
+                    ADDRESS = _ObjCsPaper.Address,
+                    PAYMENT_AMOUNT = _ObjCsPaper.PaymentAmount,
+                    PAYMENT_METHOD = _ObjCsPaper.PaymentMethod,
+                    COLLECTION_TYPE = _ObjCsPaper.CollectionType,
 
                 };
 
@@ -264,6 +273,7 @@ namespace Lab.Businesss.Masters
 
                 int intStatusCode = 0;
                 _ObjCsPaper.StatusCode = intStatusCode;
+                string strTranDate = DateUtility.GetFormatedDate(_ObjCsPaper.Date, 1);
 
                 DTOCasePaper _objDtoCasePaper = new DTOCasePaper()
                 {
@@ -271,11 +281,16 @@ namespace Lab.Businesss.Masters
                     PATIENT_NAME = _ObjCsPaper.PatientName,
                     GENDER = _ObjCsPaper.Gender,
                     CON_NUMBER = _ObjCsPaper.ConNumber,
-                    DOCTOR_REF = _ObjCsPaper.DoctorRef,
+                    DOCTOR_CODE = _ObjCsPaper.DoctorCode,
                     DISCOUNT = _ObjCsPaper.Discount,
                     TOTAL_PROFIT = _ObjCsPaper.TotalProfit,
                     TOTAL_AMOUNT = _ObjCsPaper.TotalAmount,
-                    STATUS_CODE = _ObjCsPaper.StatusCode,
+                    STATUS_CODE = _ObjCsPaper.StatusCode,                   
+                    DATE = strTranDate,                   
+                    ADDRESS = _ObjCsPaper.Address,
+                    PAYMENT_AMOUNT = _ObjCsPaper.PaymentAmount,
+                    PAYMENT_METHOD = _ObjCsPaper.PaymentMethod,
+                    COLLECTION_TYPE = _ObjCsPaper.CollectionType,
 
                 };
 
@@ -284,7 +299,6 @@ namespace Lab.Businesss.Masters
                 _dalTestTable = new DALTestTable();
                 _dalTestTable.DelPermenantData(_ObjCsPaper.TrnNo);
 
-                //IList<TestTable> counte = _ObjCsPaper.MatIs;
                 if (_ObjCsPaper.MatIs != null)
                 {
                     int intSrNo = 1;
@@ -372,6 +386,7 @@ namespace Lab.Businesss.Masters
 
                 int intStatusCode = 101;
                 _ObjCsPaper.StatusCode = intStatusCode;
+                string strTranDate = DateUtility.GetFormatedDate(_ObjCsPaper.Date, 1);
 
                 DTOCasePaper _objDtoCasePaper = new DTOCasePaper()
                 {
@@ -379,11 +394,16 @@ namespace Lab.Businesss.Masters
                     PATIENT_NAME = _ObjCsPaper.PatientName,
                     GENDER = _ObjCsPaper.Gender,
                     CON_NUMBER = _ObjCsPaper.ConNumber,
-                    DOCTOR_REF = _ObjCsPaper.DoctorRef,
+                    DOCTOR_CODE = _ObjCsPaper.DoctorCode,
                     DISCOUNT = _ObjCsPaper.Discount,
                     TOTAL_PROFIT = _ObjCsPaper.TotalProfit,
                     TOTAL_AMOUNT = _ObjCsPaper.TotalAmount,
                     STATUS_CODE = _ObjCsPaper.StatusCode,
+                    DATE = strTranDate,
+                    ADDRESS = _ObjCsPaper.Address,
+                    PAYMENT_AMOUNT = _ObjCsPaper.PaymentAmount,
+                    PAYMENT_METHOD = _ObjCsPaper.PaymentMethod,
+                    COLLECTION_TYPE = _ObjCsPaper.CollectionType,
 
                 };
 
@@ -392,7 +412,6 @@ namespace Lab.Businesss.Masters
                 _dalTestTable = new DALTestTable();
                 _dalTestTable.DelPermenantData(_ObjCsPaper.TrnNo);
 
-                //IList<TestTable> counte = _ObjCsPaper.MatIs;
                 if (_ObjCsPaper.MatIs != null)
                 {
                     int intSrNo = 1;
