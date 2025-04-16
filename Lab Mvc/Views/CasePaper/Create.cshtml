@@ -670,6 +670,7 @@
                     PaymentAmount: $("#PaymentAmount").val(),
                     CollectionType: CollectionType,
                     PaymentMethod: PaymentMethod,
+                    PaymentStatus: parseFloat($("#TotalAmount").val()) > parseFloat($("#PaymentAmount").val()) ? "PENDING" : "COMPLETED",
                     MatIs: MatIs,
                 };
 

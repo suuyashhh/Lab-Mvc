@@ -34,6 +34,9 @@ namespace Lab.Businesss.Masters
         public decimal PaymentAmount { get; set; }
         public int CollectionType { get; set; }
         public int PaymentMethod { get; set; }
+        public string PaymentStatus { get; set; }
+        public string CrtBy { get; set; }
+        public string ComId { get; set; }
         public static CasePaper New()
         {
             try
