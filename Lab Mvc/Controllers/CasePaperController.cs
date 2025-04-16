@@ -143,7 +143,9 @@ namespace Lab_Mvc.Controllers
             var result = new SaveViewModel() { Status = true };
 
             try
-            {             
+            {
+                _ObjCsPaper.CrtBy = Session["UserName"].ToString();
+                _ObjCsPaper.ComId = Session["ComId"].ToString();
                 Int64 trn_no = await CasePaper.Create(_ObjCsPaper);
                 if (trn_no != 0)
                 {
@@ -185,8 +187,7 @@ namespace Lab_Mvc.Controllers
             var result = new SaveViewModel() { Status = true };
 
             try
-            {
-                //_ObjCsPaper.Address = Session["UserName"].ToString();
+            {               
                 Int64 trn_no = await CasePaper.Edit(_ObjCsPaper);
                 if (trn_no != 0)
                 {

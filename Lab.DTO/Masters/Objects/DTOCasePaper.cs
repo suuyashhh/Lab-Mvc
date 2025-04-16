@@ -25,5 +25,8 @@ namespace Lab.DTO.Masters.Objects
         public decimal PAYMENT_AMOUNT { get; set; }
         public int COLLECTION_TYPE { get; set; }
         public int PAYMENT_METHOD { get; set; }
+        public string PAYMENT_STATUS { get; set; }
+        public string CRT_BY { get; set; }
+        public string COM_ID { get; set; }
     }
 }
