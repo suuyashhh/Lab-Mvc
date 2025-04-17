@@ -14,5 +14,6 @@ namespace Lab.DTO.Masters.Objects
         public int SR_NO { get; set; }
         public decimal PRICE { get; set; }
         public decimal LAB_PRICE { get; set; }
+        public string COM_ID { get; set; }
     }
 }

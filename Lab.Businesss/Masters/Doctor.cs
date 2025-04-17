@@ -4,6 +4,7 @@ using Lab.DTO.Masters.Objects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -17,6 +18,7 @@ namespace Lab.Businesss.Masters
         public string DoctorAddress { get; set; }
         public string DoctorNumber { get; set; }
         public string ShortTrnNo { get; set; }
+        public string ComId { get; set; }
 
         public static Doctor New()
         {
@@ -31,10 +33,10 @@ namespace Lab.Businesss.Masters
         }
 
 
-        public static List<Doctor> GetDoctorList()
+        public static List<Doctor> GetDoctorList(string comid)
         {
             _dalDoctor = new DALDoctor();
-            return FillList(_dalDoctor.GetDoctorList());
+            return FillList(_dalDoctor.GetDoctorList(comid));
         }
         private static List<Doctor> FillList(List<DTODoctor> lstdtoMstDoctor)
         {
@@ -67,12 +69,12 @@ namespace Lab.Businesss.Masters
             }
             return _Doctorlist;
         }
-        public static async Task<List<Doctor>> GetAllAsync()
+        public static async Task<List<Doctor>> GetAllAsync(string comid)
         {
             try
             {
                 _dalDoctor = new DALDoctor();
-                List<Doctor> lstDoctors = await Task.Run(() => { return fillDoctorsList(_dalDoctor.GetAll()); });
+                List<Doctor> lstDoctors = await Task.Run(() => { return fillDoctorsList(_dalDoctor.GetAll(comid)); });
                 return lstDoctors;
             }
             catch
@@ -101,8 +103,8 @@ namespace Lab.Businesss.Masters
                 Int64 result = 0;
                 _dalDoctor = new DALDoctor();
 
-                //string datePart = DateTime.Now.ToString("yyyyMMdd");
-                Int64 newTestId = await GenerateDoctorId();
+                string ComId = _ObjDoctor.ComId;
+                Int64 newTestId = await GenerateDoctorId(ComId);
 
                 DTODoctor _objDtoDoctor = new DTODoctor()
                 {
@@ -110,6 +112,7 @@ namespace Lab.Businesss.Masters
                     DOCTOR_NAME = _ObjDoctor.DoctorName,
                     DOCTOR_ADDRESS = _ObjDoctor.DoctorAddress,
                     DOCTOR_NUMBER = _ObjDoctor.DoctorNumber,
+                    COM_ID = _ObjDoctor.ComId,
                    
                 };
 
@@ -123,11 +126,11 @@ namespace Lab.Businesss.Masters
             }
         }
 
-        private static async Task<long> GenerateDoctorId()
+        private static async Task<long> GenerateDoctorId(string ComId)
         {
             _dalDoctor = new DALDoctor();
-            string fixedPart = "3";
-            string fixedPartSec = "06";
+            string fixedPart = "7";
+            string fixedPartSec = ComId;
 
             string lastId = await _dalDoctor.GetLastDoctorIdForFixedParts(fixedPart, fixedPartSec);
 

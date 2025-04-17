@@ -130,9 +130,10 @@ namespace Lab_Mvc.Controllers
 
         public ActionResult Create()
         {
+            var comid = Session["ComId"].ToString();
             //ViewData["currentdate"] = DateUtility.GetCurrentDate();
             ViewData["currentdate"] = DateUtility.GetCurrentDate();
-            List<Doctor> _objDoctor = Doctor.GetDoctorList();
+            List<Doctor> _objDoctor = Doctor.GetDoctorList(comid);
             ViewData["doctor"] = _objDoctor;
             return PartialView("Create", CasePaper.New());
         }
@@ -175,8 +176,8 @@ namespace Lab_Mvc.Controllers
 
         public async Task<ActionResult> Edit(Int64 TrnNo)
         {            
-            
-            List<Doctor> _objDoctor = Doctor.GetDoctorList();
+            var comid = Session["ComId"].ToString();
+            List<Doctor> _objDoctor = Doctor.GetDoctorList(comid);
             ViewData["doctor"] = _objDoctor;
             return PartialView(await CasePaper.GetExistingAsync(TrnNo));
         }
@@ -187,7 +188,8 @@ namespace Lab_Mvc.Controllers
             var result = new SaveViewModel() { Status = true };
 
             try
-            {               
+            {
+                _ObjCsPaper.ComId = Session["ComId"].ToString();
                 Int64 trn_no = await CasePaper.Edit(_ObjCsPaper);
                 if (trn_no != 0)
                 {
@@ -217,7 +219,8 @@ namespace Lab_Mvc.Controllers
         
         public async Task<ActionResult> Delete(Int64 TrnNo)
         {
-            List<Doctor> _objDoctor = Doctor.GetDoctorList();
+            var comid = Session["ComId"].ToString();
+            List<Doctor> _objDoctor = Doctor.GetDoctorList(comid);
             ViewData["doctor"] = _objDoctor;
             return PartialView(await CasePaper.GetExistingAsync(TrnNo));
         }
@@ -258,22 +261,25 @@ namespace Lab_Mvc.Controllers
 
         public async Task<ActionResult> Details(Int64 TrnNo)
         {
-            List<Doctor> _objDoctor = Doctor.GetDoctorList();
+            var comid = Session["ComId"].ToString();
+            List<Doctor> _objDoctor = Doctor.GetDoctorList(comid);
             ViewData["doctor"] = _objDoctor;
             return PartialView(await CasePaper.GetExistingAsync(TrnNo));
         }
 
         public async Task<ActionResult> Invoice(Int64 TrnNo)
         {
-            
-            List<Doctor> _objDoctor = Doctor.GetDoctorList();
+
+            var comid = Session["ComId"].ToString();
+            List<Doctor> _objDoctor = Doctor.GetDoctorList(comid);
             ViewData["doctor"] = _objDoctor;
             return PartialView(await CasePaper.GetExistingAsyncInvoice(TrnNo));
         }
         public async Task<ActionResult> InvoiceSave(Int64 TrnNo)
         {
-            
-            List<Doctor> _objDoctor = Doctor.GetDoctorList();
+
+            var comid = Session["ComId"].ToString();
+            List<Doctor> _objDoctor = Doctor.GetDoctorList(comid);
             ViewData["doctor"] = _objDoctor;
             return PartialView(await CasePaper.GetExistingAsyncInvoice(TrnNo));
         }
@@ -313,8 +319,9 @@ namespace Lab_Mvc.Controllers
         }
         public async Task<ActionResult> Approve(Int64 TrnNo)
         {
-            
-            List<Doctor> _objDoctor = Doctor.GetDoctorList();
+
+            var comid = Session["ComId"].ToString();
+            List<Doctor> _objDoctor = Doctor.GetDoctorList(comid);
             ViewData["doctor"] = _objDoctor;
             return PartialView(await CasePaper.GetExistingAsync(TrnNo));
         }
@@ -326,6 +333,7 @@ namespace Lab_Mvc.Controllers
 
             try
             {
+                _ObjCsPaper.ComId = Session["ComId"].ToString();
                 Int64 trn_no = await CasePaper.Approve(_ObjCsPaper);
                 if (trn_no != 0)
                 {
@@ -381,8 +389,8 @@ namespace Lab_Mvc.Controllers
             {
                 return Json(new List<Test>(), JsonRequestBehavior.AllowGet);
             }
-
-            List<Test> testList = await Test.GetTestsAsync(searchtext);
+            var comid = Session["ComId"].ToString();
+            List<Test> testList = await Test.GetTestsAsync(searchtext, comid);
 
             return Json(testList, JsonRequestBehavior.AllowGet);
         }
