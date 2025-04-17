@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Dapper;
+using System.Security.Cryptography;
 
 namespace Lab.DALDapper.Implimantation.Masters
 {
@@ -15,16 +16,16 @@ namespace Lab.DALDapper.Implimantation.Masters
     {
         private readonly string _connectionString = ConfigurationManager.ConnectionStrings["connstr"].ConnectionString;
 
-        public List<DTODoctor> GetAll()
+        public List<DTODoctor> GetAll(string comid)
         {
             string connectionString = ConfigurationManager.ConnectionStrings["connstr"].ConnectionString;
             try
             {
-                string query = "SELECT * FROM MST_DOCTOR";
+                string query = "SELECT * FROM MST_DOCTOR WHERE COM_ID = @comid";
                 using (SqlConnection con = new SqlConnection(connectionString))
                 {
                     con.Open();
-                    return con.Query<DTODoctor>(query).ToList();
+                    return con.Query<DTODoctor>(query, new { comid }).ToList();
                 }
             }
             catch (Exception ex)
@@ -36,8 +37,8 @@ namespace Lab.DALDapper.Implimantation.Masters
         {
             try
             {
-                string query = @"INSERT INTO MST_DOCTOR (DOCTOR_CODE,DOCTOR_NAME,DOCTOR_ADDRESS,DOCTOR_NUMBER)";
-                query = query + " VALUES(@DOCTOR_CODE,@DOCTOR_NAME,@DOCTOR_ADDRESS,@DOCTOR_NUMBER);SELECT @DOCTOR_CODE";
+                string query = @"INSERT INTO MST_DOCTOR (DOCTOR_CODE,DOCTOR_NAME,DOCTOR_ADDRESS,DOCTOR_NUMBER,COM_ID)";
+                query = query + " VALUES(@DOCTOR_CODE,@DOCTOR_NAME,@DOCTOR_ADDRESS,@DOCTOR_NUMBER,@COM_ID);SELECT @DOCTOR_CODE";
                 Int64 i;
                 using (SqlConnection con = new SqlConnection(_connectionString))
                 {
@@ -75,18 +76,19 @@ namespace Lab.DALDapper.Implimantation.Masters
             return lastTestId;
         }
 
-        public List<DTODoctor> GetDoctorList()
+        public List<DTODoctor> GetDoctorList(string comid)
         {
             try
             {
-                string query = @"SELECT * FROM MST_DOCTOR ORDER BY DOCTOR_CODE";
+                string query = @"SELECT * FROM MST_DOCTOR WHERE COM_ID = @comid ORDER BY DOCTOR_CODE";
 
                 List<DTODoctor> lst;
 
                 using (SqlConnection con = new SqlConnection(_connectionString))
                 {
                     con.Open();
-                    lst = con.Query<DTODoctor>(query).ToList();
+                    //lst = con.Query<DTODoctor>(query).ToList();
+                    lst = con.Query<DTODoctor>(query, new { ComId = comid }).ToList();
                 }
 
                 return lst;

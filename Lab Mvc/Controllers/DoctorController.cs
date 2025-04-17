@@ -9,11 +9,13 @@ using System.Web.Mvc;
 
 namespace Lab_Mvc.Controllers
 {
+    [CustomAuthorize]
     public class DoctorController : Controller
     {
         public async Task<ActionResult> Index(string sortdir, string sortOrder, string searchString, int? page)
         {
-            List<Doctor> _lstDoctors = await Doctor.GetAllAsync();
+            var comid = Session["ComId"].ToString();
+            List<Doctor> _lstDoctors = await Doctor.GetAllAsync(comid);
 
             string strSortDir = "";
             ViewBag.CurrentSort = sortOrder;
@@ -89,6 +91,7 @@ namespace Lab_Mvc.Controllers
 
             try
             {
+                _ObjDoctor.ComId = Session["ComId"].ToString();
                 Int64 Doctor_Code = await Doctor.Create(_ObjDoctor);
                 if (Doctor_Code != 0)
                 {

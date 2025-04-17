@@ -4,6 +4,7 @@ using Lab.DTO.Masters.Objects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -21,6 +22,7 @@ namespace Lab.Businesss.Masters
         public int StatusCode { get; set; }
         public string ShortTrnNo { get; set; }
         public string DeleteReason { get; set; }
+        public string ComId { get; set; }
 
 
         public static Test New()
@@ -62,12 +64,12 @@ namespace Lab.Businesss.Masters
                 throw new Exception("Request Failed");
             }
         }
-        public static async Task<List<Test>> GetAllAsync()
+        public static async Task<List<Test>> GetAllAsync(string comid)
         {
             try
             {
                 _dalTest = new DALTest();
-                List<Test> lstTests = await Task.Run(() => { return fillTestList(_dalTest.GetAll()); });
+                List<Test> lstTests = await Task.Run(() => { return fillTestList(_dalTest.GetAll(comid)); });
                 return lstTests;
             }
             catch
@@ -89,15 +91,16 @@ namespace Lab.Businesss.Masters
                                 LabPrice = dtotest.LAB_PRICE,
                                 SrNo = dtotest.SR_NO,
                                 StatusCode = dtotest.STATUS_CODE,
-                                ShortTrnNo = dtotest.TEST_CODE.ToString().Substring(2) + "-" + dtotest.TEST_CODE.ToString().Substring(dtotest.TEST_CODE.ToString().Length - 2)
-        };
+                                //ShortTrnNo = dtotest.TEST_CODE.ToString().Substring(2) + "-" + dtotest.TEST_CODE.ToString().Substring(dtotest.TEST_CODE.ToString().Length - 2)
+                                ShortTrnNo = dtotest.TEST_CODE.ToString().Substring(1)
+                            };
 
             return _Testlist.AsEnumerable<Test>().ToList();
         }
-        public static async Task<List<Test>> GetTestsAsync(string searchtext)
+        public static async Task<List<Test>> GetTestsAsync(string searchtext, string comid)
         {
             _dalTest = new DALTest();
-            var dtoTests = await _dalTest.GetTestsAsync(searchtext);
+            var dtoTests = await _dalTest.GetTestsAsync(searchtext, comid);
 
             
             return dtoTests.Select(t => new Test
@@ -115,8 +118,8 @@ namespace Lab.Businesss.Masters
             {
                 Int64 result = 0;
                 _dalTest = new DALTest();
-
-                Int64 newTestId = await GeneratTestId();
+                string ComId = _ObjTest.ComId;
+                Int64 newTestId = await GeneratTestId(ComId);
 
                 DTOTest _objDtoTest = new DTOTest()
                 {
@@ -124,7 +127,8 @@ namespace Lab.Businesss.Masters
                     TEST_NAME = _ObjTest.TestName,
                     PRICE = _ObjTest.Price,
                     LAB_PRICE    = _ObjTest.LabPrice,
-                    SR_NO = _ObjTest.SrNo
+                    SR_NO = _ObjTest.SrNo,
+                    COM_ID = _ObjTest.ComId
                 };
 
                 result = await Task.Run(() => { return _dalTest.Create(_objDtoTest); });
@@ -187,11 +191,11 @@ namespace Lab.Businesss.Masters
                 return 0;
             }
         }
-        private static async Task<long> GeneratTestId()
+        private static async Task<long> GeneratTestId(string ComId)
         {
             _dalTest = new DALTest();
             string fixedPart = "2";
-            string fixedPartSec = "06";
+            string fixedPartSec = ComId;
 
             string lastId = await _dalTest.GetLastTestIdForFixedParts(fixedPart, fixedPartSec);
 

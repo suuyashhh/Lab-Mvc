@@ -13,5 +13,6 @@ namespace Lab.DTO.Masters.Objects
         public string DOCTOR_ADDRESS{ get; set; }
         public string DOCTOR_NUMBER { get; set; }
         public string SHORT_TRN_NO { get; set; }
+        public string COM_ID { get; set; }
     }
 }

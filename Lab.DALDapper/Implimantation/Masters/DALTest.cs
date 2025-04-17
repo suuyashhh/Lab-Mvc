@@ -9,6 +9,7 @@ using System.Data.SqlClient;
 using System.Configuration;
 using Dapper;
 using System.Data;
+using System.Security.Cryptography;
 
 namespace Lab.DALDapper.Implimantation.Masters
 {
@@ -16,16 +17,16 @@ namespace Lab.DALDapper.Implimantation.Masters
     {
         private readonly string _connectionString = ConfigurationManager.ConnectionStrings["connstr"].ConnectionString;
 
-        public List<DTOTest> GetAll()
+        public List<DTOTest> GetAll(string comid)
         {
             string connectionString = ConfigurationManager.ConnectionStrings["connstr"].ConnectionString;
             try
             {
-                string query = "SELECT * FROM MST_TEST";
+                string query = "SELECT * FROM MST_TEST WHERE COM_ID = @comid";
                 using (SqlConnection con = new SqlConnection(connectionString))
                 {
                     con.Open();
-                    return con.Query<DTOTest>(query).ToList();
+                    return con.Query<DTOTest>(query, new { comid }).ToList();
                 }
             }
             catch (Exception ex)
@@ -33,16 +34,21 @@ namespace Lab.DALDapper.Implimantation.Masters
                 throw new Exception("Error retrieving MST_TEST data", ex);
             }
         }
-        public async Task<List<DTOTest>> GetTestsAsync(string searchtext)
+        public async Task<List<DTOTest>> GetTestsAsync(string searchtext, string comid)
         {
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
-                string query = @"SELECT TOP 10 TEST_CODE, TEST_NAME, PRICE, LAB_PRICE 
-                                 FROM MST_TEST 
-                                 WHERE TEST_NAME LIKE @SearchText + '%' 
-                                 ORDER BY TEST_NAME";
+                string query = @"SELECT TEST_CODE, TEST_NAME, PRICE, LAB_PRICE 
+                         FROM MST_TEST 
+                         WHERE TEST_NAME LIKE @SearchText + '%' 
+                         AND COM_ID = @CompanyId
+                         ORDER BY TEST_NAME";
 
-                var parameters = new { SearchText = searchtext };
+                var parameters = new
+                {
+                    SearchText = searchtext,
+                    CompanyId = comid
+                };
 
                 var tests = (await db.QueryAsync<DTOTest>(query, parameters)).ToList();
 
@@ -54,8 +60,8 @@ namespace Lab.DALDapper.Implimantation.Masters
         {
             try
             {
-                string query = @"INSERT INTO MST_TEST (TEST_CODE,TEST_NAME,PRICE,LAB_PRICE)";
-                query = query + " VALUES(@TEST_CODE,@TEST_NAME,@PRICE,@LAB_PRICE);SELECT @TEST_CODE";
+                string query = @"INSERT INTO MST_TEST (TEST_CODE,TEST_NAME,PRICE,LAB_PRICE,COM_ID)";
+                query = query + " VALUES(@TEST_CODE,@TEST_NAME,@PRICE,@LAB_PRICE,@COM_ID);SELECT @TEST_CODE";
                 Int64 i;
                 using (SqlConnection con = new SqlConnection(_connectionString))
                 {

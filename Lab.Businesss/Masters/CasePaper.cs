@@ -209,8 +209,9 @@ namespace Lab.Businesss.Masters
                 int intStatusCode = 0;
                 _ObjCsPaper.StatusCode = intStatusCode;
                 string strTranDate = DateUtility.GetFormatedDate(_ObjCsPaper.Date, 1);
+                string Comid = _ObjCsPaper.ComId;
                 string datePart = DateTime.Now.ToString("yyyyMMdd");
-                Int64 newPatientId = await GeneratePatientId(datePart);
+                Int64 newPatientId = await GeneratePatientId(datePart, Comid);
 
                 DTOCasePaper _objDtoCasePaper = new DTOCasePaper()
                 {
@@ -228,6 +229,9 @@ namespace Lab.Businesss.Masters
                     PAYMENT_AMOUNT = _ObjCsPaper.PaymentAmount,
                     PAYMENT_METHOD = _ObjCsPaper.PaymentMethod,
                     COLLECTION_TYPE = _ObjCsPaper.CollectionType,
+                    CRT_BY = _ObjCsPaper.CrtBy,
+                    PAYMENT_STATUS = _ObjCsPaper.PaymentStatus,
+                    COM_ID = _ObjCsPaper.ComId,
 
                 };
 
@@ -248,6 +252,7 @@ namespace Lab.Businesss.Masters
                             SR_NO = intSrNo,
                             PRICE = _objTestTable.Price,
                             LAB_PRICE = _objTestTable.LabPrice,
+                            COM_ID = _ObjCsPaper.ComId
 
                         };
                         intSrNo++;
@@ -294,6 +299,7 @@ namespace Lab.Businesss.Masters
                     PAYMENT_AMOUNT = _ObjCsPaper.PaymentAmount,
                     PAYMENT_METHOD = _ObjCsPaper.PaymentMethod,
                     COLLECTION_TYPE = _ObjCsPaper.CollectionType,
+                    PAYMENT_STATUS = _ObjCsPaper.PaymentStatus,
 
                 };
 
@@ -315,7 +321,7 @@ namespace Lab.Businesss.Masters
                             SR_NO = intSrNo,
                             PRICE = _objTestTable.Price,
                             LAB_PRICE = _objTestTable.LabPrice,
-
+                            COM_ID = _ObjCsPaper.ComId,
                         };
                         intSrNo++;
                         _dalTestTable.Create(_objTestTableDetails);
@@ -407,6 +413,7 @@ namespace Lab.Businesss.Masters
                     PAYMENT_AMOUNT = _ObjCsPaper.PaymentAmount,
                     PAYMENT_METHOD = _ObjCsPaper.PaymentMethod,
                     COLLECTION_TYPE = _ObjCsPaper.CollectionType,
+                    PAYMENT_STATUS = _ObjCsPaper.PaymentStatus,
 
                 };
 
@@ -428,7 +435,7 @@ namespace Lab.Businesss.Masters
                             SR_NO = intSrNo,
                             PRICE = _objTestTable.Price,
                             LAB_PRICE = _objTestTable.LabPrice,
-
+                            COM_ID = _ObjCsPaper.ComId,
                         };
                         intSrNo++;
                         _dalTestTable.Create(_objTestTableDetails);
@@ -486,13 +493,15 @@ namespace Lab.Businesss.Masters
                 throw new Exception("Request Failed");
             }
         }
-        private static async Task<long> GeneratePatientId(string datePart)
+        private static async Task<long> GeneratePatientId(string datePart,string Comid)
         {
             _dalCasePaper = new DALCasePaper();
                         
-            string fixedPart = "02";
-                       
-            string lastId = await _dalCasePaper.GetLastPatientIdForDate(datePart);
+            string fixedPart = Comid;
+
+            string dateComboKey = datePart + Comid;
+
+            string lastId = await _dalCasePaper.GetLastPatientIdForDate(dateComboKey);
 
             int nextNumber = 1;
             if (!string.IsNullOrEmpty(lastId) && lastId.StartsWith(datePart + fixedPart))
@@ -501,7 +510,7 @@ namespace Lab.Businesss.Masters
                 nextNumber = lastNumber + 1;
             }
                         
-            long newPatientId = long.Parse(datePart + fixedPart + nextNumber.ToString("D3"));
+            long newPatientId = long.Parse(dateComboKey + nextNumber.ToString("D3"));
 
             return newPatientId;
         }

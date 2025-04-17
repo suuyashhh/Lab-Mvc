@@ -14,7 +14,8 @@ namespace Lab_Mvc.Controllers
         // GET: Test
         public async Task<ActionResult> Index(string sortdir, string sortOrder, string searchString, int? page)
         {
-            List<Test> _lstTests = await Test.GetAllAsync();
+            var comid = Session["ComId"].ToString();
+            List<Test> _lstTests = await Test.GetAllAsync(comid);
 
             string strSortDir = "";
             ViewBag.CurrentSort = sortOrder;
@@ -90,6 +91,7 @@ namespace Lab_Mvc.Controllers
 
             try
             {
+                _ObjTest.ComId = Session["ComId"].ToString();
                 Int64 Test_Code = await Test.Create(_ObjTest);
                 if (Test_Code != 0)
                 {
@@ -121,7 +123,8 @@ namespace Lab_Mvc.Controllers
 
         public async Task<ActionResult> Edit(Int64 TestCode)
         {
-            List<Test> _lstTD = await Test.GetAllAsync();
+            var comid = Session["ComId"].ToString();
+            List<Test> _lstTD = await Test.GetAllAsync(comid);
 
             return PartialView(await Test.GetExistingAsync(TestCode));
         }
@@ -162,7 +165,8 @@ namespace Lab_Mvc.Controllers
 
         public async Task<ActionResult> Delete(Int64 TestCode)
         {
-            List<Test> _lstTD = await Test.GetAllAsync();
+            var comid = Session["ComId"].ToString();
+            List<Test> _lstTD = await Test.GetAllAsync(comid);
 
             return PartialView(await Test.GetExistingAsync(TestCode));
         }
