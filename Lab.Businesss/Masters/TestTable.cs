@@ -20,6 +20,7 @@ namespace Lab.Businesss.Masters
         public int SrNo { get; set; }
         public decimal Price { get; set; }
         public decimal LabPrice { get; set; }
+        public string ComId { get; set; }
 
         public static List<TestTable> GetITableList(Int64 Trnno)
         {

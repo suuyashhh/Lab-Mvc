@@ -40,8 +40,8 @@ namespace Lab.DALDapper.Implimantation.Masters
                 Int64 patientId = 0; 
                 string connectionString = ConfigurationManager.ConnectionStrings["connstr"].ConnectionString;
 
-                string query = @"INSERT INTO MST_PATIENT (TRN_NO, PATIENT_NAME,DATE, GENDER, CON_NUMBER, DOCTOR_CODE,DISCOUNT,TOTAL_PROFIT,TOTAL_AMOUNT,STATUS_CODE,ADDRESS,PAYMENT_AMOUNT,PAYMENT_METHOD,COLLECTION_TYPE) 
-                         VALUES (@TRN_NO, @PATIENT_NAME, @DATE, @GENDER, @CON_NUMBER, @DOCTOR_CODE,@DISCOUNT,@TOTAL_PROFIT,@TOTAL_AMOUNT,@STATUS_CODE,@ADDRESS,@PAYMENT_AMOUNT,@PAYMENT_METHOD,@COLLECTION_TYPE); 
+                string query = @"INSERT INTO MST_PATIENT (TRN_NO, PATIENT_NAME,DATE, GENDER, CON_NUMBER, DOCTOR_CODE,DISCOUNT,TOTAL_PROFIT,TOTAL_AMOUNT,STATUS_CODE,ADDRESS,PAYMENT_AMOUNT,PAYMENT_METHOD,COLLECTION_TYPE,CRT_BY,PAYMENT_STATUS,COM_ID) 
+                         VALUES (@TRN_NO, @PATIENT_NAME, @DATE, @GENDER, @CON_NUMBER, @DOCTOR_CODE,@DISCOUNT,@TOTAL_PROFIT,@TOTAL_AMOUNT,@STATUS_CODE,@ADDRESS,@PAYMENT_AMOUNT,@PAYMENT_METHOD,@COLLECTION_TYPE,@CRT_BY,@PAYMENT_STATUS,@COM_ID); 
                          SELECT @TRN_NO;"; 
 
                 using (SqlConnection con = new SqlConnection(connectionString))
@@ -80,6 +80,7 @@ namespace Lab.DALDapper.Implimantation.Masters
                 query += " ,PAYMENT_AMOUNT = '" + _objDtoCasePaper.PAYMENT_AMOUNT + "'";
                 query += " ,PAYMENT_METHOD = '" + _objDtoCasePaper.PAYMENT_METHOD + "'";
                 query += " ,COLLECTION_TYPE = '" + _objDtoCasePaper.COLLECTION_TYPE + "'";
+                query += " ,PAYMENT_STATUS = '" + _objDtoCasePaper.PAYMENT_STATUS + "'";
                 query += " WHERE TRN_NO = '" + _objDtoCasePaper.TRN_NO + "'";
 
                 using (SqlConnection con = new SqlConnection(connectionString))
@@ -198,6 +199,7 @@ namespace Lab.DALDapper.Implimantation.Masters
                 query += " ,PAYMENT_AMOUNT = '" + _objDtoCasePaper.PAYMENT_AMOUNT + "'";
                 query += " ,PAYMENT_METHOD = '" + _objDtoCasePaper.PAYMENT_METHOD + "'";
                 query += " ,COLLECTION_TYPE = '" + _objDtoCasePaper.COLLECTION_TYPE + "'";
+                query += " ,PAYMENT_STATUS = '" + _objDtoCasePaper.PAYMENT_STATUS + "'";
                 query += " WHERE TRN_NO = '" + _objDtoCasePaper.TRN_NO + "'";
 
                 using (SqlConnection con = new SqlConnection(connectionString))
@@ -252,17 +254,17 @@ namespace Lab.DALDapper.Implimantation.Masters
             }
         }
 
-        public async Task<string> GetLastPatientIdForDate(string datePart)
+        public async Task<string> GetLastPatientIdForDate(string dateComboKey)
         {
             string lastPatientId = null;
-            string query = "SELECT TOP 1 TRN_NO FROM MST_PATIENT WHERE TRN_NO LIKE @datePart + '%' ORDER BY TRN_NO DESC";
+            string query = "SELECT TOP 1 TRN_NO FROM MST_PATIENT WHERE TRN_NO LIKE @dateComboKey + '%' ORDER BY TRN_NO DESC";
 
             using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["connstr"].ConnectionString))
             {
                 await conn.OpenAsync();
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
-                    cmd.Parameters.AddWithValue("@datePart", datePart);
+                    cmd.Parameters.AddWithValue("@dateComboKey", dateComboKey);
                     object result = await cmd.ExecuteScalarAsync();
                     if (result != null)
                         lastPatientId = result.ToString();

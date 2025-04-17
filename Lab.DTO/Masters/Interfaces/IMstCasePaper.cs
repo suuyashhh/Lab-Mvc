@@ -17,7 +17,7 @@ namespace Lab.DTO.Masters.Interfaces
         Int64 Approve(DTOCasePaper _objDtoCasePaper);
         int Approve(string TrnNos);
         List<DTOCasePaper> GetApprovalPendingList();
-        Task<string> GetLastPatientIdForDate(string datePart);
+        Task<string> GetLastPatientIdForDate(string dateComboKey);
         Task<string> GetLastInvoiceNoAsync();
         DTOCasePaper GetExisting(Int64 code);
         Task<List<DTOCasePaper>> GetDateWiseAllAsync(string strStartDate, string strEndDate);
