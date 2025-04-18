@@ -298,11 +298,18 @@
                 {
                     foreach (var item in Model)
                     {
-                        <tr class="@(item.StatusCode == 1 ? "deleted" : "ok")">
+
+
+<tr >
                             <td>
 
                                 <div class="pm_action-buttons">
-                                    @if (item.StatusCode == 0)
+                                    @if (Session["UserType"].ToString() == "ADMIN")
+                                    {
+                                        <a class="pm_edit-btn" data-id="1" title="Edit" href="/CasePaper/Edit?TrnNo=@item.TrnNo">✏️Edit</a>
+                                        <a class="pm_delete-btn" data-id="1" title="Delete" href="/CasePaper/delete?TrnNo=@item.TrnNo">🗑️Delete</a>
+                                    }
+                                    else if (item.StatusCode == 0)
                                     {
                                         <a class="pm_edit-btn" data-id="1" title="Edit" href="/CasePaper/Edit?TrnNo=@item.TrnNo">✏️Edit</a>
                                         <a class="pm_delete-btn" data-id="1" title="Delete" href="/CasePaper/delete?TrnNo=@item.TrnNo">🗑️Delete</a>
@@ -313,7 +320,7 @@
                                     }
                                     else
                                     {
-                                <a class="pm_invoice-btn" data-id="1" title="Invoice" href="/CasePaper/invoice?TrnNo=@item.TrnNo">🧾Invoice</a>
+                                        <a class="pm_invoice-btn" data-id="1" title="Invoice" href="/CasePaper/invoice?TrnNo=@item.TrnNo">🧾Invoice</a>
                                     }
 
 
