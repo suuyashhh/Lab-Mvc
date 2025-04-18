@@ -77,12 +77,12 @@
                 <li class="nav-item dropdown pe-3">
                     <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
                         <img src="~/assets/img/profile-img.jpg" alt="Profile" class="rounded-circle">
-                        <span class="d-none d-md-block dropdown-toggle ps-2">K. Anderson</span>
+                        <span class="d-none d-md-block dropdown-toggle ps-2">@Session["UserName"]</span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
                         <li class="dropdown-header">
-                            <h6>Kevin Anderson</h6>
-                            <span>Web Designer</span>
+                            <h6>@Session["UserName"]</h6>
+                            <span>Designation:@Session["UserType"]</span>
                         </li>
                         <li>
                             <hr class="dropdown-divider">
@@ -116,20 +116,24 @@
                 <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                     <li><a href="@Url.Action("Index","Test")"><i class="bi bi-circle"></i><span>Tests</span></a></li>
                     <li><a href="@Url.Action("Index", "Doctor")"><i class="bi bi-circle"></i><span>Doctor</span></a></li>
-                    <li><a href="#"><i class="bi bi-circle"></i><span>Employee</span></a></li>
+                    @if (Session["UserType"] != null && Session["UserType"].ToString() == "ADMIN")
+                    {
+                        <li><a href="#"><i class="bi bi-circle"></i><span>Employee</span></a></li>
+                    }
                 </ul>
             </li>
-
-            <li class="nav-item">
-                <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
-                    <i class="bi bi-journal-text"></i><span>Approve</span><i class="bi bi-chevron-down ms-auto"></i>
-                </a>
-                <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                    <li><a href="@Url.Action("ApprovalPending","CasePaper")"><i class="bi bi-circle"></i><span>Patient Form</span></a></li>
-                    <li><a href="#"><i class="bi bi-circle"></i><span>Form Layouts</span></a></li>
-                </ul>
-            </li>
-
+            @if (Session["UserType"] != null && Session["UserType"].ToString() == "ADMIN")
+            {
+                <li class="nav-item">
+                    <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
+                        <i class="bi bi-journal-text"></i><span>Approve</span><i class="bi bi-chevron-down ms-auto"></i>
+                    </a>
+                    <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                        <li><a href="@Url.Action("ApprovalPending","CasePaper")"><i class="bi bi-circle"></i><span>Patient Form</span></a></li>
+                        <li><a href="#"><i class="bi bi-circle"></i><span>Form Layouts</span></a></li>
+                    </ul>
+                </li>
+            }
             <li class="nav-heading">Pages</li>
 
             <li class="nav-item">
