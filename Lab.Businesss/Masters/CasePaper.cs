@@ -7,6 +7,7 @@ using Lab.DTO.Masters.Interfaces;
 using System.Threading.Tasks;
 using Lab.DALDapper.Implimantation.Masters;
 using System.Transactions;
+using System.Security.Cryptography;
 
 namespace Lab.Businesss.Masters
 {
@@ -50,14 +51,14 @@ namespace Lab.Businesss.Masters
         }
 
        
-        public static async Task<List<CasePaper>> GetDateWiseAll(string strStartDate, string strEndDate)
+        public static async Task<List<CasePaper>> GetDateWiseAll(string strStartDate, string strEndDate, string ComId)
         {
             try
             {
                 _dalCasePaper = new DALCasePaper();
                 List<CasePaper> lstTD = new List<CasePaper>();
 
-                List<DTOCasePaper> objLstCasePaper = await _dalCasePaper.GetDateWiseAllAsync(strStartDate, strEndDate);
+                List<DTOCasePaper> objLstCasePaper = await _dalCasePaper.GetDateWiseAllAsync(strStartDate, strEndDate, ComId);
               
 
                 if (objLstCasePaper != null)
@@ -77,6 +78,8 @@ namespace Lab.Businesss.Masters
                                  InvoiceNo = cp.INVOICE_NO,
                                  ShortTrnNo = cp.TRN_NO.ToString().Substring(2, 6) + "-" +
                                               cp.TRN_NO.ToString().Substring(cp.TRN_NO.ToString().Length - 2),
+                                 CrtBy = cp.CRT_BY,
+                                 PaymentStatus = cp.PAYMENT_STATUS,
                               
                              }).ToList();
                 }

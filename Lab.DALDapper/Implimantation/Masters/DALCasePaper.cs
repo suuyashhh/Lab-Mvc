@@ -315,8 +315,8 @@ namespace Lab.DALDapper.Implimantation.Masters
             }
         }
 
-       
-        public async Task<List<DTOCasePaper>> GetDateWiseAllAsync(string strStartDate, string strEndDate)
+
+        public async Task<List<DTOCasePaper>> GetDateWiseAllAsync(string strStartDate, string strEndDate, string ComId)
         {
             try
             {
@@ -324,7 +324,9 @@ namespace Lab.DALDapper.Implimantation.Masters
 
                 string query = @"SELECT * 
                          FROM MST_PATIENT 
-                         WHERE DATE >= @StartDate AND DATE <= @EndDate 
+                         WHERE DATE >= @StartDate 
+                         AND DATE <= @EndDate 
+                         AND COM_ID = @ComId
                          ORDER BY DATE DESC, TRN_NO DESC";
 
                 using (SqlConnection con = new SqlConnection(connectionString))
@@ -333,7 +335,8 @@ namespace Lab.DALDapper.Implimantation.Masters
                     return con.Query<DTOCasePaper>(query, new
                     {
                         StartDate = strStartDate,
-                        EndDate = strEndDate
+                        EndDate = strEndDate,
+                        ComId = ComId
                     }).ToList();
                 }
             }

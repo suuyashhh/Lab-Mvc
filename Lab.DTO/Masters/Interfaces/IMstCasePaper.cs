@@ -20,6 +20,6 @@ namespace Lab.DTO.Masters.Interfaces
         Task<string> GetLastPatientIdForDate(string dateComboKey);
         Task<string> GetLastInvoiceNoAsync();
         DTOCasePaper GetExisting(Int64 code);
-        Task<List<DTOCasePaper>> GetDateWiseAllAsync(string strStartDate, string strEndDate);
+        Task<List<DTOCasePaper>> GetDateWiseAllAsync(string strStartDate, string strEndDate, string ComId);
     }
 }

@@ -41,7 +41,8 @@ namespace Lab_Mvc.Controllers
                 strToDate = ToDate;
             }
 
-            List<CasePaper> _lstTD = await CasePaper.GetDateWiseAll(strStartDate, strToDate);
+            string ComId = Session["ComId"].ToString();
+            List<CasePaper> _lstTD = await CasePaper.GetDateWiseAll(strStartDate, strToDate, ComId);
             TranGridSettings _objTranGridSettings = new TranGridSettings() { TranFromDate = DateUtility.GetFormatedDate(strStartDate, 0), TranToDate = DateUtility.GetFormatedDate(strToDate, 0) };
             ViewData["trangridsettings"] = _objTranGridSettings;
 
