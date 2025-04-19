@@ -274,7 +274,7 @@ namespace Lab_Mvc.Controllers
             var comid = Session["ComId"].ToString();
             List<Doctor> _objDoctor = Doctor.GetDoctorList(comid);
             ViewData["doctor"] = _objDoctor;
-            return PartialView(await CasePaper.GetExistingAsyncInvoice(TrnNo));
+            return PartialView(await CasePaper.GetExistingAsyncInvoice(TrnNo, comid));
         }
         public async Task<ActionResult> InvoiceSave(Int64 TrnNo)
         {
@@ -282,7 +282,7 @@ namespace Lab_Mvc.Controllers
             var comid = Session["ComId"].ToString();
             List<Doctor> _objDoctor = Doctor.GetDoctorList(comid);
             ViewData["doctor"] = _objDoctor;
-            return PartialView(await CasePaper.GetExistingAsyncInvoice(TrnNo));
+            return PartialView(await CasePaper.GetExistingAsyncInvoice(TrnNo, comid));
         }
 
         [HttpPost]

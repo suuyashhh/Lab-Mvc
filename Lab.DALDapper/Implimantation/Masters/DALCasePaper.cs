@@ -301,7 +301,7 @@ namespace Lab.DALDapper.Implimantation.Masters
             {
                 string connectionString = ConfigurationManager.ConnectionStrings["connstr"].ConnectionString;
 
-                string query = "SELECT * FROM MST_PATIENT WHERE STATUS_CODE = 0 ORDER BY TRN_NO ASC";
+                string query = "SELECT * FROM MST_PATIENT WHERE STATUS_CODE = 0 ORDER BY TRN_NO DESC";
 
                 using (SqlConnection con = new SqlConnection(connectionString))
                 {
