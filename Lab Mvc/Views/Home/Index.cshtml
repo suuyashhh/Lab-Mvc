@@ -2,32 +2,222 @@
     ViewBag.Title = "Home Page";
 }
 
-<main>
-    <section class="row" aria-labelledby="aspnetTitle">
-        <h1 id="title">ASP.NET</h1>
-        <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-        <p><a href="https://asp.net" class="btn btn-primary btn-md">Learn more &raquo;</a></p>
-    </section>
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<link href="https://fonts.googleapis.com/css2?family=Saira:wght@400;500;600&display=swap" rel="stylesheet" />
 
-    <div class="row">
-        <section class="col-md-4" aria-labelledby="gettingStartedTitle">
-            <h2 id="gettingStartedTitle">Getting started</h2>
-            <p>
-                ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-                enables a clean separation of concerns and gives you full control over markup
-                for enjoyable, agile development.
-            </p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
-        </section>
-        <section class="col-md-4" aria-labelledby="librariesTitle">
-            <h2 id="librariesTitle">Get more libraries</h2>
-            <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-        </section>
-        <section class="col-md-4" aria-labelledby="hostingTitle">
-            <h2 id="hostingTitle">Web Hosting</h2>
-            <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
-        </section>
+<style>
+        body {
+            font-family: "Saira", sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        .portal-header {
+            position: fixed;
+            top: 30px;
+            left: 30px;
+            right: 30px;
+            width: auto;
+            background-color: #343a40;
+            border-radius: 15px;
+            z-index: 1000;
+        }
+
+        .portal-brand {
+            margin-left: 20px;
+            color: #ffffff;
+            font-weight: bold;
+        }
+
+        .portal-toggler {
+            margin-right: 20px;
+        }
+
+        .portal-footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #343a40;
+            color: #ffffff;
+            text-align: center;
+            padding: 10px 0;
+        }
+
+        .dashboard-container {
+            margin-top: 8rem;
+            margin-bottom: 3rem;
+            padding-bottom: 80px;
+        }
+
+        .card-row {
+            margin-bottom: 20px;
+        }
+
+        .service-card {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .service-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .service-icon {
+            max-width: 60px;
+            margin-bottom: 15px;
+        }
+
+        .service-title {
+            margin: 0;
+            font-weight: 600;
+            color: #343a40;
+            font-size: 16px;
+        }
+
+    .patient-stats-card {
+        background-color: #ffffff;
+        border-left: 4px solid #4e73df;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        display: flex;
+        align-items: center;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+        .patient-stats-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        }
+
+    .stats-icon {
+        background-color: rgba(78, 115, 223, 0.1);
+        color: #4e73df;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 20px;
+    }
+
+    .stats-info {
+        flex: 1;
+    }
+
+    .stats-label {
+        color: #5a5c69;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        margin-bottom: 5px;
+    }
+
+    .stats-value {
+        color: #343a40;
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin: 0;
+    }
+
+        @@media (max-width: 768px) {
+            .col-md-6 {
+                margin-bottom: 15px;
+            }
+
+            .service-card {
+                padding: 15px;
+            }
+
+            .service-icon {
+                max-width: 50px;
+            }
+
+            .patient-stats-card {
+                padding: 15px;
+            }
+
+            .stats-icon {
+                width: 40px;
+                height: 40px;
+                margin-right: 15px;
+            }
+
+            .stats-value {
+                font-size: 1.5rem;
+            }
+        }
+
+        @@media screen and (max-width: 1000px) {
+            .logout-btn {
+                margin-left: 15px;
+            }
+        }
+</style>
+<div class="container dashboard-container">
+
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="patient-stats-card">
+                <div class="stats-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                </div>
+                <div class="stats-info">
+                    <h6 class="stats-label">Today Total Patient</h6>
+                    <h3 class="stats-value">30</h3>
+                </div>
+            </div>
+        </div>
     </div>
-</main>
+
+    <!-- First row -->
+    <div class="row card-row">
+        <div class="col-md-6">
+            <div class="service-card" onclick="window.location.href='http://183.82.121.72/';">
+                <img src="/assets/img/Acclin.png" alt="Allice" class="service-icon" />
+                <h5 class="service-title">Allice</h5>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="service-card" onclick="window.location.href='https://www.manipaltrutest.com/';">
+                <img src="/assets/img/Manipal.png" alt="Manipal trutest" class="service-icon" />
+                <h5 class="service-title">Manipal trutest</h5>
+            </div>
+        </div>
+    </div>
+
+    <!-- Second row -->
+    <div class="row card-row">
+        <div class="col-12">
+            <div class="service-card" onclick="window.location.href='/CasePaper';">
+                <img src="/assets/img/CasePaper.png" alt="Case Paper" class="service-icon" />
+                <h5 class="service-title">Case Paper</h5>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+ 
+

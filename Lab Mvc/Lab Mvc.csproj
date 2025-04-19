@@ -156,10 +156,13 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="assets\css\style.css" />
+    <Content Include="assets\img\Acclin.png" />
     <Content Include="assets\img\apple-touch-icon.png" />
     <Content Include="assets\img\card.jpg" />
+    <Content Include="assets\img\CasePaper.png" />
     <Content Include="assets\img\favicon.png" />
     <Content Include="assets\img\logo.png" />
+    <Content Include="assets\img\Manipal.png" />
     <Content Include="assets\img\messages-1.jpg" />
     <Content Include="assets\img\messages-2.jpg" />
     <Content Include="assets\img\messages-3.jpg" />
