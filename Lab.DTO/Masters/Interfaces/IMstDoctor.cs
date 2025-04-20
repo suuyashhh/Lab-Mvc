@@ -13,8 +13,12 @@ namespace Lab.DTO.Masters.Interfaces
         List<DTODoctor> GetAll(string comid);
         Int64 Create(DTODoctor _ObjDoctor);
         //Task<List<DTODoctor>> GetTestsAsync(string searchtext);
-        
+        Int64 Edit(DTODoctor _objDtoDoctor);
+        Int64 Delete(DTODoctor _objDtoDoctor);
+
         List<DTODoctor> GetDoctorList(string comid);
         Task<string> GetLastDoctorIdForFixedParts(string fixedPart, string fixedPartSec);
+
+        DTODoctor GetExisting(Int64 code);
     }
 }

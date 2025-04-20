@@ -7,6 +7,7 @@ using Lab.DTO.Masters.Interfaces;
 using System.Threading.Tasks;
 using Lab.DALDapper.Implimantation.Masters;
 using System.Transactions;
+using System.Security.Cryptography;
 
 namespace Lab.Businesss.Masters
 {
@@ -37,6 +38,7 @@ namespace Lab.Businesss.Masters
         public string PaymentStatus { get; set; }
         public string CrtBy { get; set; }
         public string ComId { get; set; }
+        public string DoctorName { get; set; }
         public static CasePaper New()
         {
             try
@@ -50,14 +52,14 @@ namespace Lab.Businesss.Masters
         }
 
        
-        public static async Task<List<CasePaper>> GetDateWiseAll(string strStartDate, string strEndDate)
+        public static async Task<List<CasePaper>> GetDateWiseAll(string strStartDate, string strEndDate, string ComId)
         {
             try
             {
                 _dalCasePaper = new DALCasePaper();
                 List<CasePaper> lstTD = new List<CasePaper>();
 
-                List<DTOCasePaper> objLstCasePaper = await _dalCasePaper.GetDateWiseAllAsync(strStartDate, strEndDate);
+                List<DTOCasePaper> objLstCasePaper = await _dalCasePaper.GetDateWiseAllAsync(strStartDate, strEndDate, ComId);
               
 
                 if (objLstCasePaper != null)
@@ -77,6 +79,8 @@ namespace Lab.Businesss.Masters
                                  InvoiceNo = cp.INVOICE_NO,
                                  ShortTrnNo = cp.TRN_NO.ToString().Substring(2, 6) + "-" +
                                               cp.TRN_NO.ToString().Substring(cp.TRN_NO.ToString().Length - 2),
+                                 CrtBy = cp.CRT_BY,
+                                 PaymentStatus = cp.PAYMENT_STATUS,
                               
                              }).ToList();
                 }
@@ -125,7 +129,7 @@ namespace Lab.Businesss.Masters
             }
         }
         
-        public static async Task<CasePaper> GetExistingAsyncInvoice(Int64 code)
+        public static async Task<CasePaper> GetExistingAsyncInvoice(Int64 code, string comid)
         {
             try
             {
@@ -133,7 +137,10 @@ namespace Lab.Businesss.Masters
 
                 DTOCasePaper dtoCasePaper = await Task.Run(() => { return _dalCasePaper.GetExisting(code); });
                 string invoiceNo = dtoCasePaper.INVOICE_NO;
-
+                List<Doctor> ObjDoctor = Doctor.GetDoctorList(comid);
+                string doctorName = ObjDoctor
+                .FirstOrDefault(d => d.DoctorCode == dtoCasePaper.DOCTOR_CODE)?
+                .DoctorName ?? string.Empty;
                 if (invoiceNo == null || invoiceNo == "")
                 {
                     invoiceNo = await GenerateInvoiceNoAsync();
@@ -151,7 +158,8 @@ namespace Lab.Businesss.Masters
                         StatusCode = dtoCasePaper.STATUS_CODE,
                         Discount = dtoCasePaper.DISCOUNT,
                         InvoiceNo = invoiceNo,
-                        MatIs = TestTable.GetITableList(dtoCasePaper.TRN_NO)
+                        MatIs = TestTable.GetITableList(dtoCasePaper.TRN_NO),
+                        DoctorName = doctorName,
 
                     };
                 else
@@ -192,6 +200,8 @@ namespace Lab.Businesss.Masters
                                 StatusCode = dtocasepaper.STATUS_CODE,
                                 Discount = dtocasepaper.DISCOUNT,
                                 ShortTrnNo = dtocasepaper.TRN_NO.ToString().Substring(2, 6) + "-" + dtocasepaper.TRN_NO.ToString().Substring(dtocasepaper.TRN_NO.ToString().Length - 2),
+                                CrtBy = dtocasepaper.CRT_BY,
+                                PaymentStatus = dtocasepaper.PAYMENT_STATUS,
                             };
 
             return _citylist.AsEnumerable<CasePaper>().ToList();

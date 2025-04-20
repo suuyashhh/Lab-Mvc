@@ -41,7 +41,8 @@ namespace Lab_Mvc.Controllers
                 strToDate = ToDate;
             }
 
-            List<CasePaper> _lstTD = await CasePaper.GetDateWiseAll(strStartDate, strToDate);
+            string ComId = Session["ComId"].ToString();
+            List<CasePaper> _lstTD = await CasePaper.GetDateWiseAll(strStartDate, strToDate, ComId);
             TranGridSettings _objTranGridSettings = new TranGridSettings() { TranFromDate = DateUtility.GetFormatedDate(strStartDate, 0), TranToDate = DateUtility.GetFormatedDate(strToDate, 0) };
             ViewData["trangridsettings"] = _objTranGridSettings;
 
@@ -273,7 +274,7 @@ namespace Lab_Mvc.Controllers
             var comid = Session["ComId"].ToString();
             List<Doctor> _objDoctor = Doctor.GetDoctorList(comid);
             ViewData["doctor"] = _objDoctor;
-            return PartialView(await CasePaper.GetExistingAsyncInvoice(TrnNo));
+            return PartialView(await CasePaper.GetExistingAsyncInvoice(TrnNo, comid));
         }
         public async Task<ActionResult> InvoiceSave(Int64 TrnNo)
         {
@@ -281,7 +282,7 @@ namespace Lab_Mvc.Controllers
             var comid = Session["ComId"].ToString();
             List<Doctor> _objDoctor = Doctor.GetDoctorList(comid);
             ViewData["doctor"] = _objDoctor;
-            return PartialView(await CasePaper.GetExistingAsyncInvoice(TrnNo));
+            return PartialView(await CasePaper.GetExistingAsyncInvoice(TrnNo, comid));
         }
 
         [HttpPost]

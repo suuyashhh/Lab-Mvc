@@ -471,7 +471,7 @@
                     <option value="">Select Doctor</option>
                     @foreach (Doctor doc in lstdoctor)
                     {
-                        <option value="@doc.DoctorCode" > @doc.DoctorName</option>
+                        <option value="@doc.DoctorCode"> @doc.DoctorName</option>
                     }
                 </select>
             </div>
@@ -488,7 +488,14 @@
                                 <th>Sr No</th>
                                 <th>Test Name</th>
                                 <th>Price (₹)</th>
-                                <th>Lab Price (₹)</th>
+                                @if (Session["UserType"].ToString() == "ADMIN")
+                                {
+                                    <th>Lab Price (₹)</th>
+                                }
+                                else
+                                {
+                                    <th style="display:none">Lab Price (₹)</th>
+                                }
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -505,7 +512,7 @@
                                         <input type='hidden' id='hfLabPrice(@row_num)' value="@mati.LabPrice">
                                     </td>
                                     <td id="Amount(@row_num)" data-editable="true">@mati.Price</td>
-                                    <td id="LabAmount(@row_num)" data-editable="true">@mati.LabPrice</td>
+                                    <td style="display:none" id="LabAmount(@row_num)" data-editable="true">@mati.LabPrice</td>
                                     <td>
                                         <a class="delete-btn remove-row" href="javascript:void(0);">Delete</a>
                                     </td>
@@ -517,7 +524,14 @@
                             <tr>
                                 <th colspan="2">Total Amount</th>
                                 <th id="totalPrice" name="totalPrice">₹0</th>
-                                <th id="LabtotalPrice" name="LabtotalPrice">₹0</th>
+                                @if (Session["UserType"].ToString() == "ADMIN")
+                                {
+                                    <th id="LabtotalPrice" name="LabtotalPrice">₹0</th>
+                                }
+                                else
+                                {
+                                    <th id="LabtotalPrice" name="LabtotalPrice" style="display:none">₹0</th>
+                                }
                                 <th></th>
                             </tr>
                         </thead>
@@ -565,12 +579,19 @@
                 </div>
             </div>
 
-            <div class="d-flex justify-content-end mb-3">
-                <div class="form-group text-end">
-                    <label>Total Lab Profit</label>
-                    <input type="text" id="TotalProfit" name="TotalProfit" style="width: 40%!important;" class="input-field">
+            @if (Session["UserType"].ToString() == "ADMIN")
+            {
+                <div class="d-flex justify-content-end mb-3">
+                    <div class="form-group text-end">
+                        <label>Total Lab Profit</label>
+                        <input type="text" id="TotalProfit" name="TotalProfit" style="width: 40%!important;" class="input-field">
+                    </div>
                 </div>
-            </div>
+            }
+            else
+            {
+                <input type="text" id="TotalProfit" style="display:none" name="TotalProfit" style="width: 40%!important;" class="input-field">
+            }
 
             <div class="row align-items-center mb-3">
                 <div class="col-auto">
@@ -579,7 +600,7 @@
 
                 <div class="col">
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="PaymentMethod" id="male" value="1"  @(Model.PaymentMethod == 1 ? "checked" : "")>
+                        <input class="form-check-input" type="radio" name="PaymentMethod" id="male" value="1" @(Model.PaymentMethod == 1 ? "checked" : "")>
                         <label class="form-check-label" for="male">Cash</label>
                     </div>
                     <div class="form-check form-check-inline">
@@ -610,9 +631,9 @@
 </div>
 <script type="text/javascript">
     $(document).ready(function () {
-         $('#Doctor').select2(); 
+         $('#Doctor').select2();
         if (@Model.DoctorCode != 0) {
-        $('#Doctor').val('@Model.DoctorCode').trigger('change'); 
+        $('#Doctor').val('@Model.DoctorCode').trigger('change');
         }
         if ('@Model.Gender' !== '') {
         $('#Gender').val('@Model.Gender');
@@ -782,7 +803,12 @@
                         <input type='hidden' id='hfLabPrice${cur_row_num}' value='${labprice}'>
                     </td>
                     <td id="Amount${cur_row_num}" data-editable="true">${price}</td>
+                   @if (Session["UserType"].ToString() == "ADMIN") {
                     <td id="LabAmount${cur_row_num}" data-editable="true">${labprice}</td>
+                   }
+                   else {
+                     <td id="LabAmount${cur_row_num}" data-editable="true" style="display:none">${labprice}</td>
+                      }
                     <td>
                         <a class="delete-btn remove-row" href="javascript:void(0);">Delete</a>
                     </td>

@@ -295,6 +295,8 @@
                         Name
                     </th>
                     <th>Contact</th>
+                    <th>Crt By</th>
+                    <th>Status</th>
                 </tr>
             </thead>
             <tbody>
@@ -319,6 +321,12 @@
                             </td>
                             <td>@Html.DisplayFor(modelItem => item.PatientName)</td>
                             <td>@Html.DisplayFor(modelItem => item.ConNumber)</td>
+                            <td>@Html.DisplayFor(modelItem => item.CrtBy)</td>
+                            <td>
+                                <span style="@(item.PaymentStatus == "COMPLETED" ? "color:green" : "color:red")">
+                                    @Html.DisplayFor(modelItem => item.PaymentStatus)
+                                </span>
+                            </td>
                         </tr>
                     }
                 }
