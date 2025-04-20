@@ -1,4 +1,5 @@
-﻿using Lab.DTO.Masters.Interfaces;
+﻿using Dapper;
+using Lab.DTO.Masters.Interfaces;
 using Lab.DTO.Masters.Objects;
 using System;
 using System.Collections.Generic;
@@ -7,43 +8,41 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Dapper;
-using System.Security.Cryptography;
 
 namespace Lab.DALDapper.Implimantation.Masters
 {
-    public class DALDoctor: IMstDoctor
+    public class DALEmployee : IMstEmployee
     {
         private readonly string _connectionString = ConfigurationManager.ConnectionStrings["connstr"].ConnectionString;
 
-        public List<DTODoctor> GetAll(string comid)
+        public List<DTOEmployee> GetAll(string comid)
         {
             string connectionString = ConfigurationManager.ConnectionStrings["connstr"].ConnectionString;
             try
             {
-                string query = "SELECT * FROM MST_DOCTOR WHERE COM_ID = @comid";
+                string query = "SELECT * FROM MST_EMPLOYEE WHERE COM_ID = @comid";
                 using (SqlConnection con = new SqlConnection(connectionString))
                 {
                     con.Open();
-                    return con.Query<DTODoctor>(query, new { comid }).ToList();
+                    return con.Query<DTOEmployee>(query, new { comid }).ToList();
                 }
             }
             catch (Exception ex)
             {
-                throw new Exception("Error retrieving MST_DOCTOR data", ex);
+                throw new Exception("Error retrieving MST_EMPLOYEE data", ex);
             }
         }
-        public Int64 Create(DTODoctor _objDtoDoctor)
+        public Int64 Create(DTOEmployee _objDtoEmployee)
         {
             try
             {
-                string query = @"INSERT INTO MST_DOCTOR (DOCTOR_CODE,DOCTOR_NAME,DOCTOR_ADDRESS,DOCTOR_NUMBER,COM_ID,CRT_BY)";
-                query = query + " VALUES(@DOCTOR_CODE,@DOCTOR_NAME,@DOCTOR_ADDRESS,@DOCTOR_NUMBER,@COM_ID,@CRT_BY);SELECT @DOCTOR_CODE";
+                string query = @"INSERT INTO MST_EMPLOYEE (EMP_ID,EMP_NAME,EMP_CONTACT,EMP_PASSWORD,COM_ID)";
+                query = query + " VALUES(@EMP_ID,@EMP_NAME,@EMP_CONTACT,@EMP_PASSWORD,@COM_ID);SELECT @EMP_ID";
                 Int64 i;
                 using (SqlConnection con = new SqlConnection(_connectionString))
                 {
                     con.Open();
-                    i = con.Query<Int64>(query, _objDtoDoctor).Single();
+                    i = con.Query<Int64>(query, _objDtoEmployee).Single();
                 }
                 return i;
             }
@@ -53,22 +52,22 @@ namespace Lab.DALDapper.Implimantation.Masters
             }
         }
 
-        public Int64 Edit(DTODoctor _objDtoDoctor)
+        public Int64 Edit(DTOEmployee _objDtoEmployee)
         {
             try
             {
-                string query = @"UPDATE MST_DOCTOR SET ";
-                query += " DOCTOR_NAME = '" + _objDtoDoctor.DOCTOR_NAME + "'";
-                query += " ,DOCTOR_ADDRESS = '" + _objDtoDoctor.DOCTOR_ADDRESS + "'";
-                query += " ,DOCTOR_NUMBER = '" + _objDtoDoctor.DOCTOR_NUMBER + "'";
-                query += " WHERE DOCTOR_CODE = '" + _objDtoDoctor.DOCTOR_CODE + "'";
+                string query = @"UPDATE MST_EMPLOYEE SET ";
+                query += " EMP_NAME = '" + _objDtoEmployee.EMP_NAME + "'";
+                query += " ,EMP_CONTACT = '" + _objDtoEmployee.EMP_CONTACT + "'";
+                query += " ,EMP_PASSWORD = '" + _objDtoEmployee.EMP_PASSWORD + "'";
+                query += " WHERE EMP_ID = '" + _objDtoEmployee.EMP_ID + "'";
                 Int64 i;
                 using (SqlConnection con = new SqlConnection(_connectionString))
                 {
                     con.Open();
-                    i = con.Execute(query, _objDtoDoctor);
+                    i = con.Execute(query, _objDtoEmployee);
                 }
-                return _objDtoDoctor.DOCTOR_CODE;
+                return _objDtoEmployee.EMP_ID;
             }
             catch
             {
@@ -76,13 +75,13 @@ namespace Lab.DALDapper.Implimantation.Masters
             }
         }
 
-        public Int64 Delete(DTODoctor _objDelete)
+        public Int64 Delete(DTOEmployee _objDelete)
         {
             try
             {
                 string connectionString = ConfigurationManager.ConnectionStrings["connstr"].ConnectionString;
 
-                string query = @"DELETE FROM MST_DOCTOR WHERE DOCTOR_CODE = @DOCTOR_CODE";
+                string query = @"DELETE FROM MST_EMPLOYEE WHERE EMP_ID = @EMP_ID";
 
                 Int64 i = 0;
 
@@ -92,11 +91,11 @@ namespace Lab.DALDapper.Implimantation.Masters
 
                     i = con.Execute(query, new
                     {
-                        DOCTOR_CODE = _objDelete.DOCTOR_CODE
+                        EMP_ID = _objDelete.EMP_ID
                     });
                 }
 
-                return _objDelete.DOCTOR_CODE;
+                return _objDelete.EMP_ID;
             }
             catch (Exception ex)
             {
@@ -104,17 +103,17 @@ namespace Lab.DALDapper.Implimantation.Masters
             }
         }
 
-        public DTODoctor GetExisting(Int64 code)
+        public DTOEmployee GetExisting(Int64 code)
         {
             try
             {
-                string query = "SELECT * FROM MST_DOCTOR WHERE DOCTOR_CODE = @code";
-                DTODoctor lst = new DTODoctor();
+                string query = "SELECT * FROM MST_EMPLOYEE WHERE EMP_ID = @code";
+                DTOEmployee lst = new DTOEmployee();
                 using (SqlConnection con = new SqlConnection(_connectionString))
                 {
                     con.Open();
 
-                    lst = con.Query<DTODoctor>(query, new { code }).FirstOrDefault();
+                    lst = con.Query<DTOEmployee>(query, new { code }).FirstOrDefault();
                 }
 
                 return lst;
@@ -125,13 +124,13 @@ namespace Lab.DALDapper.Implimantation.Masters
             }
         }
 
-        public async Task<string> GetLastDoctorIdForFixedParts(string fixedPart, string fixedPartSec)
+        public async Task<string> GetLastEmployeeIdForFixedParts(string fixedPart, string fixedPartSec)
         {
             string lastTestId = null;
-                        
+
             string likePattern = fixedPart + fixedPartSec + "%";
 
-            string query = "SELECT TOP 1 DOCTOR_CODE FROM MST_DOCTOR WHERE DOCTOR_CODE LIKE @likePattern ORDER BY DOCTOR_CODE DESC";
+            string query = "SELECT TOP 1 EMP_ID FROM MST_EMPLOYEE WHERE EMP_ID LIKE @likePattern ORDER BY EMP_ID DESC";
 
             using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["connstr"].ConnectionString))
             {
@@ -148,19 +147,19 @@ namespace Lab.DALDapper.Implimantation.Masters
             return lastTestId;
         }
 
-        public List<DTODoctor> GetDoctorList(string comid)
+        public List<DTOEmployee> GetEmployeeList(string comid)
         {
             try
             {
-                string query = @"SELECT * FROM MST_DOCTOR WHERE COM_ID = @comid ORDER BY DOCTOR_CODE";
+                string query = @"SELECT * FROM MST_EMPLOYEE WHERE COM_ID = @comid ORDER BY EMP_ID";
 
-                List<DTODoctor> lst;
+                List<DTOEmployee> lst;
 
                 using (SqlConnection con = new SqlConnection(_connectionString))
                 {
                     con.Open();
                     //lst = con.Query<DTODoctor>(query).ToList();
-                    lst = con.Query<DTODoctor>(query, new { ComId = comid }).ToList();
+                    lst = con.Query<DTOEmployee>(query, new { ComId = comid }).ToList();
                 }
 
                 return lst;
@@ -170,7 +169,6 @@ namespace Lab.DALDapper.Implimantation.Masters
                 throw;
             }
         }
-
 
     }
 }

@@ -18,7 +18,9 @@ namespace Lab.Businesss.Masters
         public string DoctorAddress { get; set; }
         public string DoctorNumber { get; set; }
         public string ShortTrnNo { get; set; }
+        public string DeleteReason { get; set; }
         public string ComId { get; set; }
+        public string CrtBy { get; set; }
 
         public static Doctor New()
         {
@@ -29,6 +31,34 @@ namespace Lab.Businesss.Masters
             catch (Exception ex)
             {
                 throw new Exception("Request Failed. " + ex.Message);
+            }
+        }
+
+        public static async Task<Doctor> GetExistingAsync(Int64 code)
+        {
+            try
+            {
+                _dalDoctor = new DALDoctor();
+
+                DTODoctor dtoDoctor = await Task.Run(() => { return _dalDoctor.GetExisting(code); });
+
+                if (dtoDoctor != null)
+                    return new Doctor()
+                    {
+                        //TrnNo = dtoDoctor.TRN_NO,
+                        DoctorCode = dtoDoctor.DOCTOR_CODE,
+                        DoctorName = dtoDoctor.DOCTOR_NAME,
+                        DoctorAddress = dtoDoctor.DOCTOR_ADDRESS,
+                        DoctorNumber = dtoDoctor.DOCTOR_NUMBER,
+                        //SrNo = dtoDoctor.SR_NO
+
+                    };
+                else
+                    return null;
+            }
+            catch
+            {
+                throw new Exception("Request Failed");
             }
         }
 
@@ -113,10 +143,62 @@ namespace Lab.Businesss.Masters
                     DOCTOR_ADDRESS = _ObjDoctor.DoctorAddress,
                     DOCTOR_NUMBER = _ObjDoctor.DoctorNumber,
                     COM_ID = _ObjDoctor.ComId,
+                    CRT_BY = _ObjDoctor.CrtBy
                    
                 };
 
                 result = await Task.Run(() => { return _dalDoctor.Create(_objDtoDoctor); });
+
+                return result;
+            }
+            catch
+            {
+                return 0;
+            }
+        }
+
+        public static async Task<Int64> Edit(Doctor _ObjDoctor)
+        {
+            try
+            {
+                Int64 result = 0;
+                _dalDoctor = new DALDoctor();
+
+
+                DTODoctor _objDtoDoctor = new DTODoctor()
+                {
+                    DOCTOR_CODE = _ObjDoctor.DoctorCode,
+                    DOCTOR_NAME = _ObjDoctor.DoctorName,
+                    DOCTOR_ADDRESS = _ObjDoctor.DoctorAddress,
+                    DOCTOR_NUMBER = _ObjDoctor.DoctorNumber,
+                    //SR_NO = _ObjDoctor.SrNo
+                };
+
+                result = await Task.Run(() => { return _dalDoctor.Edit(_objDtoDoctor); });
+
+                return result;
+            }
+            catch
+            {
+                return 0;
+            }
+        }
+
+        public static async Task<Int64> Delete(Doctor _ObjDoctor)
+        {
+            try
+            {
+                Int64 result = 0;
+                _dalDoctor = new DALDoctor();
+
+
+                DTODoctor _objDtoDoctor = new DTODoctor()
+                {
+                    DOCTOR_CODE = _ObjDoctor.DoctorCode,
+                    DELETE_REASON = _ObjDoctor.DeleteReason,
+                };
+
+                result = await Task.Run(() => { return _dalDoctor.Delete(_objDtoDoctor); });
 
                 return result;
             }
