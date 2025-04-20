@@ -61,6 +61,7 @@
   <ItemGroup>
     <Compile Include="Implimantation\Masters\DALCasePaper.cs" />
     <Compile Include="Implimantation\Masters\DALDoctor.cs" />
+    <Compile Include="Implimantation\Masters\DALEmployee.cs" />
     <Compile Include="Implimantation\Masters\DALTest.cs" />
     <Compile Include="Implimantation\Masters\DALTestTable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

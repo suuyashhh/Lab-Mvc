@@ -10,12 +10,12 @@ using System.Web.Mvc;
 namespace Lab_Mvc.Controllers
 {
     [CustomAuthorize]
-    public class DoctorController : Controller
+    public class EmployeeController : Controller
     {
         public async Task<ActionResult> Index(string sortdir, string sortOrder, string searchString, int? page)
         {
             var comid = Session["ComId"].ToString();
-            List<Doctor> _lstDoctors = await Doctor.GetAllAsync(comid);
+            List<Employee> _lstEmployees = await Employee.GetAllAsync(comid);
 
             string strSortDir = "";
             ViewBag.CurrentSort = sortOrder;
@@ -26,8 +26,8 @@ namespace Lab_Mvc.Controllers
             {
                 ViewBag.CurrentFilter = searchString;
 
-                _lstDoctors = _lstDoctors.Where(obj =>
-                    (obj.DoctorName != null && obj.DoctorName.ToUpper().Contains(searchString.ToUpper()))
+                _lstEmployees = _lstEmployees.Where(obj =>
+                    (obj.EmpName != null && obj.EmpName.ToUpper().Contains(searchString.ToUpper()))
                 //(obj.CreatedBy != null && obj.CreatedBy.ToUpper().Contains(searchString.ToUpper())) ||
                 //(obj.AppBy != null && obj.AppBy.ToUpper().Contains(searchString.ToUpper()))
                 ).ToList();
@@ -51,31 +51,31 @@ namespace Lab_Mvc.Controllers
                 case "DoctorCode":
                     if (strSortDir == "desc")
                     {
-                        _lstDoctors = _lstDoctors.OrderByDescending(obj => obj.DoctorCode).ToList();
+                        _lstEmployees = _lstEmployees.OrderByDescending(obj => obj.EmpId).ToList();
                     }
                     else
                     {
-                        _lstDoctors = _lstDoctors.OrderBy(obj => obj.DoctorCode).ToList();
+                        _lstEmployees = _lstEmployees.OrderBy(obj => obj.EmpId).ToList();
                     }
                     break;
 
                 case "DoctorName":
                     if (strSortDir == "desc")
                     {
-                        _lstDoctors = _lstDoctors.OrderByDescending(obj => obj.DoctorName).ToList();
+                        _lstEmployees = _lstEmployees.OrderByDescending(obj => obj.EmpName).ToList();
                     }
                     else
                     {
-                        _lstDoctors = _lstDoctors.OrderBy(obj => obj.DoctorName).ToList();
+                        _lstEmployees = _lstEmployees.OrderBy(obj => obj.EmpName).ToList();
                     }
                     break;
                 default:
-                    _lstDoctors = _lstDoctors.OrderByDescending(p => p.DoctorCode).ToList();
+                    _lstEmployees = _lstEmployees.OrderByDescending(p => p.EmpId).ToList();
                     ViewBag.SortDir = "asc";
                     break;
             }
 
-            return View(_lstDoctors);
+            return View(_lstEmployees);
         }
 
 
@@ -85,18 +85,18 @@ namespace Lab_Mvc.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Create(Doctor _ObjDoctor)
+        public async Task<ActionResult> Create(Employee _ObjEmployee)
         {
             var result = new SaveViewModel() { Status = true };
 
             try
             {
-                _ObjDoctor.CrtBy = Session["UserName"].ToString();
-                _ObjDoctor.ComId = Session["ComId"].ToString();
-                Int64 Doctor_Code = await Doctor.Create(_ObjDoctor);
-                if (Doctor_Code != 0)
+                _ObjEmployee.ComId = Session["ComId"].ToString();
+                Int64 Emp_Id = await Employee.Create(_ObjEmployee);
+                if (Emp_Id != 0)
                 {
-                    string strDocNo = Doctor_Code.ToString().Substring(2) + "-" + Doctor_Code.ToString().Substring(Doctor_Code.ToString().Length - 2);
+                    //string strDocNo = Doctor_Code.ToString().Substring(2) + "-" + Doctor_Code.ToString().Substring(Doctor_Code.ToString().Length - 2);
+                    string strDocNo = Emp_Id.ToString().Substring(2) + "-" + Emp_Id.ToString().Substring(Emp_Id.ToString().Length - 2);
                     result.DocNo = strDocNo;
                     result = new SaveViewModel()
                     {
@@ -121,25 +121,25 @@ namespace Lab_Mvc.Controllers
 
         }
 
-        public async Task<ActionResult> Edit(Int64 DoctorCode)
+        public async Task<ActionResult> Edit(Int64 EmpId)
         {
             var comid = Session["ComId"].ToString();
-            List<Doctor> _lstTD = await Doctor.GetAllAsync(comid);
+            List<Employee> _lstTD = await Employee.GetAllAsync(comid);
 
-            return PartialView(await Doctor.GetExistingAsync(DoctorCode));
+            return PartialView(await Employee.GetExistingAsync(EmpId));
         }
 
         [HttpPost]
-        public async Task<ActionResult> Edit(Doctor _ObjDoctor)
+        public async Task<ActionResult> Edit(Employee _ObjEmployee)
         {
             var result = new SaveViewModel() { Status = true };
 
             try
             {
-                Int64 Doctor_Code = await Doctor.Edit(_ObjDoctor);
-                if (Doctor_Code != 0)
+                Int64 Emp_Id = await Employee.Edit(_ObjEmployee);
+                if (Emp_Id != 0)
                 {
-                    string strDocNo = Doctor_Code.ToString().Substring(2) + "-" + Doctor_Code.ToString().Substring(Doctor_Code.ToString().Length - 2);
+                    string strDocNo = Emp_Id.ToString().Substring(2) + "-" + Emp_Id.ToString().Substring(Emp_Id.ToString().Length - 2);
                     result.DocNo = strDocNo;
                     result = new SaveViewModel()
                     {
@@ -163,25 +163,25 @@ namespace Lab_Mvc.Controllers
             }
         }
 
-        public async Task<ActionResult> Delete(Int64 DoctorCode)
+        public async Task<ActionResult> Delete(Int64 EmpId)
         {
             var comid = Session["ComId"].ToString();
-            List<Doctor> _lstTD = await Doctor.GetAllAsync(comid);
+            List<Employee> _lstTD = await Employee.GetAllAsync(comid);
 
-            return PartialView(await Doctor.GetExistingAsync(DoctorCode));
+            return PartialView(await Employee.GetExistingAsync(EmpId));
         }
 
         [HttpPost]
-        public async Task<ActionResult> Delete(Doctor _ObjDoctor)
+        public async Task<ActionResult> Delete(Employee _ObjEmployee)
         {
             var result = new SaveViewModel() { Status = true };
 
             try
             {
-                Int64 Doctor_Code = await Doctor.Delete(_ObjDoctor);
-                if (Doctor_Code != 0)
+                Int64 Emp_Id = await Employee.Delete(_ObjEmployee);
+                if (Emp_Id != 0)
                 {
-                    string strDocNo = Doctor_Code.ToString().Substring(2) + "-" + Doctor_Code.ToString().Substring(Doctor_Code.ToString().Length - 2);
+                    string strDocNo = Emp_Id.ToString().Substring(2) + "-" + Emp_Id.ToString().Substring(Emp_Id.ToString().Length - 2);
                     result.DocNo = strDocNo;
                     result = new SaveViewModel()
                     {
@@ -204,7 +204,5 @@ namespace Lab_Mvc.Controllers
                 return Json(result, JsonRequestBehavior.AllowGet);
             }
         }
-
-
     }
 }
