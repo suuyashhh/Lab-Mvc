@@ -138,6 +138,7 @@
     <Compile Include="Controllers\BikeMileageController.cs" />
     <Compile Include="Controllers\CasePaperController.cs" />
     <Compile Include="Controllers\DoctorController.cs" />
+    <Compile Include="Controllers\EmployeeController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\TestController.cs" />
     <Compile Include="Global.asax.cs">
@@ -639,6 +640,12 @@
     <Content Include="Views\CasePaper\_CasePaperTable.cshtml" />
     <Content Include="Views\CasePaper\Invoice.cshtml" />
     <Content Include="Views\CasePaper\InvoiceSave.cshtml" />
+    <Content Include="Views\Doctor\Delete.cshtml" />
+    <Content Include="Views\Doctor\Edit.cshtml" />
+    <Content Include="Views\Employee\Index.cshtml" />
+    <Content Include="Views\Employee\Create.cshtml" />
+    <Content Include="Views\Employee\Edit.cshtml" />
+    <Content Include="Views\Employee\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
