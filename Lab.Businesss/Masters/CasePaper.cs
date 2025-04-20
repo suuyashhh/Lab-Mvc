@@ -143,7 +143,7 @@ namespace Lab.Businesss.Masters
                 .DoctorName ?? string.Empty;
                 if (invoiceNo == null || invoiceNo == "")
                 {
-                    invoiceNo = await GenerateInvoiceNoAsync();
+                    invoiceNo = await GenerateInvoiceNoAsync(comid);
                 }
                 if (dtoCasePaper != null)
                     return new CasePaper()
@@ -490,12 +490,12 @@ namespace Lab.Businesss.Masters
                 throw new Exception("Failed To Approve");
             }
         }
-        public static async Task<List<CasePaper>> GetApprovalPendingListAsync()
+        public static async Task<List<CasePaper>> GetApprovalPendingListAsync(string comid)
         {
             try
             {
                 _dalCasePaper = new DALCasePaper();
-                List<CasePaper> lstCity = await Task.Run(() => { return fillCasePaperList(_dalCasePaper.GetApprovalPendingList()); });
+                List<CasePaper> lstCity = await Task.Run(() => { return fillCasePaperList(_dalCasePaper.GetApprovalPendingList(comid)); });
                 return lstCity;
             }
             catch
@@ -514,22 +514,22 @@ namespace Lab.Businesss.Masters
             string lastId = await _dalCasePaper.GetLastPatientIdForDate(dateComboKey);
 
             int nextNumber = 1;
-            if (!string.IsNullOrEmpty(lastId) && lastId.StartsWith(datePart + fixedPart))
+            if (!string.IsNullOrEmpty(lastId) && lastId.StartsWith(dateComboKey))
             {
-                int lastNumber = int.Parse(lastId.Substring(10)); 
+                int lastNumber = int.Parse(lastId.Substring(11)); 
                 nextNumber = lastNumber + 1;
             }
                         
-            long newPatientId = long.Parse(dateComboKey + nextNumber.ToString("D3"));
+            long newPatientId = long.Parse(dateComboKey + nextNumber);
 
             return newPatientId;
         }
 
-        private static async Task<string> GenerateInvoiceNoAsync()
+        private static async Task<string> GenerateInvoiceNoAsync(string comid)
         {
             _dalCasePaper = new DALCasePaper();
 
-            string lastInvoice = await _dalCasePaper.GetLastInvoiceNoAsync();
+            string lastInvoice = await _dalCasePaper.GetLastInvoiceNoAsync(comid);
 
             int nextNumber = 1;
 
@@ -546,6 +546,23 @@ namespace Lab.Businesss.Masters
             return newInvoice;
         }
 
+        public async Task<int> GetCountCurrentDate(string comid)
+        {
+            _dalCasePaper = new DALCasePaper();
+            var strTranDate = DateUtility.GetCurrentDate();
+
+            string currentDate = DateUtility.GetFormatedDate(strTranDate, 1);
+            return await _dalCasePaper.GetCountByDate(currentDate, comid);
+        }
+
+        public async Task<int> GetCountApprovePending(string comid)
+        {
+            _dalCasePaper = new DALCasePaper();
+            var strTranDate = DateUtility.GetCurrentDate();
+
+            string currentDate = DateUtility.GetFormatedDate(strTranDate, 1);
+            return await _dalCasePaper.GetCountApprovePending(comid);
+        }
 
     }
 }

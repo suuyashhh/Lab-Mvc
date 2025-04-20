@@ -181,6 +181,8 @@
     <Content Include="assets\img\slides-1.jpg" />
     <Content Include="assets\img\slides-2.jpg" />
     <Content Include="assets\img\slides-3.jpg" />
+    <Content Include="assets\img\USER.jpg" />
+    <Content Include="assets\img\LabLogo.jpg" />
     <Content Include="assets\js\main.js" />
     <Content Include="assets\scss\Readme.txt" />
     <Content Include="assets\vendor\apexcharts\apexcharts.amd.js" />
