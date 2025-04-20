@@ -512,7 +512,14 @@
                                         <input type='hidden' id='hfLabPrice(@row_num)' value="@mati.LabPrice" disabled="disabled">
                                     </td>
                                     <td id="Amount(@row_num)" data-editable="true">@mati.Price</td>
-                                    <td style="display:none" id="LabAmount(@row_num)" data-editable="true">@mati.LabPrice</td>
+                                    @if (Session["UserType"].ToString() == "ADMIN")
+                                    {
+                                        <td id="LabAmount(@row_num)" data-editable="true">@mati.LabPrice</td>
+                                    }
+                                    else
+                                    {
+                                        <td style="display:none" id="LabAmount(@row_num)" data-editable="true">@mati.LabPrice</td>
+                                    }
                                     <td>
                                         <a class="delete-btn remove-row" href="javascript:void(0);" disabled="disabled">Delete</a>
                                     </td>

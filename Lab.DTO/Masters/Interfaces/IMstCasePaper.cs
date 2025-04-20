@@ -16,10 +16,12 @@ namespace Lab.DTO.Masters.Interfaces
         Int64 InvoiceSave(DTOCasePaper _objDtoCasePaper); 
         Int64 Approve(DTOCasePaper _objDtoCasePaper);
         int Approve(string TrnNos);
-        List<DTOCasePaper> GetApprovalPendingList();
+        List<DTOCasePaper> GetApprovalPendingList(string comid);
         Task<string> GetLastPatientIdForDate(string dateComboKey);
-        Task<string> GetLastInvoiceNoAsync();
+        Task<string> GetLastInvoiceNoAsync(string comid);
         DTOCasePaper GetExisting(Int64 code);
         Task<List<DTOCasePaper>> GetDateWiseAllAsync(string strStartDate, string strEndDate, string ComId);
+        Task<int> GetCountByDate(string currentDate,string comid);
+        Task<int> GetCountApprovePending(string comid);
     }
 }

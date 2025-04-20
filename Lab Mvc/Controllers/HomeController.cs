@@ -1,7 +1,9 @@
-﻿using Lab_Mvc.Models;
+﻿using Lab.Businesss.Masters;
+using Lab_Mvc.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 
@@ -10,8 +12,14 @@ namespace Lab_Mvc.Controllers
     [CustomAuthorize]
     public class HomeController : Controller
     {
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
+            string comid = Session["ComId"].ToString();
+            var casePaper = new CasePaper(); 
+            var count = await casePaper.GetCountCurrentDate(comid);
+            var ApproveCount = await casePaper.GetCountApprovePending(comid);
+            ViewData["Count"] = count;
+            ViewData["AppPenCount"] = ApproveCount;
             return View();
         }
 

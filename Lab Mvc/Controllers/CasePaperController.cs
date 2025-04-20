@@ -363,7 +363,8 @@ namespace Lab_Mvc.Controllers
         }
         public async Task<ActionResult> ApprovalPending()
         {
-            List<CasePaper> _lstCasePaper = await CasePaper.GetApprovalPendingListAsync();
+            string comid = Session["ComId"].ToString();
+            List<CasePaper> _lstCasePaper = await CasePaper.GetApprovalPendingListAsync(comid);
 
             return PartialView(_lstCasePaper);
         }

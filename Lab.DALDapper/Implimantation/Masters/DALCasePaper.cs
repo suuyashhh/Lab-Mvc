@@ -295,18 +295,18 @@ namespace Lab.DALDapper.Implimantation.Masters
             }
         }
 
-        public List<DTOCasePaper> GetApprovalPendingList()
+        public List<DTOCasePaper> GetApprovalPendingList(string comid)
         {
             try
             {
                 string connectionString = ConfigurationManager.ConnectionStrings["connstr"].ConnectionString;
 
-                string query = "SELECT * FROM MST_PATIENT WHERE STATUS_CODE = 0 ORDER BY TRN_NO DESC";
+                string query = "SELECT * FROM MST_PATIENT WHERE STATUS_CODE = 0 AND COM_ID = @comid ORDER BY TRN_NO DESC";
 
                 using (SqlConnection con = new SqlConnection(connectionString))
                 {
                     con.Open();
-                    return con.Query<DTOCasePaper>(query).ToList();
+                    return con.Query<DTOCasePaper>(query, new { comid }).ToList();
                 }
             }
             catch (Exception ex)
@@ -346,16 +346,19 @@ namespace Lab.DALDapper.Implimantation.Masters
             }
         }
 
-        public async Task<string> GetLastInvoiceNoAsync()
+        public async Task<string> GetLastInvoiceNoAsync(string comid)
         {
             string lastInvoiceNo = null;
-            string query = "SELECT TOP 1 INVOICE_NO FROM MST_PATIENT WHERE INVOICE_NO IS NOT NULL ORDER BY INVOICE_NO DESC";
+            string query = "SELECT TOP 1 INVOICE_NO FROM MST_PATIENT WHERE INVOICE_NO IS NOT NULL AND COM_ID = @comid ORDER BY INVOICE_NO DESC";
 
             using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["connstr"].ConnectionString))
             {
                 await conn.OpenAsync();
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
+                    // Add parameter to prevent SQL injection
+                    cmd.Parameters.AddWithValue("@comid", comid);
+
                     object result = await cmd.ExecuteScalarAsync();
                     if (result != null)
                         lastInvoiceNo = result.ToString();
@@ -365,6 +368,40 @@ namespace Lab.DALDapper.Implimantation.Masters
             return lastInvoiceNo;
         }
 
+        public async Task<int> GetCountByDate(string currentDate, string comid)
+        {
+            string query = @"SELECT COUNT(*) 
+                     FROM MST_PATIENT 
+                     WHERE DATE = @CurrentDate 
+                     AND COM_ID = @ComId";
+
+            using (var con = new SqlConnection(ConfigurationManager.ConnectionStrings["connstr"].ConnectionString))
+            {
+                await con.OpenAsync();
+                return await con.ExecuteScalarAsync<int>(query, new
+                {
+                    CurrentDate = currentDate,
+                    ComId = comid
+                });
+            }
+        }
+
+        public async Task<int> GetCountApprovePending(string comid)
+        {
+            string query = @"SELECT COUNT(*) 
+                     FROM MST_PATIENT 
+                     WHERE STATUS_CODE = 0 
+                     AND COM_ID = @ComId";
+
+            using (var con = new SqlConnection(ConfigurationManager.ConnectionStrings["connstr"].ConnectionString))
+            {
+                await con.OpenAsync();
+                return await con.ExecuteScalarAsync<int>(query, new
+                {
+                    ComId = comid
+                });
+            }
+        }
 
     }
 }
