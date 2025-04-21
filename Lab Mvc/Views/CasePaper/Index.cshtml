@@ -270,8 +270,8 @@
             <input type="text" id="pm_searchInput" value="@ViewBag.CurrentFilter" name="searchString" placeholder="Search patients...">
         </div>
     </div>
-    <div class="pm_table-container">
-        <table id="pm_patientTable">
+    <div class="pm_table-container" id="casepaper-results">
+        <table id="pm_patientTable" class="table">
             <thead>
                 <tr>
                     <th>Action</th>
@@ -372,11 +372,33 @@
             $.ajax({
                 url: urlName,
                 type: "POST",
-                success: function (response, status, xhr) {
-                    $("#mainContent").html(response);
+                data: {
+                    FromDate: fromDate,
+                    ToDate: toDate
+                },
+                success: function (response) {
+                    // Assuming the response returns the updated HTML table
+                    $('#pm_patientTable tbody').html($(response).find('#pm_patientTable tbody').html());
                 },
                 error: function (err) {
-                    $("#mainContent").html(err);
+                    console.log('Error:', err);
+                }
+            });
+
+            $.ajax({
+                url: '/CasePaper/Index',
+                type: 'GET',
+                data: {
+                    FromDate: fromDate,
+                    ToDate: toDate,
+                    searchString: $('#pm_searchInput').val(), // Passing the search string as well
+                },
+                success: function (response) {
+                    // Update the table with the new data
+                    $('#pm_patientTable tbody').html($(response).find('#pm_patientTable tbody').html());
+                },
+                error: function () {
+                    alert('Error loading data.');
                 }
             });
 
