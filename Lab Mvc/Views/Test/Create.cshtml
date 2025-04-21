@@ -310,10 +310,19 @@
                     <label>Price</label>
                     <input type="text" id="Price" name="Price" class="number input-field">
                 </div>
-                <div class="col form-group">
-                    <label>Lab Price</label>
-                    <input type="text" id="LabPrice" name="LabPrice" class="number input-field unit-field">
-                </div>
+                @if (Session["UserType"].ToString() == "ADMIN")
+                {
+
+
+                    <div class="col form-group">
+                        <label>Lab Price</label>
+                        <input type="text" id="LabPrice" value="0" name="LabPrice" class="number input-field unit-field">
+                    </div>
+                }
+                else
+                {
+                    <input type="text" style="display:none" id="LabPrice" value="0" name="LabPrice" class="number input-field unit-field">
+                }
             </div>
 
             <div class="tests-section">
@@ -355,17 +364,7 @@
                 $('#Price').focus();
                 return false;
             }
-
-            if ($("#LabPrice").val().trim() === "") {
-                toastr.error("Please Enter LabPrice..!", "LabPrice", {
-                    timeOut: 3000,
-                    closeButton: false,
-                    progressBar: true,
-                    positionClass: "toast-top-right"
-                });
-                $('#LabPrice').focus();
-                return false;
-            }
+                       
 
             if (form.valid()) {
                 var _ObjTest = {
