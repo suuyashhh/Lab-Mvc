@@ -360,10 +360,27 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function () {
+
+        $('#pm_searchInput').on('keyup blur', function () {
+            var searchText = $(this).val().toLowerCase();
+            $('#pm_patientTable tbody tr').each(function () {
+                var $row = $(this);
+                var matches = false;
+
+                $row.find('td:not(:first-child)').each(function () {
+                    if ($(this).text().toLowerCase().indexOf(searchText) > -1) {
+                        matches = true;
+                        return false; 
+                    }
+                });
+
+                matches ? $row.show() : $row.hide();
+            });
+        });
+
         $('#pm_searchBtn').click(function () {
             var fromDateRaw = $('#pm_fromDate').val();
             var toDateRaw = $('#pm_toDate').val();
-
             // Format to yyyyMMdd
             var fromDate = formatDateToYYYYMMDD(fromDateRaw);
             var toDate = formatDateToYYYYMMDD(toDateRaw);
@@ -391,7 +408,7 @@
                 data: {
                     FromDate: fromDate,
                     ToDate: toDate,
-                    searchString: $('#pm_searchInput').val(), // Passing the search string as well
+                    searchString: $('#pm_searchBtn').val(), // Passing the search string as well
                 },
                 success: function (response) {
                     // Update the table with the new data
@@ -402,20 +419,6 @@
                 }
             });
 
-            //$.ajax({
-            //    url: '/CasePaper/Index',
-            //    type: 'GET',
-            //    data: {
-            //        FromDate: fromDate,
-            //        ToDate: toDate
-            //    },
-            //    success: function (result) {
-            //        $('#casepaper-results').html(result);
-            //    },
-            //    error: function () {
-            //        alert('Error loading data.');
-            //    }
-            //});
         });
 
         function formatDateToYYYYMMDD(dateStr) {

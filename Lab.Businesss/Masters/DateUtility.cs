@@ -38,6 +38,10 @@ namespace Lab.Businesss.Masters
                         {
                             retDate = DateTime.ParseExact(strDate, "yyyy-MM-dd", null).ToString("dd/MM/yyyy");
                         }
+                        else if(flag == 8)
+                        {
+                            retDate = DateTime.ParseExact(strDate, "yyyyMMdd", null).ToString("yyyy-MM-dd");
+                        }
                         else
                         {
                             retDate = DateTime.ParseExact(strDate, "yyyyMMdd", null).ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
