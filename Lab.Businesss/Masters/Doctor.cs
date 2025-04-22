@@ -77,24 +77,7 @@ namespace Lab.Businesss.Masters
                                  select new Doctor()
                                  {
                                      DoctorCode= dtoMstDoctor.DOCTOR_CODE,
-                                     DoctorName = dtoMstDoctor.DOCTOR_NAME,
-                                     //EmployeeId = dtoMstEmployee.EMPLOYEE_ID,
-                                     //EmployeeShortName = dtoMstEmployee.EMPLOYEE_SHORT_NAME,
-                                     //EmployeeFirstName = dtoMstEmployee.EMPLOYEE_FIRST_NAME,
-                                     //EmployeeMiddleName = dtoMstEmployee.EMPLOYEE_MIDDLE_NAME,
-                                     //EmployeeLastName = dtoMstEmployee.EMPLOYEE_LAST_NAME,
-                                     //StatusCode = dtoMstEmployee.STATUS_CODE,
-                                     //EmployeeName = dtoMstEmployee.EMPLOYEE_FIRST_NAME + " " + dtoMstEmployee.EMPLOYEE_MIDDLE_NAME + " " + dtoMstEmployee.EMPLOYEE_LAST_NAME,
-                                     //PayrollEmpId = dtoMstEmployee.PAYROLL_EMP_ID,
-                                     //PayrollCompany = dtoMstEmployee.PAYROLL_COMPANY,
-                                     //PayrollDept = dtoMstEmployee.PAYROLL_DEPT,
-                                     //Location = dtoMstEmployee.LOCATION,
-                                     //IsLeft = dtoMstEmployee.IS_LEFT,
-                                     //DesignationCode = dtoMstEmployee.DESIGNATION_CODE,
-                                     //IsVendor = dtoMstEmployee.IS_VENDOR,
-                                     //CrtBy = dtoMstEmployee.CRT_BY,
-                                     //EmployeeLoginId = dtoMstEmployee.EMPLOYEE_LOGIN_ID,
-                                     //Email = dtoMstEmployee.EMAIL
+                                     DoctorName = dtoMstDoctor.DOCTOR_NAME,                                
                                  }).ToList();
             }
             return _Doctorlist;
@@ -211,7 +194,7 @@ namespace Lab.Businesss.Masters
         private static async Task<long> GenerateDoctorId(string ComId)
         {
             _dalDoctor = new DALDoctor();
-            string fixedPart = "7";
+            string fixedPart = "3";
             string fixedPartSec = ComId;
 
             string lastId = await _dalDoctor.GetLastDoctorIdForFixedParts(fixedPart, fixedPartSec);
@@ -223,7 +206,7 @@ namespace Lab.Businesss.Masters
                 nextNumber = lastNumber + 1;
             }
 
-            long newTestId = long.Parse(fixedPart + fixedPartSec + nextNumber.ToString("D3"));
+            long newTestId = long.Parse(fixedPart + fixedPartSec + nextNumber);
 
             return newTestId;
         }
