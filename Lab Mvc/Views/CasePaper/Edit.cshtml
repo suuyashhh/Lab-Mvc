@@ -512,11 +512,18 @@
                                         <input type='hidden' id='hfLabPrice(@row_num)' value="@mati.LabPrice">
                                     </td>
                                     <td id="Amount(@row_num)" data-editable="true">@mati.Price</td>
-                                    <td style="display:none" id="LabAmount(@row_num)" data-editable="true">@mati.LabPrice</td>
-                                    <td>
-                                        <a class="delete-btn remove-row" href="javascript:void(0);">Delete</a>
-                                    </td>
-                                </tr>
+                                    @if (Session["UserType"].ToString() == "ADMIN")
+                                     {
+                                        <td id="LabAmount(@row_num)" data-editable="true">@mati.LabPrice</td>
+                                     }
+                                     else
+                                     {
+                                             <td style="display:none" id="LabAmount(@row_num)" data-editable="true">@mati.LabPrice</td>
+                                     }
+                                        <td>
+                                            <a class="delete-btn remove-row" href="javascript:void(0);">Delete</a>
+                                        </td>
+                                    </tr>
                                 row_num++;
                             }
                         </tbody>
@@ -590,7 +597,7 @@
             }
             else
             {
-                <input type="text" id="TotalProfit" style="display:none" name="TotalProfit" style="width: 40%!important;" class="input-field">
+                <input type="text" id="TotalProfit" style="display: none; width: 40% !important;" name="TotalProfit" class="input-field">
             }
 
             <div class="row align-items-center mb-3">
@@ -723,7 +730,7 @@
                     PaymentAmount: $("#PaymentAmount").val(),
                     CollectionType: CollectionType,
                     PaymentMethod: PaymentMethod,
-                    PaymentStatus: parseFloat($("#TotalAmount").val()) > parseFloat($("#PaymentAmount").val()) ? "PENDING" : "COMPLETED",
+                    PaymentStatus: parseInt($("#TotalAmount").val()) > parseInt($("#PaymentAmount").val()) ? "PENDING" : "COMPLETED",
                     MatIs: MatIs,
                 };
 

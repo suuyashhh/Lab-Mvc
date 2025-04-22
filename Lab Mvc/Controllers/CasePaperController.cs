@@ -43,7 +43,7 @@ namespace Lab_Mvc.Controllers
 
             string ComId = Session["ComId"].ToString();
             List<CasePaper> _lstTD = await CasePaper.GetDateWiseAll(strStartDate, strToDate, ComId);
-            TranGridSettings _objTranGridSettings = new TranGridSettings() { TranFromDate = DateUtility.GetFormatedDate(strStartDate, 0), TranToDate = DateUtility.GetFormatedDate(strToDate, 0) };
+            TranGridSettings _objTranGridSettings = new TranGridSettings() { TranFromDate = DateUtility.GetFormatedDate(strStartDate, 8), TranToDate = DateUtility.GetFormatedDate(strToDate, 8) };
             ViewData["trangridsettings"] = _objTranGridSettings;
 
             ViewBag.FromDate = strStartDate;
@@ -57,11 +57,9 @@ namespace Lab_Mvc.Controllers
                 ViewBag.CurrentFilter = searchString;
 
                 _lstTD = _lstTD.Where(obj =>
-                    (obj.Date != null && obj.Date.ToString().ToUpper().Contains(searchString.ToUpper())) ||
-                    (obj.ShortTrnNo != null && obj.ShortTrnNo.ToUpper().Contains(searchString.ToUpper())) ||
-                    (obj.PatientName != null && obj.PatientName.ToUpper().Contains(searchString.ToUpper())) 
-                    //(obj.CreatedBy != null && obj.CreatedBy.ToUpper().Contains(searchString.ToUpper())) ||
-                    //(obj.AppBy != null && obj.AppBy.ToUpper().Contains(searchString.ToUpper()))
+                    (obj.PatientName != null && obj.PatientName.ToUpper().Contains(searchString.ToUpper())) ||
+                    (obj.ConNumber != null && obj.ConNumber.ToUpper().Contains(searchString.ToUpper())) ||
+                    (obj.PaymentStatus != null && obj.PaymentStatus.ToUpper().Contains(searchString.ToUpper()))
                 ).ToList();
             }
 
@@ -363,7 +361,8 @@ namespace Lab_Mvc.Controllers
         }
         public async Task<ActionResult> ApprovalPending()
         {
-            List<CasePaper> _lstCasePaper = await CasePaper.GetApprovalPendingListAsync();
+            string comid = Session["ComId"].ToString();
+            List<CasePaper> _lstCasePaper = await CasePaper.GetApprovalPendingListAsync(comid);
 
             return PartialView(_lstCasePaper);
         }

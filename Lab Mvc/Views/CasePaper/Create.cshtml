@@ -569,7 +569,7 @@
             }
             else
             {
-                <input type="text" id="TotalProfit" style="display:none" name="TotalProfit" style="width: 40%!important;" class="input-field">
+                <input type="text" id="TotalProfit" style="display: none; width: 40% !important;" name="TotalProfit" class="input-field">
             }
 
             <div class="row align-items-center mb-3">
@@ -637,6 +637,17 @@
             e.preventDefault();
             var form = $("#CasePaper-form");
 
+            if ($("#PaymentAmount").val().trim() === "") {
+                toastr.error("Please Enter PaymentAmount..!", "PaymentAmount", {
+                    timeOut: 3000,
+                    closeButton: false,
+                    progressBar: true,
+                    positionClass: "toast-top-right"
+                });
+                $('#PaymentAmount').focus();
+                return false;
+            }
+
             if (form.valid()) {
                 if ($('#tblMaterials > tbody > tr').length == 0) {
                     toastr.error("Please add at least one test.", "Test", {
@@ -690,7 +701,7 @@
                     PaymentAmount: $("#PaymentAmount").val(),
                     CollectionType: CollectionType,
                     PaymentMethod: PaymentMethod,
-                    PaymentStatus: parseFloat($("#TotalAmount").val()) > parseFloat($("#PaymentAmount").val()) ? "PENDING" : "COMPLETED",
+                    PaymentStatus: parseInt($("#TotalAmount").val()) > parseInt($("#PaymentAmount").val()) ? "PENDING" : "COMPLETED",
                     MatIs: MatIs,
                 };
 
