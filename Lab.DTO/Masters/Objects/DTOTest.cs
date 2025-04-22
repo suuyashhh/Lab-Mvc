@@ -18,5 +18,6 @@ namespace Lab.DTO.Masters.Objects
         public string SHORT_TRN_NO { get; set; }
         public string DELETE_REASON { get; set; }
         public string COM_ID { get; set; }
+        public string CRT_BY { get; set; }
     }
 }

@@ -195,7 +195,7 @@ namespace Lab.Businesss.Masters
         private static async Task<long> GenerateEmployeeId(string ComId)
         {
            _dalEmployee = new DALEmployee();
-           string fixedPart = "7";
+           string fixedPart = "4";
            string fixedPartSec = ComId;
 
            string lastId = await _dalEmployee.GetLastEmployeeIdForFixedParts(fixedPart, fixedPartSec);
@@ -207,7 +207,7 @@ namespace Lab.Businesss.Masters
                nextNumber = lastNumber + 1;
            }
 
-            long newTestId = long.Parse(fixedPart + fixedPartSec + nextNumber.ToString("D3"));
+            long newTestId = long.Parse(fixedPart + fixedPartSec + nextNumber);
 
             return newTestId;
         }

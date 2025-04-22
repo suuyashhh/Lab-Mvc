@@ -91,6 +91,7 @@ namespace Lab_Mvc.Controllers
 
             try
             {
+                _ObjTest.CrtBy = Session["UserName"].ToString();
                 _ObjTest.ComId = Session["ComId"].ToString();
                 Int64 Test_Code = await Test.Create(_ObjTest);
                 if (Test_Code != 0)

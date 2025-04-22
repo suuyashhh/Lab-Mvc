@@ -60,8 +60,8 @@ namespace Lab.DALDapper.Implimantation.Masters
         {
             try
             {
-                string query = @"INSERT INTO MST_TEST (TEST_CODE,TEST_NAME,PRICE,LAB_PRICE,COM_ID)";
-                query = query + " VALUES(@TEST_CODE,@TEST_NAME,@PRICE,@LAB_PRICE,@COM_ID);SELECT @TEST_CODE";
+                string query = @"INSERT INTO MST_TEST (TEST_CODE,TEST_NAME,PRICE,LAB_PRICE,COM_ID,CRT_BY,STATUS_CODE)";
+                query = query + " VALUES(@TEST_CODE,@TEST_NAME,@PRICE,@LAB_PRICE,@COM_ID,@CRT_BY,@STATUS_CODE);SELECT @TEST_CODE";
                 Int64 i;
                 using (SqlConnection con = new SqlConnection(_connectionString))
                 {

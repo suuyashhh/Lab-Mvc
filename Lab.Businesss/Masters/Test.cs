@@ -23,6 +23,7 @@ namespace Lab.Businesss.Masters
         public string ShortTrnNo { get; set; }
         public string DeleteReason { get; set; }
         public string ComId { get; set; }
+        public string CrtBy { get; set; }
 
 
         public static Test New()
@@ -118,6 +119,9 @@ namespace Lab.Businesss.Masters
             {
                 Int64 result = 0;
                 _dalTest = new DALTest();
+
+                int intStatusCode = 0;
+                _ObjTest.StatusCode = intStatusCode;
                 string ComId = _ObjTest.ComId;
                 Int64 newTestId = await GeneratTestId(ComId);
 
@@ -128,7 +132,9 @@ namespace Lab.Businesss.Masters
                     PRICE = _ObjTest.Price,
                     LAB_PRICE    = _ObjTest.LabPrice,
                     SR_NO = _ObjTest.SrNo,
-                    COM_ID = _ObjTest.ComId
+                    COM_ID = _ObjTest.ComId,
+                    CRT_BY = _ObjTest.CrtBy,
+                    STATUS_CODE= intStatusCode,
                 };
 
                 result = await Task.Run(() => { return _dalTest.Create(_objDtoTest); });
@@ -206,7 +212,7 @@ namespace Lab.Businesss.Masters
                 nextNumber = lastNumber + 1;
             }
 
-            long newTestId = long.Parse(fixedPart + fixedPartSec + nextNumber.ToString("D3"));
+            long newTestId = long.Parse(fixedPart + fixedPartSec + nextNumber);
 
             return newTestId;
         }
