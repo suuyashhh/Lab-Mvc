@@ -11,7 +11,7 @@
     int row_num = 1;
 }
 
-
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 
 <style>
     * {
@@ -29,7 +29,6 @@
     .pm_container {
         max-width: 1200px;
         margin: 0 auto;
-        padding: 20px;
         display: flex;
         flex-direction: column;
         height: calc(100vh - 40px);
@@ -41,6 +40,7 @@
         justify-content: space-between;
         align-items: center;
         margin-bottom: 20px;
+        padding: 20px;
         gap: 10px;
     }
 
@@ -244,6 +244,16 @@
             flex-direction: column;
         }
     }
+
+    #pm_fromDate, #pm_toDate {
+        background: white url('https://cdn-icons-png.flaticon.com/512/747/747310.png') no-repeat right 10px center;
+        background-size: 18px 18px;
+        cursor: pointer;
+    }
+
+    .ui-datepicker {
+        font-size: 14px;
+    }
 </style>
 <div class="pagetitle">
     <h1>Case Paper</h1>
@@ -262,8 +272,10 @@
         </div>
 
         <div class="pm_date-container">
-            <input type="date" id="pm_fromDate" value="@grid_settings.TranFromDate"  placeholder="From Date">
-            <input type="date" id="pm_toDate" value="@grid_settings.TranToDate"  placeholder="To Date">
+            <input type="text" id="pm_fromDate" name="Date" placeholder="dd/mm/yyyy" readonly="readonly" value="@grid_settings.TranFromDate" />
+            <input type="text" id="pm_toDate" name="Date" placeholder="dd/mm/yyyy" readonly="readonly" value="@grid_settings.TranToDate" />
+            @*<input type="date" id="pm_fromDate" value="@grid_settings.TranFromDate" placeholder="From Date">*@
+            @*<input type="date" id="pm_toDate" value="@grid_settings.TranToDate" placeholder="To Date">*@
             <button id="pm_searchBtn">🔍 Search</button>
         </div>
         <div class="pm_search-container">
@@ -300,7 +312,7 @@
                 {
                     foreach (var item in Model)
                     {
-                         <tr >
+                        <tr>
                             <td>
 
                                 <div class="pm_action-buttons">
@@ -358,9 +370,24 @@
     </div>
 </div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 <script>
     $(document).ready(function () {
 
+        
+            $(function () {
+                $("#pm_fromDate, #pm_toDate").datepicker({
+        dateFormat: 'dd/mm/yy',
+        changeMonth: true,
+        changeYear: true,
+        showAnim: 'slideDown',
+        showButtonPanel: true,
+        prevText: '<i class="fa fa-chevron-left"></i>',
+        nextText: '<i class="fa fa-chevron-right"></i>'
+    });
+});
+
+        // Search on input
         $('#pm_searchInput').on('keyup blur', function () {
             var searchText = $(this).val().toLowerCase();
             $('#pm_patientTable tbody tr').each(function () {
@@ -370,7 +397,7 @@
                 $row.find('td:not(:first-child)').each(function () {
                     if ($(this).text().toLowerCase().indexOf(searchText) > -1) {
                         matches = true;
-                        return false; 
+                        return false;
                     }
                 });
 
@@ -378,56 +405,58 @@
             });
         });
 
+        // Date search
         $('#pm_searchBtn').click(function () {
-            var fromDateRaw = $('#pm_fromDate').val();
-            var toDateRaw = $('#pm_toDate').val();
-            // Format to yyyyMMdd
-            var fromDate = formatDateToYYYYMMDD(fromDateRaw);
-            var toDate = formatDateToYYYYMMDD(toDateRaw);
+            var fromDate = $('#pm_fromDate').val();
+            var toDate = $('#pm_toDate').val();
+            var searchString = $('#pm_searchInput').val();
 
-            var urlName = "CasePaper/index?FromDate='" + fromDate + "'&ToDate='" + toDate + "'";
-            $.ajax({
-                url: urlName,
-                type: "POST",
-                data: {
-                    FromDate: fromDate,
-                    ToDate: toDate
-                },
-                success: function (response) {
-                    // Assuming the response returns the updated HTML table
-                    $('#pm_patientTable tbody').html($(response).find('#pm_patientTable tbody').html());
-                },
-                error: function (err) {
-                    console.log('Error:', err);
-                }
-            });
+            // Validate dates
+            if (!isValidDate(fromDate) || !isValidDate(toDate)) {
+                alert('Please enter valid dates in dd/mm/yyyy format');
+                return;
+            }
 
+            // Format dates for backend
+            var fromDateFormatted = formatDateToYYYYMMDD(fromDate);
+            var toDateFormatted = formatDateToYYYYMMDD(toDate);
+
+            // Validate date range
+            if (new Date(toDateFormatted) < new Date(fromDateFormatted)) {
+                alert('To date cannot be before From date');
+                return;
+            }
+
+            // Make AJAX call
             $.ajax({
                 url: '/CasePaper/Index',
                 type: 'GET',
                 data: {
-                    FromDate: fromDate,
-                    ToDate: toDate,
-                    searchString: $('#pm_searchBtn').val(), // Passing the search string as well
+                    FromDate: fromDateFormatted,
+                    ToDate: toDateFormatted,
+                    searchString: searchString
                 },
                 success: function (response) {
-                    // Update the table with the new data
-                    $('#pm_patientTable tbody').html($(response).find('#pm_patientTable tbody').html());
+                    $('#casepaper-results').html($(response).find('#casepaper-results').html());
                 },
-                error: function () {
+                error: function (xhr, status, error) {
+                    console.error('Error:', error);
                     alert('Error loading data.');
                 }
             });
-
         });
 
         function formatDateToYYYYMMDD(dateStr) {
             if (!dateStr) return '';
-            var date = new Date(dateStr);
-            var yyyy = date.getFullYear();
-            var mm = ('0' + (date.getMonth() + 1)).slice(-2);
-            var dd = ('0' + date.getDate()).slice(-2);
-            return yyyy + mm + dd;
+            var parts = dateStr.split('/');
+            if (parts.length === 3) {
+                return parts[2] + parts[1] + parts[0]; // yyyyMMdd
+            }
+            return '';
+        }
+
+        function isValidDate(dateStr) {
+            return dateStr && dateStr.match(/^\d{2}\/\d{2}\/\d{4}$/);
         }
     });
 
