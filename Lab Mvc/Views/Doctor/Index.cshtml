@@ -20,7 +20,6 @@
     .pm_container {
         max-width: 1200px;
         margin: 0 auto;
-        padding: 20px;
         display: flex;
         flex-direction: column;
         height: calc(100vh - 40px);
@@ -30,6 +29,7 @@
         display: flex;
         flex-wrap: wrap;
         justify-content: space-between;
+        padding: 20px;
         align-items: center;
         margin-bottom: 20px;
         gap: 10px;
@@ -152,7 +152,7 @@
             <a href="@Url.Action("Create", "Doctor")" id="pm_newBtn">New</a>
         </div>
         <div class="pm_search-container">
-            <input type="text" id="pm_searchInput" placeholder="Search patients...">
+            <input type="text" id="pm_searchInput" value="@ViewBag.CurrentFilter" name="searchString" placeholder="Search patients...">
         </div>
     </div>
 
@@ -175,11 +175,11 @@
                     {
                         <tr>
                             <td>
-                                    <div class="pm_action-buttons">
-                                        <a class="pm_edit-btn" data-id="1" title="Edit" href="/Doctor/edit?DoctorCode=@item.DoctorCode">Edit</a>
-                                        <a class="pm_delete-btn" data-id="1" title="Delete" href="/Doctor/delete?DoctorCode=@item.DoctorCode">Delete</a>
+                                <div class="pm_action-buttons">
+                                    <a class="pm_edit-btn" data-id="1" title="Edit" href="/Doctor/edit?DoctorCode=@item.DoctorCode">Edit</a>
+                                    <a class="pm_delete-btn" data-id="1" title="Delete" href="/Doctor/delete?DoctorCode=@item.DoctorCode">Delete</a>
 
-                                    </div>
+                                </div>
                             </td>
                             <td>@Html.DisplayFor(modelItem => item.DoctorName)</td>
                         </tr>
@@ -198,3 +198,24 @@
 </div>
 
 <script src="~/js/script.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#pm_searchInput').on('keyup blur', function () {
+            var searchText = $(this).val().toLowerCase();
+            $('#pm_patientTable tbody tr').each(function () {
+                var $row = $(this);
+                var matches = false;
+
+                $row.find('td:not(:first-child)').each(function () {
+                    if ($(this).text().toLowerCase().indexOf(searchText) > -1) {
+                        matches = true;
+                        return false;
+                    }
+                });
+
+                matches ? $row.show() : $row.hide();
+            });
+        });
+    });
+</script>
+

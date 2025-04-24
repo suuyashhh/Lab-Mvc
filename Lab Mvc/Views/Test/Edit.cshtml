@@ -319,12 +319,12 @@
 
                     <div class="col form-group">
                         <label>Lab Price</label>
-                        <input type="text" id="LabPrice" name="LabPrice" class="number input-field unit-field">
+                        <input type="text" id="LabPrice" name="LabPrice" value="@Model.LabPrice" class="number input-field unit-field">
                     </div>
                 }
                 else
                 {
-                    <input type="text" style="display:none" id="LabPrice" value="0" name="LabPrice" class="number input-field unit-field">
+                    <input type="text" style="display:none" id="LabPrice" value="@Model.LabPrice" name="LabPrice" class="number input-field unit-field">
                 }
             </div>
 

@@ -28,8 +28,6 @@ namespace Lab_Mvc.Controllers
 
                 _lstDoctors = _lstDoctors.Where(obj =>
                     (obj.DoctorName != null && obj.DoctorName.ToUpper().Contains(searchString.ToUpper()))
-                //(obj.CreatedBy != null && obj.CreatedBy.ToUpper().Contains(searchString.ToUpper())) ||
-                //(obj.AppBy != null && obj.AppBy.ToUpper().Contains(searchString.ToUpper()))
                 ).ToList();
             }
 

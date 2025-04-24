@@ -29,8 +29,6 @@ namespace Lab_Mvc.Controllers
                 _lstTests = _lstTests.Where(obj =>
                     (obj.ShortTrnNo != null && obj.ShortTrnNo.ToUpper().Contains(searchString.ToUpper())) ||
                     (obj.TestName != null && obj.TestName.ToUpper().Contains(searchString.ToUpper()))
-                //(obj.CreatedBy != null && obj.CreatedBy.ToUpper().Contains(searchString.ToUpper())) ||
-                //(obj.AppBy != null && obj.AppBy.ToUpper().Contains(searchString.ToUpper()))
                 ).ToList();
             }
 
