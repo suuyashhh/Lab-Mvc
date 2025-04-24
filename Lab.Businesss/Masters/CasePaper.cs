@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Lab.DALDapper.Implimantation.Masters;
 using System.Transactions;
 using System.Security.Cryptography;
+using System.Globalization;
 
 namespace Lab.Businesss.Masters
 {
@@ -77,7 +78,7 @@ namespace Lab.Businesss.Masters
                                  StatusCode = cp.STATUS_CODE,
                                  Discount = cp.DISCOUNT,
                                  InvoiceNo = cp.INVOICE_NO,
-                                 ShortTrnNo = cp.TRN_NO.ToString().Substring(2, 6) + "-" +
+                                 ShortTrnNo = cp.TRN_NO.ToString().Substring(0, 6) + "-" +
                                               cp.TRN_NO.ToString().Substring(cp.TRN_NO.ToString().Length - 2),
                                  CrtBy = cp.CRT_BY,
                                  PaymentStatus = cp.PAYMENT_STATUS,
@@ -220,7 +221,8 @@ namespace Lab.Businesss.Masters
                 _ObjCsPaper.StatusCode = intStatusCode;
                 string strTranDate = DateUtility.GetFormatedDate(_ObjCsPaper.Date, 1);
                 string Comid = _ObjCsPaper.ComId;
-                string datePart = DateTime.Now.ToString("yyyyMMdd");
+                string datePart = DateUtility.GetCurrDateForGenId();
+             
                 Int64 newPatientId = await GeneratePatientId(datePart, Comid);
 
                 DTOCasePaper _objDtoCasePaper = new DTOCasePaper()
@@ -516,7 +518,7 @@ namespace Lab.Businesss.Masters
             int nextNumber = 1;
             if (!string.IsNullOrEmpty(lastId) && lastId.StartsWith(dateComboKey))
             {
-                int lastNumber = int.Parse(lastId.Substring(11)); 
+                int lastNumber = int.Parse(lastId.Substring(9)); 
                 nextNumber = lastNumber + 1;
             }
                         

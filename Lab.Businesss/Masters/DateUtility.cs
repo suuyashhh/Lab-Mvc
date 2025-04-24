@@ -58,12 +58,21 @@ namespace Lab.Businesss.Masters
 
         public static string GetCurrentDate()
         {
-            //return DateTime.Now.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
-          
-                return DateTime.Now.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
+            DateTime utcNow = DateTime.UtcNow;
+            TimeZoneInfo indiaZone = TimeZoneInfo.FindSystemTimeZoneById("India Standard Time");
+            DateTime indianTime = TimeZoneInfo.ConvertTimeFromUtc(utcNow, indiaZone);
+            return indianTime.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
            
         }
 
+        public static string GetCurrDateForGenId()
+        {
+            DateTime utcNow = DateTime.UtcNow;
+            TimeZoneInfo indiaZone = TimeZoneInfo.FindSystemTimeZoneById("India Standard Time");
+            DateTime indianTime = TimeZoneInfo.ConvertTimeFromUtc(utcNow, indiaZone);
+            return indianTime.ToString("yyMMdd", CultureInfo.InvariantCulture);
+
+        }
         public static string GetCurrentMonthStartDate()
         {
             DateTime now = DateTime.Now;
