@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Configuration;
+using System.Data.SqlClient;
 using System.Web;
 using System.Web.Mvc;
 
@@ -11,23 +11,69 @@ namespace Lab_Mvc.Models
         protected override bool AuthorizeCore(HttpContextBase httpContext)
         {
             // Check if user is authenticated via session or cookie
-            if (httpContext.Session["UserId"] != null)
+            string contact = null;
+            string password = null;
+            string connectionString = ConfigurationManager.ConnectionStrings["connstr"].ConnectionString;
+
+            // Try to get credentials from session first
+            if (httpContext.Session["Contact"] != null && httpContext.Session["Password"] != null)
             {
-                return true; // User is authenticated via session
+                contact = httpContext.Session["Contact"].ToString();
+                password = httpContext.Session["Password"].ToString();
+            }
+            // If not in session, try to get from cookie
+            else
+            {
+                HttpCookie authCookie = httpContext.Request.Cookies["UserAuth"];
+                if (authCookie != null)
+                {
+                    contact = authCookie["Contact"];
+                    password = authCookie["Password"];
+                }
             }
 
-            // Check for authentication cookie
-            HttpCookie authCookie = httpContext.Request.Cookies["UserAuth"];
-            if (authCookie != null)
+            // If we have credentials, validate them against database
+            if (!string.IsNullOrEmpty(contact) && !string.IsNullOrEmpty(password))
             {
-                // Restore session from cookie
-                httpContext.Session["UserId"] = authCookie["UserId"];
-                httpContext.Session["UserName"] = authCookie["UserName"];
-                httpContext.Session["Contact"] = authCookie["Contact"];
-                httpContext.Session["ComId"] = authCookie["ComId"];
-                httpContext.Session["UserType"] = authCookie["UserType"];
+                using (SqlConnection con = new SqlConnection(connectionString))
+                {
+                    string query = @"SELECT USER_ID, NAME, CONTACT, PASSWORD, COM_ID, USER_LOGIN 
+                                    FROM (
+                                        SELECT ADMIN_ID AS USER_ID, ADMIN_NAME AS NAME, ADMIN_CONTACT AS CONTACT, 
+                                               ADMIN_PASSWORD AS PASSWORD, COM_ID, 'ADMIN' AS USER_LOGIN 
+                                        FROM MST_ADMIN 
+                                        UNION ALL 
+                                        SELECT EMP_ID AS USER_ID, EMP_NAME AS NAME, EMP_CONTACT AS CONTACT, 
+                                               EMP_PASSWORD AS PASSWORD, COM_ID, 'EMPLOYEE' AS USER_LOGIN 
+                                        FROM MST_EMPLOYEE
+                                    ) AS CombinedUsers 
+                                    WHERE CONTACT = @contact AND PASSWORD = @pass";
 
-                return true;
+                    using (SqlCommand sqlCommand = new SqlCommand(query, con))
+                    {
+                        sqlCommand.Parameters.AddWithValue("@contact", contact);
+                        sqlCommand.Parameters.AddWithValue("@pass", password);
+
+                        con.Open();
+                        using (SqlDataReader reader = sqlCommand.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+
+                                // Update session with current user data
+                                httpContext.Session["UserId"] = reader["USER_ID"];
+                                httpContext.Session["UserName"] = reader["NAME"];
+                                httpContext.Session["Contact"] = reader["CONTACT"];
+                                httpContext.Session["Password"] = reader["PASSWORD"];
+                                httpContext.Session["ComId"] = reader["COM_ID"];
+                                httpContext.Session["UserType"] = reader["USER_LOGIN"];
+
+                                return true; // Valid credentials found
+                            }
+                        }
+                    }
+                }
             }
 
             return false; // Not authorized
@@ -35,6 +81,13 @@ namespace Lab_Mvc.Models
 
         protected override void HandleUnauthorizedRequest(AuthorizationContext filterContext)
         {
+            // Clear any existing session/cookie if validation failed
+            filterContext.HttpContext.Session.Clear();
+            if (filterContext.HttpContext.Request.Cookies["UserAuth"] != null)
+            {
+                filterContext.HttpContext.Response.Cookies["UserAuth"].Expires = DateTime.Now.AddDays(-1);
+            }
+
             // Redirect to login page with return URL
             filterContext.Result = new RedirectResult("~/Login.aspx?returnUrl=" +
                 HttpUtility.UrlEncode(filterContext.HttpContext.Request.Url.PathAndQuery));
