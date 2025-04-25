@@ -5,7 +5,7 @@
 <head runat="server">
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>Suyash Patil Dairy Farm</title>
+    <title>Rupesh Lab</title>
 
     <!-- Google Fonts -->
     <link href="https://fonts.gstatic.com" rel="preconnect" />
@@ -203,8 +203,6 @@
 
                         <asp:Button ID="btnLogin" CssClass="btn btn-primary w-100" runat="server" Text="Login" OnClick="btnLogin_Click" />
                     </asp:Panel>
-
-                    <p class="small mb-0 mt-3 text-center">Don't have an account? <a href="#" style="color: green; font-family: 'saira';">Create an account</a></p>
                 </div>
             </div>
         </div>

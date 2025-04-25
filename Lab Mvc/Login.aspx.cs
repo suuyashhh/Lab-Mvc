@@ -51,7 +51,8 @@ namespace Lab_Mvc
                 reader.Read();
                 Session["UserId"] = reader.GetValue(0);
                 Session["UserName"] = reader.GetValue(1);               
-                Session["Contact"] = reader.GetValue(3);           
+                Session["Contact"] = reader.GetValue(2);               
+                Session["Password"] = reader.GetValue(3);           
                 Session["ComId"] = reader.GetValue(4);           
                 Session["UserType"] = reader.GetValue(5);
 
@@ -59,7 +60,8 @@ namespace Lab_Mvc
                 HttpCookie authCookie = new HttpCookie("UserAuth");
                 authCookie["UserName"] = reader.GetValue(1).ToString();
                 authCookie["UserId"] = reader.GetValue(0).ToString();
-                authCookie["Contact"] = reader.GetValue(3).ToString();
+                authCookie["Contact"] = reader.GetValue(2).ToString();
+                authCookie["Password"] = reader.GetValue(3).ToString();
                 authCookie["ComId"] = reader.GetValue(4).ToString();
                 authCookie["UserType"] = reader.GetValue(5).ToString();
                 authCookie.Expires = DateTime.Now.AddDays(30); // Cookie valid for 30 days
