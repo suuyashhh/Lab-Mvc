@@ -167,10 +167,10 @@
                         </a>
                     </th>
                     <th>Price</th>
-                    @if (Session["UserType"].ToString() == "ADMIN")
-                    {
+                    @*@if (Session["UserType"].ToString() == "ADMIN")
+                    {*@
                         <th>Lab Price</th>
-                    }
+                    @*}*@
                     </tr>
             </thead>
             <tbody>
@@ -190,10 +190,10 @@
                             </td>
                             <td>@Html.DisplayFor(modelItem => item.TestName)</td>
                             <td>@Html.DisplayFor(modelItem => item.Price)</td>
-                            @if (Session["UserType"].ToString() == "ADMIN")
-                            {
+                            @*@if (Session["UserType"].ToString() == "ADMIN")
+                            {*@
                                 <td>@Html.DisplayFor(modelItem => item.LabPrice)</td>
-                            }
+                            @*}*@
                             </tr>                       
                     }
                 }
